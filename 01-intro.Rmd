@@ -1,3 +1,9 @@
 # Introduction {#intro}
 
-占坑...
+这本书主要讲解的，是如何使用非常重要的数据科学工具，并给出了工具模型
+
+<div align=center>![](https://d33wubrfki0l68.cloudfront.net/571b056757d68e6df81a3e3853f54d3c76ad6efc/32d37/diagrams/data-science.png)</div>
+
+其大致的含义如下：
+
+<div align=center>![](01-intro_files/r4ds.png)</div>
