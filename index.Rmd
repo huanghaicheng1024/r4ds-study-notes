@@ -1,0 +1,27 @@
+--- 
+title: "r4ds学习笔记"
+author: "Huang"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+description: "这是使用bookdwon编写的书籍。"
+---
+
+# 背景 {-}
+
+开始正式学习《R for data science》(https://r4ds.had.co.nz/)
+
+<p style="text-align: right;">2020-8-29</p>
+
+```{r include=FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+```
+
+
+
