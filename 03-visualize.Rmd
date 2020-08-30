@@ -1,0 +1,80 @@
+# Data visualisation
+
+## Introduction
+
+我们将要学习的第一套工具，`ggplot2`的程序包，用于绘图。
+
+首先加载`tidyverse`
+```{r}
+library(tidyverse)
+```
+
+## First steps
+
+先绘制一个`mpg`数据框里边的引擎大小(`displ`)-燃油效率(`hwy`)散点图
+```{r}
+ggplot(data = mpg)+
+  geom_point(mapping = aes(x = displ,y = hwy))
+```
+
+可以看到，绘图的模板命令大致是
+
+```{r eval = FALSE}
+ggplot(data = <DATA>) + 
+  <GEOM_FUNCTION>(mapping = aes(<MAPPINGS>))
+```
+
+
+```{r eval = FALSE}
+ggplot(data = <DATA>) 
+```
+这是在生成一个空白图层，指定数据。
+
+
+```{r eval = FALSE}
+<GEOM_FUNCTION>(mapping = aes(<MAPPINGS>))
+```
+这是在空白图层上方继续加图层，比如前面的`geom_point`就是加上散点图图层。`mapping`是映射，是将数据框的属性映射成图形属性，常见的我们还用`aes()`，这是将将数据框的属性映射成`x,y`轴变量。
+
+### Exercises
+
+(1) 运行`ggplot(data = mpg)`，你会看到什么？
+```{r}
+ggplot(data = mpg)
+```
+
+显然，是一个空白的图层。
+
+(2) 数据集`mpg`中有多少行？多少列？
+```{r}
+str(mpg)
+```
+
+利用`str `函数，可以得到数据集`mpg`中有234行11列。
+
+(3) 变量`drv`的意义是什么？使用`?mpg`命令阅读帮助文件以找出答案。
+```{r}
+?mpg
+```
+
+通过阅读帮助文档可以知道
+
+> drv: the type of drive train, where f = front-wheel drive, r = rear wheel drive, 4 = 4wd
+
+即传动系的类型，f表示前轮驱动，r表示后轮驱动，4表示四轮驱动。
+
+(4) 使用`hwy`和`cyl`绘制一张散点图。
+```{r}
+ggplot(data = mpg)+
+  geom_point(mapping = aes(x = hwy,y = cyl))
+```
+
+啊，这奇怪的图形。
+
+(5) 如果使用`class`和`drv`绘制散点图，会发生什么情况？为什么这张图没什么用处？
+```{r}
+ggplot(data = mpg)+
+  geom_point(mapping = aes(x = class,y = drv))
+```
+
+会出现很多点重合的现象，这是这张图没什么用处的原因吗？但是自我感觉还是保留了些许信息，但的确被压缩了很多。
