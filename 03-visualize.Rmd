@@ -78,3 +78,130 @@ ggplot(data = mpg)+
 ```
 
 会出现很多点重合的现象，这是这张图没什么用处的原因吗？但是自我感觉还是保留了些许信息，但的确被压缩了很多。
+
+
+## Aesthetic mappings
+
+我们在前面学习了如何把数据框属性映射为`x,y`轴，实际上还可以映射其他图形属性。
+
+在引擎大小(`displ`)-燃油效率(`hwy`)散点图中增加多一个映射，将点的颜色映射为变量`class`
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, color = class))
+```
+
+
+类似于点的颜色，还有的图形属性为：
+
+- 点的透明度`alpha`
+
+- 点的大小`size`，单位为毫米
+
+- 点的形状`shape`，`ggplot2`只能同时使用**6**种形状
+
+- 还可以通过`?geom_point`来查看
+
+除了映射图形属性让`ggplot2`帮忙设置，还可以手动为几何对象设置图形属性。
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy),colour = 'blue')
+```
+上图会将所有点都绘制成蓝色，因为我们并没有对点的颜色建立映射，而是直接设置。这与前面的图不同。
+
+
+### Exercises
+
+(1) 以下这段代码有什么错误？为什么点不是蓝色的？
+```{r}
+ggplot(data = mpg) + 
+  geom_point( 
+    mapping = aes(x = displ, y = hwy, color = "blue") 
+  )
+```
+
+这是因为这段代码把字符串常量当作数据框属性映射为点的颜色，由于各点的值都是常量"blue"故大家的颜色也一样，为默认的第一种颜色：红色。
+
+事实上，
+```{r}
+ggplot(data = mpg) + 
+  geom_point( 
+    mapping = aes(x = displ, y = hwy, color = "hello") 
+  )
+```
+
+不论那个字符串是什么，甚至不是颜色的字符串也没有什么影响的。
+
+(2)`mpg`中的哪些变量是分类变量？哪些变量是连续变量？（提示：输入`?mpg`来阅读这个数据集的文档。）当调用`mpg`时，如何才能看到这些信息？
+
+当然可以阅读文档，但也可以
+```{r}
+str(mpg)
+summary(mpg)
+```
+
+(3) 将一个连续变量映射为`color`、`size`和`shape`。对分类变量和连续变量来说，这些图形
+属性的表现有什么不同？
+
+实践是检验真理的唯一标准，我们试试看：
+```{r}
+ggplot(data = mpg) + 
+  geom_point( 
+    mapping = aes(x = displ, y = hwy, color = cty) 
+  )
+```
+
+```{r}
+ggplot(data = mpg) + 
+  geom_point( 
+    mapping = aes(x = displ, y = hwy, size = cty) 
+  )
+```
+
+```{r eval=FALSE}
+ggplot(data = mpg) + 
+  geom_point( 
+    mapping = aes(x = displ, y = hwy, shape = cty) 
+  )
+```
+
+前两个还好，后面这个形状是直接报错无法映射了。毕竟`color`还有`size`都是可以渐变也即可以建立连续映射到连续的，但是形状就是铁定的离散值了，无法与连续值建立映射。
+
+(4)如果将同一个变量映射为多个图形属性，会发生什么情况？
+
+试试看：
+```{r}
+ggplot(data = mpg) + 
+  geom_point( 
+    mapping = aes(x = displ, y = hwy, colour = class, size = class) 
+  )
+```
+
+咦，会叠加的耶。
+
+(5)`stroke`这个图形属性的作用是什么？它适用于哪些形状？（提示：使用`?geom_point`命令。）
+```{r}
+?geom_point
+```
+
+但是里面没有具体涉及。实践一下
+```{r}
+ggplot(data = mpg) + 
+  geom_point( 
+    mapping = aes(x = displ, y = hwy, stroke = cty*0.2, size = cty) 
+  )
+```
+
+查阅https://ggplot2.tidyverse.org/articles/ggplot2-specs.html#colour-and-fill-1， `stroke`这个图形属性是用于21-24形状的点的描边大小。
+
+(6) 如果将图形属性映射为非变量名对象，比如`aes(color = displ < 5)`，会发生什么情况？
+```{r}
+ggplot(data = mpg) + 
+  geom_point( 
+    mapping = aes(x = displ, y = hwy, color = displ < 5) 
+  )
+```
+
+嗯，还是可以映射成图形属性的。
+
+
+
