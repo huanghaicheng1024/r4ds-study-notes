@@ -145,6 +145,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="3.2.1" data-path="data-visualisation.html"><a href="data-visualisation.html#exercises"><i class="fa fa-check"></i><b>3.2.1</b> Exercises</a></li>
 </ul></li>
+<li class="chapter" data-level="3.3" data-path="data-visualisation.html"><a href="data-visualisation.html#aesthetic-mappings"><i class="fa fa-check"></i><b>3.3</b> Aesthetic mappings</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="data-visualisation.html"><a href="data-visualisation.html#exercises-1"><i class="fa fa-check"></i><b>3.3.1</b> Exercises</a></li>
+</ul></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://bookdown.org" target="blank">本书由 bookdown 强力驱动</a></li>
@@ -244,6 +248,130 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb10-2"><a href="data-visualisation.html#cb10-2"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> class,<span class="dt">y =</span> drv))</span></code></pre></div>
 <p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-15-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>会出现很多点重合的现象，这是这张图没什么用处的原因吗？但是自我感觉还是保留了些许信息，但的确被压缩了很多。</p>
+</div>
+</div>
+<div id="aesthetic-mappings" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> Aesthetic mappings</h2>
+<p>我们在前面学习了如何把数据框属性映射为<code>x,y</code>轴，实际上还可以映射其他图形属性。</p>
+<p>在引擎大小(<code>displ</code>)-燃油效率(<code>hwy</code>)散点图中增加多一个映射，将点的颜色映射为变量<code>class</code></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="data-visualisation.html#cb11-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb11-2"><a href="data-visualisation.html#cb11-2"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy, <span class="dt">color =</span> class))</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-16-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>类似于点的颜色，还有的图形属性为：</p>
+<ul>
+<li><p>点的透明度<code>alpha</code></p></li>
+<li><p>点的大小<code>size</code>，单位为毫米</p></li>
+<li><p>点的形状<code>shape</code>，<code>ggplot2</code>只能同时使用<strong>6</strong>种形状</p></li>
+<li><p>还可以通过<code>?geom_point</code>来查看</p></li>
+</ul>
+<p>除了映射图形属性让<code>ggplot2</code>帮忙设置，还可以手动为几何对象设置图形属性。</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="data-visualisation.html#cb12-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb12-2"><a href="data-visualisation.html#cb12-2"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy),<span class="dt">colour =</span> <span class="st">&#39;blue&#39;</span>)</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-17-1.png" width="70%" style="display: block; margin: auto;" />
+上图会将所有点都绘制成蓝色，因为我们并没有对点的颜色建立映射，而是直接设置。这与前面的图不同。</p>
+<div id="exercises-1" class="section level3" number="3.3.1">
+<h3><span class="header-section-number">3.3.1</span> Exercises</h3>
+<ol style="list-style-type: decimal">
+<li>以下这段代码有什么错误？为什么点不是蓝色的？</li>
+</ol>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="data-visualisation.html#cb13-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb13-2"><a href="data-visualisation.html#cb13-2"></a><span class="st">  </span><span class="kw">geom_point</span>( </span>
+<span id="cb13-3"><a href="data-visualisation.html#cb13-3"></a>    <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy, <span class="dt">color =</span> <span class="st">&quot;blue&quot;</span>) </span>
+<span id="cb13-4"><a href="data-visualisation.html#cb13-4"></a>  )</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-18-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>这是因为这段代码把字符串常量当作数据框属性映射为点的颜色，由于各点的值都是常量“blue”故大家的颜色也一样，为默认的第一种颜色：红色。</p>
+<p>事实上，</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="data-visualisation.html#cb14-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb14-2"><a href="data-visualisation.html#cb14-2"></a><span class="st">  </span><span class="kw">geom_point</span>( </span>
+<span id="cb14-3"><a href="data-visualisation.html#cb14-3"></a>    <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy, <span class="dt">color =</span> <span class="st">&quot;hello&quot;</span>) </span>
+<span id="cb14-4"><a href="data-visualisation.html#cb14-4"></a>  )</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-19-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>不论那个字符串是什么，甚至不是颜色的字符串也没有什么影响的。</p>
+<p>(2)<code>mpg</code>中的哪些变量是分类变量？哪些变量是连续变量？（提示：输入<code>?mpg</code>来阅读这个数据集的文档。）当调用<code>mpg</code>时，如何才能看到这些信息？</p>
+<p>当然可以阅读文档，但也可以</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="data-visualisation.html#cb15-1"></a><span class="kw">str</span>(mpg)</span>
+<span id="cb15-2"><a href="data-visualisation.html#cb15-2"></a><span class="co">#&gt; tibble [234 x 11] (S3: tbl_df/tbl/data.frame)</span></span>
+<span id="cb15-3"><a href="data-visualisation.html#cb15-3"></a><span class="co">#&gt;  $ manufacturer: chr [1:234] &quot;audi&quot; &quot;audi&quot; &quot;audi&quot; &quot;audi&quot; ...</span></span>
+<span id="cb15-4"><a href="data-visualisation.html#cb15-4"></a><span class="co">#&gt;  $ model       : chr [1:234] &quot;a4&quot; &quot;a4&quot; &quot;a4&quot; &quot;a4&quot; ...</span></span>
+<span id="cb15-5"><a href="data-visualisation.html#cb15-5"></a><span class="co">#&gt;  $ displ       : num [1:234] 1.8 1.8 2 2 2.8 2.8 3.1 1.8 1.8 2 ...</span></span>
+<span id="cb15-6"><a href="data-visualisation.html#cb15-6"></a><span class="co">#&gt;  $ year        : int [1:234] 1999 1999 2008 2008 1999 1999 2008 1999 1999 2008 ...</span></span>
+<span id="cb15-7"><a href="data-visualisation.html#cb15-7"></a><span class="co">#&gt;  $ cyl         : int [1:234] 4 4 4 4 6 6 6 4 4 4 ...</span></span>
+<span id="cb15-8"><a href="data-visualisation.html#cb15-8"></a><span class="co">#&gt;  $ trans       : chr [1:234] &quot;auto(l5)&quot; &quot;manual(m5)&quot; &quot;manual(m6)&quot; &quot;auto(av)&quot; ...</span></span>
+<span id="cb15-9"><a href="data-visualisation.html#cb15-9"></a><span class="co">#&gt;  $ drv         : chr [1:234] &quot;f&quot; &quot;f&quot; &quot;f&quot; &quot;f&quot; ...</span></span>
+<span id="cb15-10"><a href="data-visualisation.html#cb15-10"></a><span class="co">#&gt;  $ cty         : int [1:234] 18 21 20 21 16 18 18 18 16 20 ...</span></span>
+<span id="cb15-11"><a href="data-visualisation.html#cb15-11"></a><span class="co">#&gt;  $ hwy         : int [1:234] 29 29 31 30 26 26 27 26 25 28 ...</span></span>
+<span id="cb15-12"><a href="data-visualisation.html#cb15-12"></a><span class="co">#&gt;  $ fl          : chr [1:234] &quot;p&quot; &quot;p&quot; &quot;p&quot; &quot;p&quot; ...</span></span>
+<span id="cb15-13"><a href="data-visualisation.html#cb15-13"></a><span class="co">#&gt;  $ class       : chr [1:234] &quot;compact&quot; &quot;compact&quot; &quot;compact&quot; &quot;compact&quot; ...</span></span>
+<span id="cb15-14"><a href="data-visualisation.html#cb15-14"></a><span class="kw">summary</span>(mpg)</span>
+<span id="cb15-15"><a href="data-visualisation.html#cb15-15"></a><span class="co">#&gt;  manufacturer          model               displ           year     </span></span>
+<span id="cb15-16"><a href="data-visualisation.html#cb15-16"></a><span class="co">#&gt;  Length:234         Length:234         Min.   :1.60   Min.   :1999  </span></span>
+<span id="cb15-17"><a href="data-visualisation.html#cb15-17"></a><span class="co">#&gt;  Class :character   Class :character   1st Qu.:2.40   1st Qu.:1999  </span></span>
+<span id="cb15-18"><a href="data-visualisation.html#cb15-18"></a><span class="co">#&gt;  Mode  :character   Mode  :character   Median :3.30   Median :2004  </span></span>
+<span id="cb15-19"><a href="data-visualisation.html#cb15-19"></a><span class="co">#&gt;                                        Mean   :3.47   Mean   :2004  </span></span>
+<span id="cb15-20"><a href="data-visualisation.html#cb15-20"></a><span class="co">#&gt;                                        3rd Qu.:4.60   3rd Qu.:2008  </span></span>
+<span id="cb15-21"><a href="data-visualisation.html#cb15-21"></a><span class="co">#&gt;                                        Max.   :7.00   Max.   :2008  </span></span>
+<span id="cb15-22"><a href="data-visualisation.html#cb15-22"></a><span class="co">#&gt;       cyl          trans               drv                 cty      </span></span>
+<span id="cb15-23"><a href="data-visualisation.html#cb15-23"></a><span class="co">#&gt;  Min.   :4.00   Length:234         Length:234         Min.   : 9.0  </span></span>
+<span id="cb15-24"><a href="data-visualisation.html#cb15-24"></a><span class="co">#&gt;  1st Qu.:4.00   Class :character   Class :character   1st Qu.:14.0  </span></span>
+<span id="cb15-25"><a href="data-visualisation.html#cb15-25"></a><span class="co">#&gt;  Median :6.00   Mode  :character   Mode  :character   Median :17.0  </span></span>
+<span id="cb15-26"><a href="data-visualisation.html#cb15-26"></a><span class="co">#&gt;  Mean   :5.89                                         Mean   :16.9  </span></span>
+<span id="cb15-27"><a href="data-visualisation.html#cb15-27"></a><span class="co">#&gt;  3rd Qu.:8.00                                         3rd Qu.:19.0  </span></span>
+<span id="cb15-28"><a href="data-visualisation.html#cb15-28"></a><span class="co">#&gt;  Max.   :8.00                                         Max.   :35.0  </span></span>
+<span id="cb15-29"><a href="data-visualisation.html#cb15-29"></a><span class="co">#&gt;       hwy            fl               class          </span></span>
+<span id="cb15-30"><a href="data-visualisation.html#cb15-30"></a><span class="co">#&gt;  Min.   :12.0   Length:234         Length:234        </span></span>
+<span id="cb15-31"><a href="data-visualisation.html#cb15-31"></a><span class="co">#&gt;  1st Qu.:18.0   Class :character   Class :character  </span></span>
+<span id="cb15-32"><a href="data-visualisation.html#cb15-32"></a><span class="co">#&gt;  Median :24.0   Mode  :character   Mode  :character  </span></span>
+<span id="cb15-33"><a href="data-visualisation.html#cb15-33"></a><span class="co">#&gt;  Mean   :23.4                                        </span></span>
+<span id="cb15-34"><a href="data-visualisation.html#cb15-34"></a><span class="co">#&gt;  3rd Qu.:27.0                                        </span></span>
+<span id="cb15-35"><a href="data-visualisation.html#cb15-35"></a><span class="co">#&gt;  Max.   :44.0</span></span></code></pre></div>
+<ol start="3" style="list-style-type: decimal">
+<li>将一个连续变量映射为<code>color</code>、<code>size</code>和<code>shape</code>。对分类变量和连续变量来说，这些图形
+属性的表现有什么不同？</li>
+</ol>
+<p>实践是检验真理的唯一标准，我们试试看：</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="data-visualisation.html#cb16-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb16-2"><a href="data-visualisation.html#cb16-2"></a><span class="st">  </span><span class="kw">geom_point</span>( </span>
+<span id="cb16-3"><a href="data-visualisation.html#cb16-3"></a>    <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy, <span class="dt">color =</span> cty) </span>
+<span id="cb16-4"><a href="data-visualisation.html#cb16-4"></a>  )</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-21-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="data-visualisation.html#cb17-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb17-2"><a href="data-visualisation.html#cb17-2"></a><span class="st">  </span><span class="kw">geom_point</span>( </span>
+<span id="cb17-3"><a href="data-visualisation.html#cb17-3"></a>    <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy, <span class="dt">size =</span> cty) </span>
+<span id="cb17-4"><a href="data-visualisation.html#cb17-4"></a>  )</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-22-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="data-visualisation.html#cb18-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb18-2"><a href="data-visualisation.html#cb18-2"></a><span class="st">  </span><span class="kw">geom_point</span>( </span>
+<span id="cb18-3"><a href="data-visualisation.html#cb18-3"></a>    <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy, <span class="dt">shape =</span> cty) </span>
+<span id="cb18-4"><a href="data-visualisation.html#cb18-4"></a>  )</span></code></pre></div>
+<p>前两个还好，后面这个形状是直接报错无法映射了。毕竟<code>color</code>还有<code>size</code>都是可以渐变也即可以建立连续映射到连续的，但是形状就是铁定的离散值了，无法与连续值建立映射。</p>
+<p>(4)如果将同一个变量映射为多个图形属性，会发生什么情况？</p>
+<p>试试看：</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="data-visualisation.html#cb19-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb19-2"><a href="data-visualisation.html#cb19-2"></a><span class="st">  </span><span class="kw">geom_point</span>( </span>
+<span id="cb19-3"><a href="data-visualisation.html#cb19-3"></a>    <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy, <span class="dt">colour =</span> class, <span class="dt">size =</span> class) </span>
+<span id="cb19-4"><a href="data-visualisation.html#cb19-4"></a>  )</span>
+<span id="cb19-5"><a href="data-visualisation.html#cb19-5"></a><span class="co">#&gt; Warning: Using size for a discrete variable is not advised.</span></span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-24-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>咦，会叠加的耶。</p>
+<p>(5)<code>stroke</code>这个图形属性的作用是什么？它适用于哪些形状？（提示：使用<code>?geom_point</code>命令。）</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="data-visualisation.html#cb20-1"></a>?geom_point</span>
+<span id="cb20-2"><a href="data-visualisation.html#cb20-2"></a><span class="co">#&gt; starting httpd help server ... done</span></span></code></pre></div>
+<p>但是里面没有具体涉及。实践一下</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="data-visualisation.html#cb21-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb21-2"><a href="data-visualisation.html#cb21-2"></a><span class="st">  </span><span class="kw">geom_point</span>( </span>
+<span id="cb21-3"><a href="data-visualisation.html#cb21-3"></a>    <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy, <span class="dt">stroke =</span> cty<span class="op">*</span><span class="fl">0.2</span>, <span class="dt">size =</span> cty) </span>
+<span id="cb21-4"><a href="data-visualisation.html#cb21-4"></a>  )</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-26-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>查阅https://ggplot2.tidyverse.org/articles/ggplot2-specs.html#colour-and-fill-1， <code>stroke</code>这个图形属性是用于21-24形状的点的描边大小。</p>
+<ol start="6" style="list-style-type: decimal">
+<li>如果将图形属性映射为非变量名对象，比如<code>aes(color = displ &lt; 5)</code>，会发生什么情况？</li>
+</ol>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="data-visualisation.html#cb22-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb22-2"><a href="data-visualisation.html#cb22-2"></a><span class="st">  </span><span class="kw">geom_point</span>( </span>
+<span id="cb22-3"><a href="data-visualisation.html#cb22-3"></a>    <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy, <span class="dt">color =</span> displ <span class="op">&lt;</span><span class="st"> </span><span class="dv">5</span>) </span>
+<span id="cb22-4"><a href="data-visualisation.html#cb22-4"></a>  )</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-27-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>嗯，还是可以映射成图形属性的。</p>
 
 </div>
 </div>
