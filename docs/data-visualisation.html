@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>3 Data visualisation | r4ds学习笔记</title>
+  <meta name="description" content="这是使用bookdwon编写的书籍。" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="3 Data visualisation | r4ds学习笔记" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="这是使用bookdwon编写的书籍。" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="3 Data visualisation | r4ds学习笔记" />
+  
+  <meta name="twitter:description" content="这是使用bookdwon编写的书籍。" />
+  
+
+<meta name="author" content="Huang" />
+
+
+<meta name="date" content="2020-08-30" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="explore-intro.html"/>
+
+<script src="libs/header-attrs-2.3/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./index.html">r4ds Study Notes</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>背景</a></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="part"><span><b>I Explore</b></span></li>
+<li class="chapter" data-level="2" data-path="explore-intro.html"><a href="explore-intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a></li>
+<li class="chapter" data-level="3" data-path="data-visualisation.html"><a href="data-visualisation.html"><i class="fa fa-check"></i><b>3</b> Data visualisation</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="data-visualisation.html"><a href="data-visualisation.html#introduction"><i class="fa fa-check"></i><b>3.1</b> Introduction</a></li>
+<li class="chapter" data-level="3.2" data-path="data-visualisation.html"><a href="data-visualisation.html#first-steps"><i class="fa fa-check"></i><b>3.2</b> First steps</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="data-visualisation.html"><a href="data-visualisation.html#exercises"><i class="fa fa-check"></i><b>3.2.1</b> Exercises</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://bookdown.org" target="blank">本书由 bookdown 强力驱动</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">r4ds学习笔记</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="data-visualisation" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Data visualisation</h1>
+<div id="introduction" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Introduction</h2>
+<p>我们将要学习的第一套工具，<code>ggplot2</code>的程序包，用于绘图。</p>
+<p>首先加载<code>tidyverse</code></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="data-visualisation.html#cb1-1"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="data-visualisation.html#cb1-2"></a><span class="co">#&gt; -- Attaching packages ------------</span></span>
+<span id="cb1-3"><a href="data-visualisation.html#cb1-3"></a><span class="co">#&gt; √ ggplot2 3.3.2     √ purrr   0.3.4</span></span>
+<span id="cb1-4"><a href="data-visualisation.html#cb1-4"></a><span class="co">#&gt; √ tibble  3.0.3     √ dplyr   1.0.2</span></span>
+<span id="cb1-5"><a href="data-visualisation.html#cb1-5"></a><span class="co">#&gt; √ tidyr   1.1.1     √ stringr 1.4.0</span></span>
+<span id="cb1-6"><a href="data-visualisation.html#cb1-6"></a><span class="co">#&gt; √ readr   1.3.1     √ forcats 0.5.0</span></span>
+<span id="cb1-7"><a href="data-visualisation.html#cb1-7"></a><span class="co">#&gt; -- Conflicts ---------------------</span></span>
+<span id="cb1-8"><a href="data-visualisation.html#cb1-8"></a><span class="co">#&gt; x dplyr::filter() masks stats::filter()</span></span>
+<span id="cb1-9"><a href="data-visualisation.html#cb1-9"></a><span class="co">#&gt; x dplyr::lag()    masks stats::lag()</span></span></code></pre></div>
+</div>
+<div id="first-steps" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> First steps</h2>
+<p>先绘制一个<code>mpg</code>数据框里边的引擎大小(<code>displ</code>)-燃油效率(<code>hwy</code>)散点图</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="data-visualisation.html#cb2-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg)<span class="op">+</span></span>
+<span id="cb2-2"><a href="data-visualisation.html#cb2-2"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ,<span class="dt">y =</span> hwy))</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-7-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>可以看到，绘图的模板命令大致是</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="data-visualisation.html#cb3-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> <span class="op">&lt;</span>DATA<span class="op">&gt;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb3-2"><a href="data-visualisation.html#cb3-2"></a><span class="st">  </span><span class="er">&lt;</span>GEOM_FUNCTION<span class="op">&gt;</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="op">&lt;</span>MAPPINGS<span class="op">&gt;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="data-visualisation.html#cb4-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> <span class="op">&lt;</span>DATA<span class="op">&gt;</span>) </span></code></pre></div>
+<p>这是在生成一个空白图层，指定数据。</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="data-visualisation.html#cb5-1"></a><span class="op">&lt;</span>GEOM_FUNCTION<span class="op">&gt;</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="op">&lt;</span>MAPPINGS<span class="op">&gt;</span>))</span></code></pre></div>
+<p>这是在空白图层上方继续加图层，比如前面的<code>geom_point</code>就是加上散点图图层。<code>mapping</code>是映射，是将数据框的属性映射成图形属性，常见的我们还用<code>aes()</code>，这是将将数据框的属性映射成<code>x,y</code>轴变量。</p>
+<div id="exercises" class="section level3" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> Exercises</h3>
+<ol style="list-style-type: decimal">
+<li>运行<code>ggplot(data = mpg)</code>，你会看到什么？</li>
+</ol>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="data-visualisation.html#cb6-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg)</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-11-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>显然，是一个空白的图层。</p>
+<ol start="2" style="list-style-type: decimal">
+<li>数据集<code>mpg</code>中有多少行？多少列？</li>
+</ol>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="data-visualisation.html#cb7-1"></a><span class="kw">str</span>(mpg)</span>
+<span id="cb7-2"><a href="data-visualisation.html#cb7-2"></a><span class="co">#&gt; tibble [234 x 11] (S3: tbl_df/tbl/data.frame)</span></span>
+<span id="cb7-3"><a href="data-visualisation.html#cb7-3"></a><span class="co">#&gt;  $ manufacturer: chr [1:234] &quot;audi&quot; &quot;audi&quot; &quot;audi&quot; &quot;audi&quot; ...</span></span>
+<span id="cb7-4"><a href="data-visualisation.html#cb7-4"></a><span class="co">#&gt;  $ model       : chr [1:234] &quot;a4&quot; &quot;a4&quot; &quot;a4&quot; &quot;a4&quot; ...</span></span>
+<span id="cb7-5"><a href="data-visualisation.html#cb7-5"></a><span class="co">#&gt;  $ displ       : num [1:234] 1.8 1.8 2 2 2.8 2.8 3.1 1.8 1.8 2 ...</span></span>
+<span id="cb7-6"><a href="data-visualisation.html#cb7-6"></a><span class="co">#&gt;  $ year        : int [1:234] 1999 1999 2008 2008 1999 1999 2008 1999 1999 2008 ...</span></span>
+<span id="cb7-7"><a href="data-visualisation.html#cb7-7"></a><span class="co">#&gt;  $ cyl         : int [1:234] 4 4 4 4 6 6 6 4 4 4 ...</span></span>
+<span id="cb7-8"><a href="data-visualisation.html#cb7-8"></a><span class="co">#&gt;  $ trans       : chr [1:234] &quot;auto(l5)&quot; &quot;manual(m5)&quot; &quot;manual(m6)&quot; &quot;auto(av)&quot; ...</span></span>
+<span id="cb7-9"><a href="data-visualisation.html#cb7-9"></a><span class="co">#&gt;  $ drv         : chr [1:234] &quot;f&quot; &quot;f&quot; &quot;f&quot; &quot;f&quot; ...</span></span>
+<span id="cb7-10"><a href="data-visualisation.html#cb7-10"></a><span class="co">#&gt;  $ cty         : int [1:234] 18 21 20 21 16 18 18 18 16 20 ...</span></span>
+<span id="cb7-11"><a href="data-visualisation.html#cb7-11"></a><span class="co">#&gt;  $ hwy         : int [1:234] 29 29 31 30 26 26 27 26 25 28 ...</span></span>
+<span id="cb7-12"><a href="data-visualisation.html#cb7-12"></a><span class="co">#&gt;  $ fl          : chr [1:234] &quot;p&quot; &quot;p&quot; &quot;p&quot; &quot;p&quot; ...</span></span>
+<span id="cb7-13"><a href="data-visualisation.html#cb7-13"></a><span class="co">#&gt;  $ class       : chr [1:234] &quot;compact&quot; &quot;compact&quot; &quot;compact&quot; &quot;compact&quot; ...</span></span></code></pre></div>
+<p>利用<code>str</code>函数，可以得到数据集<code>mpg</code>中有234行11列。</p>
+<ol start="3" style="list-style-type: decimal">
+<li>变量<code>drv</code>的意义是什么？使用<code>?mpg</code>命令阅读帮助文件以找出答案。</li>
+</ol>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="data-visualisation.html#cb8-1"></a>?mpg</span>
+<span id="cb8-2"><a href="data-visualisation.html#cb8-2"></a><span class="co">#&gt; starting httpd help server ... done</span></span></code></pre></div>
+<p>通过阅读帮助文档可以知道</p>
+<blockquote>
+<p>drv: the type of drive train, where f = front-wheel drive, r = rear wheel drive, 4 = 4wd</p>
+</blockquote>
+<p>即传动系的类型，f表示前轮驱动，r表示后轮驱动，4表示四轮驱动。</p>
+<ol start="4" style="list-style-type: decimal">
+<li>使用<code>hwy</code>和<code>cyl</code>绘制一张散点图。</li>
+</ol>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="data-visualisation.html#cb9-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg)<span class="op">+</span></span>
+<span id="cb9-2"><a href="data-visualisation.html#cb9-2"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> hwy,<span class="dt">y =</span> cyl))</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-14-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>啊，这奇怪的图形。</p>
+<ol start="5" style="list-style-type: decimal">
+<li>如果使用<code>class</code>和<code>drv</code>绘制散点图，会发生什么情况？为什么这张图没什么用处？</li>
+</ol>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="data-visualisation.html#cb10-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg)<span class="op">+</span></span>
+<span id="cb10-2"><a href="data-visualisation.html#cb10-2"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> class,<span class="dt">y =</span> drv))</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-15-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>会出现很多点重合的现象，这是这张图没什么用处的原因吗？但是自我感觉还是保留了些许信息，但的确被压缩了很多。</p>
+
+</div>
+</div>
+</div>
+<section style="
+    display: block;
+">
+<script src="https://utteranc.es/client.js"
+        repo="huanghaicheng1024/r4ds-study-notes"
+        issue-term="title"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+</section>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="explore-intro.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": null,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/huanghaicheng1024/r4ds-study-notes/edit/master/03-visualize.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "none"
+},
+"search": false
+});
+});
+</script>
+
+</body>
+
+</html>
