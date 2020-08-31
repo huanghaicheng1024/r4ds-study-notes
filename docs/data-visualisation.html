@@ -24,7 +24,7 @@
 <meta name="author" content="Huang" />
 
 
-<meta name="date" content="2020-08-30" />
+<meta name="date" content="2020-08-31" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -148,6 +148,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.3" data-path="data-visualisation.html"><a href="data-visualisation.html#aesthetic-mappings"><i class="fa fa-check"></i><b>3.3</b> Aesthetic mappings</a>
 <ul>
 <li class="chapter" data-level="3.3.1" data-path="data-visualisation.html"><a href="data-visualisation.html#exercises-1"><i class="fa fa-check"></i><b>3.3.1</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="data-visualisation.html"><a href="data-visualisation.html#common-problems"><i class="fa fa-check"></i><b>3.4</b> Common problems</a></li>
+<li class="chapter" data-level="3.5" data-path="data-visualisation.html"><a href="data-visualisation.html#facets分面"><i class="fa fa-check"></i><b>3.5</b> Facets分面</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="data-visualisation.html"><a href="data-visualisation.html#exercises-2"><i class="fa fa-check"></i><b>3.5.1</b> Exercises</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -372,6 +377,90 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb22-4"><a href="data-visualisation.html#cb22-4"></a>  )</span></code></pre></div>
 <p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-27-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>嗯，还是可以映射成图形属性的。</p>
+</div>
+</div>
+<div id="common-problems" class="section level2" number="3.4">
+<h2><span class="header-section-number">3.4</span> Common problems</h2>
+<p>这样子是错的</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="data-visualisation.html#cb23-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg)</span>
+<span id="cb23-2"><a href="data-visualisation.html#cb23-2"></a><span class="op">+</span><span class="kw">geom_point</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy, <span class="dt">color =</span> class))</span></code></pre></div>
+<p>加号要放在代码的末尾。</p>
+</div>
+<div id="facets分面" class="section level2" number="3.5">
+<h2><span class="header-section-number">3.5</span> Facets分面</h2>
+<p>一个参数的分面：利用函数<code>facet_wrap()</code>。例如：</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="data-visualisation.html#cb24-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb24-2"><a href="data-visualisation.html#cb24-2"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb24-3"><a href="data-visualisation.html#cb24-3"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>class, <span class="dt">nrow =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-29-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>每一个“面”都是属性<code>class</code>的一个值，所以<strong>传递给<code>facet_wrap()</code>的变量应该是离散型的</strong>。参数<code>nrow</code>表示分面的行数。</p>
+<p>两个参数的分面：利用函数<code>facet_grid()</code>。例如：</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="data-visualisation.html#cb25-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb25-2"><a href="data-visualisation.html#cb25-2"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb25-3"><a href="data-visualisation.html#cb25-3"></a><span class="st">  </span><span class="kw">facet_grid</span>(drv <span class="op">~</span><span class="st"> </span>cyl)</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-30-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>每一个面都由(<code>cyl</code>,<code>drv</code>)决定。</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="data-visualisation.html#cb26-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb26-2"><a href="data-visualisation.html#cb26-2"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb26-3"><a href="data-visualisation.html#cb26-3"></a><span class="st">  </span><span class="kw">facet_grid</span>(. <span class="op">~</span><span class="st"> </span>cyl)</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-31-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>想要取消在行的维度分面，用<code>.</code>替代属性。</p>
+<div id="exercises-2" class="section level3" number="3.5.1">
+<h3><span class="header-section-number">3.5.1</span> Exercises</h3>
+<ol style="list-style-type: decimal">
+<li>如果使用连续变量进行分面，会发生什么情况？</li>
+</ol>
+<p>看一个参数的：</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="data-visualisation.html#cb27-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb27-2"><a href="data-visualisation.html#cb27-2"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb27-3"><a href="data-visualisation.html#cb27-3"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>cty, <span class="dt">nrow =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-32-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>可以看到它会把连续变量的所有取值都绘制分面了。</p>
+<ol start="2" style="list-style-type: decimal">
+<li>在使用<code>facet_grid(drv ~ cyl)</code>生成的图中，空白单元的意义是什么？它们和以下代码
+生成的图有什么关系？</li>
+</ol>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="data-visualisation.html#cb28-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb28-2"><a href="data-visualisation.html#cb28-2"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> drv, <span class="dt">y =</span> cyl))</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-33-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>而</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="data-visualisation.html#cb29-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg) <span class="op">+</span></span>
+<span id="cb29-2"><a href="data-visualisation.html#cb29-2"></a><span class="st">  </span><span class="kw">facet_grid</span>(drv <span class="op">~</span><span class="st"> </span>cyl)</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-34-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>这个图只是对变量<code>drv</code>,<code>cyl</code>绘制分面，而上图是对这两个变量绘制散点图。</p>
+<ol start="3" style="list-style-type: decimal">
+<li>以下代码会绘制出什么图？ . 的作用是什么？</li>
+</ol>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="data-visualisation.html#cb30-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb30-2"><a href="data-visualisation.html#cb30-2"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb30-3"><a href="data-visualisation.html#cb30-3"></a><span class="st">  </span><span class="kw">facet_grid</span>(drv <span class="op">~</span><span class="st"> </span>.) </span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-35-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="data-visualisation.html#cb31-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb31-2"><a href="data-visualisation.html#cb31-2"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb31-3"><a href="data-visualisation.html#cb31-3"></a><span class="st">  </span><span class="kw">facet_grid</span>(. <span class="op">~</span><span class="st"> </span>cyl)</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-36-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>这两幅图实际上是按单个变量按列或行分面，与<code>facet_warp()</code>不同之处：</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="data-visualisation.html#cb32-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb32-2"><a href="data-visualisation.html#cb32-2"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb32-3"><a href="data-visualisation.html#cb32-3"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>cyl)</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-37-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><code>facet_warp()</code>对单个变量分面不会考虑按行或者按列。</p>
+<ol start="4" style="list-style-type: decimal">
+<li>查看本节的第一个分面图，
+<img src="r4ds-study-notes_files/figure-html/unnamed-chunk-38-1.png" width="70%" style="display: block; margin: auto;" /></li>
+</ol>
+<p>与使用图形属性相比，使用分面的优势和劣势分别是什么？如果有一个更大的数据集，你将如何权衡这两种方法的优劣？</p>
+<p>使用分面的优势：可以更好地看清，在固定某个变量（上图的<code>class</code>）时其余两个变量的关系。劣势就是三个变量的共同作用不太好看清了。</p>
+<p>所以我觉得，当我们要考虑多个变量的共同作用、相互关系时可以考虑使用图形属性，当我们想要固定某个变量考虑其他变量时可以考虑分面。</p>
+<ol start="5" style="list-style-type: decimal">
+<li>阅读<code>?facet_wrap</code>的帮助页面。<code>nrow</code>和<code>ncol</code>的功能分别是什么？还有哪些选项可以控
+制分面的布局？为什么函数<code>facet_grid()</code>没有变量<code>nrow</code>和<code>ncol</code>？</li>
+</ol>
+<p><code>nrow</code>和<code>ncol</code>的功能分别是控制分面图的行列个数。函数<code>facet_grid()</code>的行列数是依赖于分面变量的取值数，所以无法自定义。</p>
+<ol start="6" style="list-style-type: decimal">
+<li>在使用函数<code>facet_grid()</code>时，一般应该将具有更多唯一值的变量放在列上。为什么这么做呢？</li>
+</ol>
+<p>增加分面图的行数，从而每幅图看起来更好看、清晰，吧。</p>
 
 </div>
 </div>
