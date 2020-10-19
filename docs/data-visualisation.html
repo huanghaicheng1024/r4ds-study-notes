@@ -24,7 +24,7 @@
 <meta name="author" content="Huang" />
 
 
-<meta name="date" content="2020-08-31" />
+<meta name="date" content="2020-10-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -153,6 +153,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.5" data-path="data-visualisation.html"><a href="data-visualisation.html#facets分面"><i class="fa fa-check"></i><b>3.5</b> Facets分面</a>
 <ul>
 <li class="chapter" data-level="3.5.1" data-path="data-visualisation.html"><a href="data-visualisation.html#exercises-2"><i class="fa fa-check"></i><b>3.5.1</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="data-visualisation.html"><a href="data-visualisation.html#几何对象"><i class="fa fa-check"></i><b>3.6</b> 几何对象</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="data-visualisation.html"><a href="data-visualisation.html#分组绘图"><i class="fa fa-check"></i><b>3.6.1</b> 分组绘图</a></li>
+<li class="chapter" data-level="3.6.2" data-path="data-visualisation.html"><a href="data-visualisation.html#多个几何对象"><i class="fa fa-check"></i><b>3.6.2</b> 多个几何对象</a></li>
+<li class="chapter" data-level="3.6.3" data-path="data-visualisation.html"><a href="data-visualisation.html#练习"><i class="fa fa-check"></i><b>3.6.3</b> 练习</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -461,6 +467,138 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>在使用函数<code>facet_grid()</code>时，一般应该将具有更多唯一值的变量放在列上。为什么这么做呢？</li>
 </ol>
 <p>增加分面图的行数，从而每幅图看起来更好看、清晰，吧。</p>
+</div>
+</div>
+<div id="几何对象" class="section level2" number="3.6">
+<h2><span class="header-section-number">3.6</span> 几何对象</h2>
+<p>几何对象是图中用来表示数据的几何图形对象，在ggplot2中使用几何对象函数来实现，比如
+<code>geom_point(),geom_smooth()</code>等等，对于同一个数据对象，使用什么样的几何对象来展示，这估计也是一个大学问啊。</p>
+<p>ggplot2中每个几何对象函数都有<code>mapping</code>参数，但并不意味着可以任意设置所有的图形属性，比如<code>geom_point()</code>就没有<code>linetype</code>属性。每个几何对象的详情可以使用帮助<code>?geom_point</code>。</p>
+<div id="分组绘图" class="section level3" number="3.6.1">
+<h3><span class="header-section-number">3.6.1</span> 分组绘图</h3>
+<p>使用单一几何对象实现分组绘图：</p>
+<ul>
+<li>将一个图形属性映射为一个离散变量，自动添加图例（巨方便）</li>
+</ul>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="data-visualisation.html#cb33-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb33-2"><a href="data-visualisation.html#cb33-2"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy, <span class="dt">color =</span> drv)) </span>
+<span id="cb33-3"><a href="data-visualisation.html#cb33-3"></a><span class="co">#&gt; `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</span></span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-40-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<ul>
+<li>使用<code>group</code>参数</li>
+</ul>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="data-visualisation.html#cb34-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb34-2"><a href="data-visualisation.html#cb34-2"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy, <span class="dt">group =</span> drv)) </span>
+<span id="cb34-3"><a href="data-visualisation.html#cb34-3"></a><span class="co">#&gt; `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</span></span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-41-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="多个几何对象" class="section level3" number="3.6.2">
+<h3><span class="header-section-number">3.6.2</span> 多个几何对象</h3>
+<p>想要在一幅图上显示多个几何对象，只需要把图层不断叠加。例如：</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="data-visualisation.html#cb35-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb35-2"><a href="data-visualisation.html#cb35-2"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy))<span class="op">+</span></span>
+<span id="cb35-3"><a href="data-visualisation.html#cb35-3"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy))</span>
+<span id="cb35-4"><a href="data-visualisation.html#cb35-4"></a><span class="co">#&gt; `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</span></span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-42-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>可以看到，两个几何对象的映射是重复的，可以用全局映射替代。即</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="data-visualisation.html#cb36-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg,<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy))<span class="op">+</span></span>
+<span id="cb36-2"><a href="data-visualisation.html#cb36-2"></a><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></span>
+<span id="cb36-3"><a href="data-visualisation.html#cb36-3"></a><span class="st">  </span><span class="kw">geom_smooth</span>()</span>
+<span id="cb36-4"><a href="data-visualisation.html#cb36-4"></a><span class="co">#&gt; `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</span></span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-43-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>这样修改全局映射就会对所有几何对象有影响。</p>
+<p>关于全局映射与局部映射：全局映射会作用与所有几何对象，局部映射只会作用与当前几何对象，并且局部映射可以拓展（不冲突时）或者覆盖全局映射（冲突时）。对于全局指定数据集以及局部指定数据集也类似。例如，</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="data-visualisation.html#cb37-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb37-2"><a href="data-visualisation.html#cb37-2"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">color =</span> class)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb37-3"><a href="data-visualisation.html#cb37-3"></a><span class="st">  </span><span class="kw">geom_smooth</span>( </span>
+<span id="cb37-4"><a href="data-visualisation.html#cb37-4"></a>    <span class="dt">data =</span> <span class="kw">filter</span>(mpg, class <span class="op">==</span><span class="st"> &quot;subcompact&quot;</span>), </span>
+<span id="cb37-5"><a href="data-visualisation.html#cb37-5"></a>    <span class="dt">se =</span> <span class="ot">FALSE</span> </span>
+<span id="cb37-6"><a href="data-visualisation.html#cb37-6"></a>  )</span>
+<span id="cb37-7"><a href="data-visualisation.html#cb37-7"></a><span class="co">#&gt; `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</span></span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-44-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>上例中，全局指定数据集与局部指定数据集冲突，所以几何对象<code>geom_smooth</code>只绘制了局部指定的数据集。局部映射<code>color = class</code>与全局映射不冲突，所以几何对象<code>geom_point</code>被三个映射作用。</p>
+</div>
+<div id="练习" class="section level3" number="3.6.3">
+<h3><span class="header-section-number">3.6.3</span> 练习</h3>
+<ol style="list-style-type: decimal">
+<li>在绘制折线图、箱线图、直方图和分区图时，应该分别使用哪种几何对象？</li>
+</ol>
+<p>参考： <a href="https://ggplot2.tidyverse.org/reference/index.html" class="uri">https://ggplot2.tidyverse.org/reference/index.html</a>。</p>
+<ol start="2" style="list-style-type: decimal">
+<li>在脑海中运行以下代码，并预测会有何种输出。接着在R中运行代码，并检查你的预测是否正确。</li>
+</ol>
+<p>预测：对数据中变量<code>drv</code>不同值分别绘制散点图并绘制该散点图的平滑拟合曲线。</p>
+<p>实际：</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="data-visualisation.html#cb38-1"></a><span class="kw">ggplot</span>( </span>
+<span id="cb38-2"><a href="data-visualisation.html#cb38-2"></a>  <span class="dt">data =</span> mpg, </span>
+<span id="cb38-3"><a href="data-visualisation.html#cb38-3"></a>  <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy, <span class="dt">color =</span> drv) </span>
+<span id="cb38-4"><a href="data-visualisation.html#cb38-4"></a>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb38-5"><a href="data-visualisation.html#cb38-5"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb38-6"><a href="data-visualisation.html#cb38-6"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">se =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb38-7"><a href="data-visualisation.html#cb38-7"></a><span class="co">#&gt; `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</span></span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-45-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>嗯，一样的。</p>
+<ol start="3" style="list-style-type: decimal">
+<li><code>show.legend = FALSE</code>的作用是什么？删除它会发生什么情况？你觉得我为什么要在本
+章前面的示例中使用这句代码？</li>
+</ol>
+<p>作用是不显示图例，删除它就显示图例呗。为了体现将一个图形属性映射为一个离散变量时ggplot2可以自动添加图例。</p>
+<ol start="4" style="list-style-type: decimal">
+<li><code>geom_smooth()</code>函数中的<code>se</code>参数的作用是什么？</li>
+</ol>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="data-visualisation.html#cb39-1"></a>?geom_smooth</span></code></pre></div>
+<p>可以看到<code>se</code>参数的作用是控制是否展示拟合曲线的置信区间。</p>
+<ol start="5" style="list-style-type: decimal">
+<li>以下代码生成的两张图有什么区别吗？为什么？</li>
+</ol>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="data-visualisation.html#cb40-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb40-2"><a href="data-visualisation.html#cb40-2"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb40-3"><a href="data-visualisation.html#cb40-3"></a><span class="st">  </span><span class="kw">geom_smooth</span>() </span>
+<span id="cb40-4"><a href="data-visualisation.html#cb40-4"></a><span class="co">#&gt; `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</span></span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-47-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="data-visualisation.html#cb41-1"></a><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb41-2"><a href="data-visualisation.html#cb41-2"></a><span class="st">  </span><span class="kw">geom_point</span>( </span>
+<span id="cb41-3"><a href="data-visualisation.html#cb41-3"></a>    <span class="dt">data =</span> mpg, </span>
+<span id="cb41-4"><a href="data-visualisation.html#cb41-4"></a>    <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy) </span>
+<span id="cb41-5"><a href="data-visualisation.html#cb41-5"></a>  ) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb41-6"><a href="data-visualisation.html#cb41-6"></a><span class="st">  </span><span class="kw">geom_smooth</span>( </span>
+<span id="cb41-7"><a href="data-visualisation.html#cb41-7"></a>    <span class="dt">data =</span> mpg, </span>
+<span id="cb41-8"><a href="data-visualisation.html#cb41-8"></a>    <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy) </span>
+<span id="cb41-9"><a href="data-visualisation.html#cb41-9"></a>  )</span>
+<span id="cb41-10"><a href="data-visualisation.html#cb41-10"></a><span class="co">#&gt; `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</span></span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-48-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>一样的呀，不就是把全局变量放在局部变量那里吗…</p>
+<ol start="6" style="list-style-type: decimal">
+<li>自己编写R代码来生成以下各图。</li>
+</ol>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="data-visualisation.html#cb42-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb42-2"><a href="data-visualisation.html#cb42-2"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb42-3"><a href="data-visualisation.html#cb42-3"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">se=</span>F) </span>
+<span id="cb42-4"><a href="data-visualisation.html#cb42-4"></a><span class="co">#&gt; `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</span></span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-49-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="data-visualisation.html#cb43-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb43-2"><a href="data-visualisation.html#cb43-2"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb43-3"><a href="data-visualisation.html#cb43-3"></a><span class="st">  </span><span class="kw">geom_smooth</span>( <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">group=</span>drv),<span class="dt">se=</span>F) </span>
+<span id="cb43-4"><a href="data-visualisation.html#cb43-4"></a><span class="co">#&gt; `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</span></span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-50-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="data-visualisation.html#cb44-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy,<span class="dt">color=</span>drv)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb44-2"><a href="data-visualisation.html#cb44-2"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb44-3"><a href="data-visualisation.html#cb44-3"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">se=</span>F) </span>
+<span id="cb44-4"><a href="data-visualisation.html#cb44-4"></a><span class="co">#&gt; `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</span></span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-51-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="data-visualisation.html#cb45-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb45-2"><a href="data-visualisation.html#cb45-2"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">color=</span>drv)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb45-3"><a href="data-visualisation.html#cb45-3"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">se=</span>F) </span>
+<span id="cb45-4"><a href="data-visualisation.html#cb45-4"></a><span class="co">#&gt; `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</span></span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-52-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="data-visualisation.html#cb46-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb46-2"><a href="data-visualisation.html#cb46-2"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">color=</span>drv)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb46-3"><a href="data-visualisation.html#cb46-3"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">se=</span>F,<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">linetype=</span>drv))</span>
+<span id="cb46-4"><a href="data-visualisation.html#cb46-4"></a><span class="co">#&gt; `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</span></span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-53-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="data-visualisation.html#cb47-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb47-2"><a href="data-visualisation.html#cb47-2"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">color=</span>drv))</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-54-1.png" width="70%" style="display: block; margin: auto;" /></p>
 
 </div>
 </div>

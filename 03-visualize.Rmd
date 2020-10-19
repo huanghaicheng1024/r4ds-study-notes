@@ -320,18 +320,152 @@ ggplot(data = mpg) +
 增加分面图的行数，从而每幅图看起来更好看、清晰，吧。
 
 
+## 几何对象
+
+几何对象是图中用来表示数据的几何图形对象，在ggplot2中使用几何对象函数来实现，比如
+`geom_point(),geom_smooth()`等等，对于同一个数据对象，使用什么样的几何对象来展示，这估计也是一个大学问啊。
+
+ggplot2中每个几何对象函数都有`mapping`参数，但并不意味着可以任意设置所有的图形属性，比如`geom_point()`就没有`linetype`属性。每个几何对象的详情可以使用帮助`?geom_point`。
+
+### 分组绘图
+
+使用单一几何对象实现分组绘图：
+
+- 将一个图形属性映射为一个离散变量，自动添加图例（巨方便）
+```{r}
+ggplot(data = mpg) + 
+  geom_smooth(mapping = aes(x = displ, y = hwy, color = drv)) 
+```
+
+- 使用`group`参数
+
+```{r}
+ggplot(data = mpg) + 
+  geom_smooth(mapping = aes(x = displ, y = hwy, group = drv)) 
+```
 
 
+### 多个几何对象
+
+想要在一幅图上显示多个几何对象，只需要把图层不断叠加。例如：
+```{r}
+ggplot(data = mpg) + 
+  geom_smooth(mapping = aes(x = displ, y = hwy))+
+  geom_point(mapping = aes(x = displ, y = hwy))
+```
 
 
+可以看到，两个几何对象的映射是重复的，可以用全局映射替代。即
 
+```{r}
+ggplot(data = mpg,mapping = aes(x = displ, y = hwy))+
+  geom_point()+
+  geom_smooth()
+```
 
+这样修改全局映射就会对所有几何对象有影响。
 
+关于全局映射与局部映射：全局映射会作用与所有几何对象，局部映射只会作用与当前几何对象，并且局部映射可以拓展（不冲突时）或者覆盖全局映射（冲突时）。对于全局指定数据集以及局部指定数据集也类似。例如，
+```{r}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point(mapping = aes(color = class)) + 
+  geom_smooth( 
+    data = filter(mpg, class == "subcompact"), 
+    se = FALSE 
+  )
+```
 
+上例中，全局指定数据集与局部指定数据集冲突，所以几何对象`geom_smooth`只绘制了局部指定的数据集。局部映射`color = class`与全局映射不冲突，所以几何对象`geom_point`被三个映射作用。
 
+### 练习
 
+(1) 在绘制折线图、箱线图、直方图和分区图时，应该分别使用哪种几何对象？
 
+参考： https://ggplot2.tidyverse.org/reference/index.html。 
 
+(2) 在脑海中运行以下代码，并预测会有何种输出。接着在R中运行代码，并检查你的预测是否正确。
 
+预测：对数据中变量`drv`不同值分别绘制散点图并绘制该散点图的平滑拟合曲线。
 
+实际：
+```{r}
+ggplot( 
+  data = mpg, 
+  mapping = aes(x = displ, y = hwy, color = drv) 
+) + 
+  geom_point() + 
+  geom_smooth(se = FALSE)
+```
+
+嗯，一样的。
+
+(3) `show.legend = FALSE`的作用是什么？删除它会发生什么情况？你觉得我为什么要在本
+章前面的示例中使用这句代码？
+
+作用是不显示图例，删除它就显示图例呗。为了体现将一个图形属性映射为一个离散变量时ggplot2可以自动添加图例。
+
+(4) `geom_smooth()`函数中的`se`参数的作用是什么？
+
+```{r eval=FALSE}
+?geom_smooth
+```
+可以看到`se`参数的作用是控制是否展示拟合曲线的置信区间。
+
+(5) 以下代码生成的两张图有什么区别吗？为什么？
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point() + 
+  geom_smooth() 
+```
+```{r}
+ggplot() + 
+  geom_point( 
+    data = mpg, 
+    mapping = aes(x = displ, y = hwy) 
+  ) + 
+  geom_smooth( 
+    data = mpg, 
+    mapping = aes(x = displ, y = hwy) 
+  )
+```
+
+一样的呀，不就是把全局变量放在局部变量那里吗...
+
+(6) 自己编写R代码来生成以下各图。
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point() + 
+  geom_smooth(se=F) 
+```
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point() + 
+  geom_smooth( mapping = aes(group=drv),se=F) 
+```
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy,color=drv)) + 
+  geom_point() + 
+  geom_smooth(se=F) 
+```
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point(mapping = aes(color=drv)) + 
+  geom_smooth(se=F) 
+```
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point(mapping = aes(color=drv)) + 
+  geom_smooth(se=F,mapping = aes(linetype=drv))
+```
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+  geom_point(mapping = aes(color=drv))
+```
 
