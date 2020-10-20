@@ -492,7 +492,7 @@ y轴的`count`变量是原始数据中所没有的，是通过**统计变换（s
 
 - 通常来说，几何对象函数和统计变换函数可以互换使用，如`geom_bar`与`stat_count`，因为每个几何对象函数都有一个默认统计变换，每个统计变换函数都有一个默认几何对象
 
-### 显示使用
+### 显式使用
 
 当我们想要显式使用某种统计变换时，
 
@@ -556,7 +556,7 @@ ggplot(data = diamonds) +
 
 ### 练习
 
-(1)`stat_summary()`函数的默认几何对象是什么？不使用统计变换函数的话，如何使用几何对象函数重新生成以上的图？
+(1) `stat_summary()`函数的默认几何对象是什么？不使用统计变换函数的话，如何使用几何对象函数重新生成以上的图？
 ```{r eval=FALSE, include=FALSE}
 ?stat_summary
 ```
@@ -603,6 +603,152 @@ ggplot(data = diamonds) +
   geom_bar(mapping = aes(x = cut, y = ..prop..,group="hello")) 
 ```
 
+
+## 位置调整
+
+### 条形图上色
+
+使用`color`或者`fill`图形属性
+```{r}
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, color = cut)) 
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, fill = cut))
+```
+
+可以看到，`color`为边框上色，`fill`为图形填充颜色。
+
+改变`fill`映射的变量，可以得到分块堆砌条形图。
+```{r}
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, fill = clarity))
+```
+
+### 位置调整功能
+
+这是由`position`参数设定的位置调整功能自动完成的，默认为`stack`（堆砌），还有其余值为`identity,fill,dodge`。
+
+- `position = "identity"`：将每个对象直接显示在图中，在图层上进行堆砌。这种方式不太适合条形图，因为条形会彼此重叠。为了让重叠部分能够显示出来，我们可以设置`alpha`参数为一个较小的数，从而使得条形略微透明；或者设定`fill = NA`，让条形完全透明：
+```{r}
+ggplot( 
+  data = diamonds, 
+  mapping = aes(x = cut, fill = clarity) 
+) + 
+  geom_bar(alpha = 1/5, position = "identity") 
+ggplot( 
+  data = diamonds, 
+  mapping = aes(x = cut, color = clarity) 
+) + 
+  geom_bar(fill = NA, position = "identity")
+```
+
+- `position = "fill"`：与堆叠相似，但每组堆叠条形具有同样的高度，因此这种条形图可以非常轻松地比较各组间的**比例**：
+```{r}
+ggplot(data = diamonds) + 
+  geom_bar( 
+    mapping = aes(x = cut, fill = clarity), 
+    position = "fill" 
+  )
+```
+
+-  `position = "dodge"`将每组中的条形依次并列放置，这样可以非常轻松地比较每个条形
+表示的**具体数值**：
+```{r}
+ggplot(data = diamonds) + 
+  geom_bar( 
+    mapping = aes(x = cut, fill = clarity), 
+    position = "dodge" 
+  )
+```
+
+- `position = "jitter"`：虽然不适合条形图，但非常适合散点图。它为每个数据点添加一个很小的随机扰动，这样就可以将重叠的点分散开来。用损失精确性的方法提高图形的启发性，我觉得想法非常棒呀，毕竟图形化本身就是在用降低精确性来提高启发性。
+```{r}
+ggplot(data = mpg) + 
+  geom_point( 
+    mapping = aes(x = displ, y = hwy), 
+    position = "jitter" 
+  )
+```
+
+
+### 练习
+
+(1)以下图形有什么问题？应该如何改善？
+```{r}
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) + 
+  geom_point()
+```
+
+重叠点太多，加入随机扰动看看：
+```{r}
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) + 
+  geom_jitter()
+```
+
+效果要好一点。
+
+(2)`geom_jitter()`使用哪些参数来控制抖动的程度？
+
+`width,height`，但不太清楚作用机制...
+
+(3)对比 `geom_jitter()` 与 `geom_count()`。
+
+`geom_jitter()`通过对数据点加随机扰动把重叠点分开，而 `geom_count()`对于重叠点，将重叠点计数映射到改区域点的大小。即
+```{r}
+ggplot(mpg, aes(cty, hwy)) +
+ geom_count()
+```
+
+(4)`geom_boxplot()`函数的默认位置调整方式是什么？创建`mpg`数据集的可视化表示来演示一下。
+
+默认位置调整方式是`dodge2`。
+```{r}
+ggplot(mpg, aes(class, hwy))+ 
+  geom_boxplot()
+```
+
+
+## 坐标系
+
+- `coord_flip()`交换x轴，y轴；
+
+- `coord_quickmap()`为地图设置合适的纵横比；
+
+- ` coord_polar()`采用极坐标；
+
+### 练习
+
+(1)使用`coord_polar()`函数将堆叠式条形图转换为饼图。
+```{r}
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, fill = clarity))+
+  coord_polar()
+```
+
+(2)`labs()`函数的功能是什么？阅读一下文档。
+
+修改标签。
+
+(3)`coord_quickmap()`函数和 `coord_map()` 函数的区别是什么？
+
+参考：https://ggplot2.tidyverse.org/reference/coord_map.html
+
+(4)下图表明城市和公路燃油效率之间有什么关系？为什么`coord_fixed()`函数很重要？`geom_abline()` 函数的作用是什么？
+```{r}
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) + 
+  geom_point() + 
+  geom_abline() + 
+  coord_fixed()
+```
+
+正相关（线性）。可以使数据点（看起来）成斜率为1或-1，否则就是
+```{r}
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) + 
+  geom_point() + 
+  geom_abline()
+```
+
+`geom_abline()` 函数的作用是绘制参考直线。
 
 
 
