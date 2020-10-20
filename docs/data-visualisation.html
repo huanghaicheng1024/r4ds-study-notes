@@ -163,8 +163,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.7" data-path="data-visualisation.html"><a href="data-visualisation.html#统计变换"><i class="fa fa-check"></i><b>3.7</b> 统计变换</a>
 <ul>
 <li class="chapter" data-level="3.7.1" data-path="data-visualisation.html"><a href="data-visualisation.html#底层实现"><i class="fa fa-check"></i><b>3.7.1</b> 底层实现</a></li>
-<li class="chapter" data-level="3.7.2" data-path="data-visualisation.html"><a href="data-visualisation.html#显示使用"><i class="fa fa-check"></i><b>3.7.2</b> 显示使用</a></li>
+<li class="chapter" data-level="3.7.2" data-path="data-visualisation.html"><a href="data-visualisation.html#显式使用"><i class="fa fa-check"></i><b>3.7.2</b> 显式使用</a></li>
 <li class="chapter" data-level="3.7.3" data-path="data-visualisation.html"><a href="data-visualisation.html#练习-1"><i class="fa fa-check"></i><b>3.7.3</b> 练习</a></li>
+</ul></li>
+<li class="chapter" data-level="3.8" data-path="data-visualisation.html"><a href="data-visualisation.html#位置调整"><i class="fa fa-check"></i><b>3.8</b> 位置调整</a>
+<ul>
+<li class="chapter" data-level="3.8.1" data-path="data-visualisation.html"><a href="data-visualisation.html#条形图上色"><i class="fa fa-check"></i><b>3.8.1</b> 条形图上色</a></li>
+<li class="chapter" data-level="3.8.2" data-path="data-visualisation.html"><a href="data-visualisation.html#位置调整功能"><i class="fa fa-check"></i><b>3.8.2</b> 位置调整功能</a></li>
+<li class="chapter" data-level="3.8.3" data-path="data-visualisation.html"><a href="data-visualisation.html#练习-2"><i class="fa fa-check"></i><b>3.8.3</b> 练习</a></li>
+</ul></li>
+<li class="chapter" data-level="3.9" data-path="data-visualisation.html"><a href="data-visualisation.html#坐标系"><i class="fa fa-check"></i><b>3.9</b> 坐标系</a>
+<ul>
+<li class="chapter" data-level="3.9.1" data-path="data-visualisation.html"><a href="data-visualisation.html#练习-3"><i class="fa fa-check"></i><b>3.9.1</b> 练习</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -624,8 +634,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>通常来说，几何对象函数和统计变换函数可以互换使用，如<code>geom_bar</code>与<code>stat_count</code>，因为每个几何对象函数都有一个默认统计变换，每个统计变换函数都有一个默认几何对象</p></li>
 </ul>
 </div>
-<div id="显示使用" class="section level3" number="3.7.2">
-<h3><span class="header-section-number">3.7.2</span> 显示使用</h3>
+<div id="显式使用" class="section level3" number="3.7.2">
+<h3><span class="header-section-number">3.7.2</span> 显式使用</h3>
 <p>当我们想要显式使用某种统计变换时，</p>
 <ul>
 <li>想要覆盖默认的统计变换：更改<code>stat</code>参数值，并指定各图形属性的映射。例</li>
@@ -684,7 +694,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="练习-1" class="section level3" number="3.7.3">
 <h3><span class="header-section-number">3.7.3</span> 练习</h3>
-<p>(1)<code>stat_summary()</code>函数的默认几何对象是什么？不使用统计变换函数的话，如何使用几何对象函数重新生成以上的图？</p>
+<ol style="list-style-type: decimal">
+<li><code>stat_summary()</code>函数的默认几何对象是什么？不使用统计变换函数的话，如何使用几何对象函数重新生成以上的图？</li>
+</ol>
 <p>可以看到<code>geom = "pointrange"</code>，从而默认的几何对象为<code>geom_pointrange</code>。利用<code>pointrange</code>生成图如下：</p>
 <div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="data-visualisation.html#cb54-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> diamonds) <span class="op">+</span><span class="st"> </span></span>
 <span id="cb54-2"><a href="data-visualisation.html#cb54-2"></a><span class="st">  </span><span class="kw">geom_pointrange</span>(</span>
@@ -724,6 +736,125 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="data-visualisation.html#cb56-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> diamonds) <span class="op">+</span><span class="st"> </span></span>
 <span id="cb56-2"><a href="data-visualisation.html#cb56-2"></a><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> cut, <span class="dt">y =</span> ..prop..,<span class="dt">group=</span><span class="st">&quot;hello&quot;</span>)) </span></code></pre></div>
 <p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-64-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="位置调整" class="section level2" number="3.8">
+<h2><span class="header-section-number">3.8</span> 位置调整</h2>
+<div id="条形图上色" class="section level3" number="3.8.1">
+<h3><span class="header-section-number">3.8.1</span> 条形图上色</h3>
+<p>使用<code>color</code>或者<code>fill</code>图形属性</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="data-visualisation.html#cb57-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> diamonds) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb57-2"><a href="data-visualisation.html#cb57-2"></a><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> cut, <span class="dt">color =</span> cut)) </span>
+<span id="cb57-3"><a href="data-visualisation.html#cb57-3"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> diamonds) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb57-4"><a href="data-visualisation.html#cb57-4"></a><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> cut, <span class="dt">fill =</span> cut))</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-65-1.png" width="70%" style="display: block; margin: auto;" /><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-65-2.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>可以看到，<code>color</code>为边框上色，<code>fill</code>为图形填充颜色。</p>
+<p>改变<code>fill</code>映射的变量，可以得到分块堆砌条形图。</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="data-visualisation.html#cb58-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> diamonds) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb58-2"><a href="data-visualisation.html#cb58-2"></a><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> cut, <span class="dt">fill =</span> clarity))</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-66-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="位置调整功能" class="section level3" number="3.8.2">
+<h3><span class="header-section-number">3.8.2</span> 位置调整功能</h3>
+<p>这是由<code>position</code>参数设定的位置调整功能自动完成的，默认为<code>stack</code>（堆砌），还有其余值为<code>identity,fill,dodge</code>。</p>
+<ul>
+<li><code>position = "identity"</code>：将每个对象直接显示在图中，在图层上进行堆砌。这种方式不太适合条形图，因为条形会彼此重叠。为了让重叠部分能够显示出来，我们可以设置<code>alpha</code>参数为一个较小的数，从而使得条形略微透明；或者设定<code>fill = NA</code>，让条形完全透明：</li>
+</ul>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="data-visualisation.html#cb59-1"></a><span class="kw">ggplot</span>( </span>
+<span id="cb59-2"><a href="data-visualisation.html#cb59-2"></a>  <span class="dt">data =</span> diamonds, </span>
+<span id="cb59-3"><a href="data-visualisation.html#cb59-3"></a>  <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> cut, <span class="dt">fill =</span> clarity) </span>
+<span id="cb59-4"><a href="data-visualisation.html#cb59-4"></a>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb59-5"><a href="data-visualisation.html#cb59-5"></a><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">5</span>, <span class="dt">position =</span> <span class="st">&quot;identity&quot;</span>) </span>
+<span id="cb59-6"><a href="data-visualisation.html#cb59-6"></a><span class="kw">ggplot</span>( </span>
+<span id="cb59-7"><a href="data-visualisation.html#cb59-7"></a>  <span class="dt">data =</span> diamonds, </span>
+<span id="cb59-8"><a href="data-visualisation.html#cb59-8"></a>  <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> cut, <span class="dt">color =</span> clarity) </span>
+<span id="cb59-9"><a href="data-visualisation.html#cb59-9"></a>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb59-10"><a href="data-visualisation.html#cb59-10"></a><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">fill =</span> <span class="ot">NA</span>, <span class="dt">position =</span> <span class="st">&quot;identity&quot;</span>)</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-67-1.png" width="70%" style="display: block; margin: auto;" /><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-67-2.png" width="70%" style="display: block; margin: auto;" /></p>
+<ul>
+<li><code>position = "fill"</code>：与堆叠相似，但每组堆叠条形具有同样的高度，因此这种条形图可以非常轻松地比较各组间的<strong>比例</strong>：</li>
+</ul>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="data-visualisation.html#cb60-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> diamonds) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb60-2"><a href="data-visualisation.html#cb60-2"></a><span class="st">  </span><span class="kw">geom_bar</span>( </span>
+<span id="cb60-3"><a href="data-visualisation.html#cb60-3"></a>    <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> cut, <span class="dt">fill =</span> clarity), </span>
+<span id="cb60-4"><a href="data-visualisation.html#cb60-4"></a>    <span class="dt">position =</span> <span class="st">&quot;fill&quot;</span> </span>
+<span id="cb60-5"><a href="data-visualisation.html#cb60-5"></a>  )</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-68-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<ul>
+<li><code>position = "dodge"</code>将每组中的条形依次并列放置，这样可以非常轻松地比较每个条形
+表示的<strong>具体数值</strong>：</li>
+</ul>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="data-visualisation.html#cb61-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> diamonds) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb61-2"><a href="data-visualisation.html#cb61-2"></a><span class="st">  </span><span class="kw">geom_bar</span>( </span>
+<span id="cb61-3"><a href="data-visualisation.html#cb61-3"></a>    <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> cut, <span class="dt">fill =</span> clarity), </span>
+<span id="cb61-4"><a href="data-visualisation.html#cb61-4"></a>    <span class="dt">position =</span> <span class="st">&quot;dodge&quot;</span> </span>
+<span id="cb61-5"><a href="data-visualisation.html#cb61-5"></a>  )</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-69-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<ul>
+<li><code>position = "jitter"</code>：虽然不适合条形图，但非常适合散点图。它为每个数据点添加一个很小的随机扰动，这样就可以将重叠的点分散开来。用损失精确性的方法提高图形的启发性，我觉得想法非常棒呀，毕竟图形化本身就是在用降低精确性来提高启发性。</li>
+</ul>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="data-visualisation.html#cb62-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb62-2"><a href="data-visualisation.html#cb62-2"></a><span class="st">  </span><span class="kw">geom_point</span>( </span>
+<span id="cb62-3"><a href="data-visualisation.html#cb62-3"></a>    <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy), </span>
+<span id="cb62-4"><a href="data-visualisation.html#cb62-4"></a>    <span class="dt">position =</span> <span class="st">&quot;jitter&quot;</span> </span>
+<span id="cb62-5"><a href="data-visualisation.html#cb62-5"></a>  )</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-70-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="练习-2" class="section level3" number="3.8.3">
+<h3><span class="header-section-number">3.8.3</span> 练习</h3>
+<p>(1)以下图形有什么问题？应该如何改善？</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="data-visualisation.html#cb63-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> cty, <span class="dt">y =</span> hwy)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb63-2"><a href="data-visualisation.html#cb63-2"></a><span class="st">  </span><span class="kw">geom_point</span>()</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-71-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>重叠点太多，加入随机扰动看看：</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="data-visualisation.html#cb64-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> cty, <span class="dt">y =</span> hwy)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb64-2"><a href="data-visualisation.html#cb64-2"></a><span class="st">  </span><span class="kw">geom_jitter</span>()</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-72-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>效果要好一点。</p>
+<p>(2)<code>geom_jitter()</code>使用哪些参数来控制抖动的程度？</p>
+<p><code>width,height</code>，但不太清楚作用机制…</p>
+<p>(3)对比 <code>geom_jitter()</code> 与 <code>geom_count()</code>。</p>
+<p><code>geom_jitter()</code>通过对数据点加随机扰动把重叠点分开，而 <code>geom_count()</code>对于重叠点，将重叠点计数映射到改区域点的大小。即</p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="data-visualisation.html#cb65-1"></a><span class="kw">ggplot</span>(mpg, <span class="kw">aes</span>(cty, hwy)) <span class="op">+</span></span>
+<span id="cb65-2"><a href="data-visualisation.html#cb65-2"></a><span class="st"> </span><span class="kw">geom_count</span>()</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-73-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>(4)<code>geom_boxplot()</code>函数的默认位置调整方式是什么？创建<code>mpg</code>数据集的可视化表示来演示一下。</p>
+<p>默认位置调整方式是<code>dodge2</code>。</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="data-visualisation.html#cb66-1"></a><span class="kw">ggplot</span>(mpg, <span class="kw">aes</span>(class, hwy))<span class="op">+</span><span class="st"> </span></span>
+<span id="cb66-2"><a href="data-visualisation.html#cb66-2"></a><span class="st">  </span><span class="kw">geom_boxplot</span>()</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-74-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="坐标系" class="section level2" number="3.9">
+<h2><span class="header-section-number">3.9</span> 坐标系</h2>
+<ul>
+<li><p><code>coord_flip()</code>交换x轴，y轴；</p></li>
+<li><p><code>coord_quickmap()</code>为地图设置合适的纵横比；</p></li>
+<li><p><code>coord_polar()</code>采用极坐标；</p></li>
+</ul>
+<div id="练习-3" class="section level3" number="3.9.1">
+<h3><span class="header-section-number">3.9.1</span> 练习</h3>
+<p>(1)使用<code>coord_polar()</code>函数将堆叠式条形图转换为饼图。</p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="data-visualisation.html#cb67-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> diamonds) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb67-2"><a href="data-visualisation.html#cb67-2"></a><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> cut, <span class="dt">fill =</span> clarity))<span class="op">+</span></span>
+<span id="cb67-3"><a href="data-visualisation.html#cb67-3"></a><span class="st">  </span><span class="kw">coord_polar</span>()</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-75-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>(2)<code>labs()</code>函数的功能是什么？阅读一下文档。</p>
+<p>修改标签。</p>
+<p>(3)<code>coord_quickmap()</code>函数和 <code>coord_map()</code> 函数的区别是什么？</p>
+<p>参考：<a href="https://ggplot2.tidyverse.org/reference/coord_map.html" class="uri">https://ggplot2.tidyverse.org/reference/coord_map.html</a></p>
+<p>(4)下图表明城市和公路燃油效率之间有什么关系？为什么<code>coord_fixed()</code>函数很重要？<code>geom_abline()</code> 函数的作用是什么？</p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="data-visualisation.html#cb68-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> cty, <span class="dt">y =</span> hwy)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb68-2"><a href="data-visualisation.html#cb68-2"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb68-3"><a href="data-visualisation.html#cb68-3"></a><span class="st">  </span><span class="kw">geom_abline</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb68-4"><a href="data-visualisation.html#cb68-4"></a><span class="st">  </span><span class="kw">coord_fixed</span>()</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-76-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>正相关（线性）。可以使数据点（看起来）成斜率为1或-1，否则就是</p>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="data-visualisation.html#cb69-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> cty, <span class="dt">y =</span> hwy)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb69-2"><a href="data-visualisation.html#cb69-2"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb69-3"><a href="data-visualisation.html#cb69-3"></a><span class="st">  </span><span class="kw">geom_abline</span>()</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-77-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><code>geom_abline()</code> 函数的作用是绘制参考直线。</p>
 
 </div>
 </div>
