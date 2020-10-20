@@ -751,10 +751,35 @@ ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
 `geom_abline()` 函数的作用是绘制参考直线。
 
 
+## 图形分层语法
 
+模板语法：
+```{r eval=FALSE, include=FALSE}
+ggplot(data = <DATA>) + 
+  <GEOM_FUNCTION>( 
+     mapping = aes(<MAPPINGS>), 
+     stat = <STAT>, 
+     position = <POSITION> 
+  ) + 
+  <COORDINATE_FUNCTION> + 
+  <FACET_FUNCTION>
+```
 
+如果构建一个图形？
 
+1.需要有一个数据集<DATA>
 
+2.（通过统计变换<STAT>）将其转换为想要显示的信息
+
+3.选择一个几何对象<GEOM_FUNCTION>来表示转换后的数据中的每个观测值，
+
+4.选择几何对象的图形属性来表示数据中的变量，这会将每个变量的值映射<MAPPINGS>为图形属性的水平。
+
+5.选择放置几何对象的坐标系<COORDINATE_FUNCTION>
+
+6.进一步调整几何对象在坐标系中的位置（位置调整<POSITION>），或者将图划分为多个子图（分面<FACET_FUNCTION>）
+
+7.添加一个或多个附加图层进行拓展。
 
 
 
