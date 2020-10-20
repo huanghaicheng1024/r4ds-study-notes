@@ -24,7 +24,7 @@
 <meta name="author" content="Huang" />
 
 
-<meta name="date" content="2020-10-19" />
+<meta name="date" content="2020-10-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -159,6 +159,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.6.1" data-path="data-visualisation.html"><a href="data-visualisation.html#分组绘图"><i class="fa fa-check"></i><b>3.6.1</b> 分组绘图</a></li>
 <li class="chapter" data-level="3.6.2" data-path="data-visualisation.html"><a href="data-visualisation.html#多个几何对象"><i class="fa fa-check"></i><b>3.6.2</b> 多个几何对象</a></li>
 <li class="chapter" data-level="3.6.3" data-path="data-visualisation.html"><a href="data-visualisation.html#练习"><i class="fa fa-check"></i><b>3.6.3</b> 练习</a></li>
+</ul></li>
+<li class="chapter" data-level="3.7" data-path="data-visualisation.html"><a href="data-visualisation.html#统计变换"><i class="fa fa-check"></i><b>3.7</b> 统计变换</a>
+<ul>
+<li class="chapter" data-level="3.7.1" data-path="data-visualisation.html"><a href="data-visualisation.html#底层实现"><i class="fa fa-check"></i><b>3.7.1</b> 底层实现</a></li>
+<li class="chapter" data-level="3.7.2" data-path="data-visualisation.html"><a href="data-visualisation.html#显示使用"><i class="fa fa-check"></i><b>3.7.2</b> 显示使用</a></li>
+<li class="chapter" data-level="3.7.3" data-path="data-visualisation.html"><a href="data-visualisation.html#练习-1"><i class="fa fa-check"></i><b>3.7.3</b> 练习</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -599,6 +605,125 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="data-visualisation.html#cb47-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy)) <span class="op">+</span><span class="st"> </span></span>
 <span id="cb47-2"><a href="data-visualisation.html#cb47-2"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">color=</span>drv))</span></code></pre></div>
 <p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-54-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="统计变换" class="section level2" number="3.7">
+<h2><span class="header-section-number">3.7</span> 统计变换</h2>
+<p>很多图形绘制的是数据集的原始数据，比如散点图,它把原始数据中已有的变量映射到图形属性中。</p>
+<p>另外一些图形则可以绘制那些计算出的新数据，比如条形图。例如，</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="data-visualisation.html#cb48-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> diamonds) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb48-2"><a href="data-visualisation.html#cb48-2"></a><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> cut))</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-55-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>y轴的<code>count</code>变量是原始数据中所没有的，是通过<strong>统计变换（stat）</strong>后得到的。所以对于这些函数，它们作用的过程可以分为两步，先是处理原始数据集，后是将处理后的数据集的变量映射到图形属性。但我们往往不需要关注底层统计变换的实现过程。</p>
+<div id="底层实现" class="section level3" number="3.7.1">
+<h3><span class="header-section-number">3.7.1</span> 底层实现</h3>
+<p>当我们需要关注底层实现过程的时候，我们需要知道：</p>
+<ul>
+<li><p>通过查看<code>stat</code>参数的默认值，可以知道几何对象函数使用了哪种统计变换函数。统计函数会计算出不止一个新变量，例如可以通过<code>?geom_bar</code>的Computed variables一节看到。</p></li>
+<li><p>统计变换函数指的是实现某种统计变换的函数，例如<code>count-&gt;stat_count()</code>。</p></li>
+<li><p>通常来说，几何对象函数和统计变换函数可以互换使用，如<code>geom_bar</code>与<code>stat_count</code>，因为每个几何对象函数都有一个默认统计变换，每个统计变换函数都有一个默认几何对象</p></li>
+</ul>
+</div>
+<div id="显示使用" class="section level3" number="3.7.2">
+<h3><span class="header-section-number">3.7.2</span> 显示使用</h3>
+<p>当我们想要显式使用某种统计变换时，</p>
+<ul>
+<li>想要覆盖默认的统计变换：更改<code>stat</code>参数值，并指定各图形属性的映射。例</li>
+</ul>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="data-visualisation.html#cb49-1"></a>demo &lt;-<span class="st"> </span><span class="kw">tribble</span>( </span>
+<span id="cb49-2"><a href="data-visualisation.html#cb49-2"></a>  <span class="op">~</span>a,      <span class="op">~</span>b, </span>
+<span id="cb49-3"><a href="data-visualisation.html#cb49-3"></a>  <span class="st">&quot;bar_1&quot;</span>, <span class="dv">20</span>, </span>
+<span id="cb49-4"><a href="data-visualisation.html#cb49-4"></a>  <span class="st">&quot;bar_2&quot;</span>, <span class="dv">30</span>, </span>
+<span id="cb49-5"><a href="data-visualisation.html#cb49-5"></a>  <span class="st">&quot;bar_3&quot;</span>, <span class="dv">40</span> </span>
+<span id="cb49-6"><a href="data-visualisation.html#cb49-6"></a>) </span>
+<span id="cb49-7"><a href="data-visualisation.html#cb49-7"></a> </span>
+<span id="cb49-8"><a href="data-visualisation.html#cb49-8"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> demo) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb49-9"><a href="data-visualisation.html#cb49-9"></a><span class="st">  </span><span class="kw">geom_bar</span>( </span>
+<span id="cb49-10"><a href="data-visualisation.html#cb49-10"></a>    <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> a, <span class="dt">y =</span> b), <span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span> </span>
+<span id="cb49-11"><a href="data-visualisation.html#cb49-11"></a>  )</span>
+<span id="cb49-12"><a href="data-visualisation.html#cb49-12"></a></span>
+<span id="cb49-13"><a href="data-visualisation.html#cb49-13"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> demo) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb49-14"><a href="data-visualisation.html#cb49-14"></a><span class="st">  </span><span class="kw">geom_bar</span>( </span>
+<span id="cb49-15"><a href="data-visualisation.html#cb49-15"></a>    <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> a)</span>
+<span id="cb49-16"><a href="data-visualisation.html#cb49-16"></a>  )</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-56-1.png" width="70%" style="display: block; margin: auto;" /><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-56-2.png" width="70%" style="display: block; margin: auto;" />
+其中，<code>stat = "identity"</code>表示不使用统计变换（即使用恒等变换）。</p>
+<ul>
+<li>想要覆盖从统计变换生成的变量到图形属性的默认映射。</li>
+</ul>
+<p>前面我们说过，统计函数会计算出不止一个新变量，我们可以显示地更改变量到图形属性的默认映射，例如，默认的：</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="data-visualisation.html#cb50-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> diamonds) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb50-2"><a href="data-visualisation.html#cb50-2"></a><span class="st">  </span><span class="kw">geom_bar</span>( </span>
+<span id="cb50-3"><a href="data-visualisation.html#cb50-3"></a>    <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> cut) </span>
+<span id="cb50-4"><a href="data-visualisation.html#cb50-4"></a>  )</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-57-1.png" width="70%" style="display: block; margin: auto;" />
+<code>stat_count</code>计算的变量除了<code>count</code>（默认映射）还有<code>prop</code>，更改一下映射：</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="data-visualisation.html#cb51-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> diamonds) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb51-2"><a href="data-visualisation.html#cb51-2"></a><span class="st">  </span><span class="kw">geom_bar</span>( </span>
+<span id="cb51-3"><a href="data-visualisation.html#cb51-3"></a>    <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> cut, <span class="dt">y =</span> ..prop.., <span class="dt">group =</span> <span class="dv">1</span>) </span>
+<span id="cb51-4"><a href="data-visualisation.html#cb51-4"></a>  )</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-58-1.png" width="70%" style="display: block; margin: auto;" />
+可以看到<code>y = ..prop..</code>而不是<code>y = prop</code>估计是为了表明这个<code>prop</code>是统计变换计算出来的中间变量，而不是原始数据中的变量。验证一下：</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="data-visualisation.html#cb52-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> diamonds) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb52-2"><a href="data-visualisation.html#cb52-2"></a><span class="st">  </span><span class="kw">geom_bar</span>( </span>
+<span id="cb52-3"><a href="data-visualisation.html#cb52-3"></a>    <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> cut, <span class="dt">y =</span> ..count.., <span class="dt">group =</span> <span class="dv">1</span>) </span>
+<span id="cb52-4"><a href="data-visualisation.html#cb52-4"></a>  )</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-59-1.png" width="70%" style="display: block; margin: auto;" />
+可以得到默认的绘图。</p>
+<ul>
+<li>想要在代码中强调统计变换。而非几何对象。如</li>
+</ul>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="data-visualisation.html#cb53-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> diamonds) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb53-2"><a href="data-visualisation.html#cb53-2"></a><span class="st">  </span><span class="kw">stat_summary</span>( </span>
+<span id="cb53-3"><a href="data-visualisation.html#cb53-3"></a>    <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> cut, <span class="dt">y =</span> depth), </span>
+<span id="cb53-4"><a href="data-visualisation.html#cb53-4"></a>    <span class="dt">fun.min =</span> min, </span>
+<span id="cb53-5"><a href="data-visualisation.html#cb53-5"></a>    <span class="dt">fun.max =</span> max, </span>
+<span id="cb53-6"><a href="data-visualisation.html#cb53-6"></a>    <span class="dt">fun =</span> median </span>
+<span id="cb53-7"><a href="data-visualisation.html#cb53-7"></a>  )</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-60-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="练习-1" class="section level3" number="3.7.3">
+<h3><span class="header-section-number">3.7.3</span> 练习</h3>
+<p>(1)<code>stat_summary()</code>函数的默认几何对象是什么？不使用统计变换函数的话，如何使用几何对象函数重新生成以上的图？</p>
+<p>可以看到<code>geom = "pointrange"</code>，从而默认的几何对象为<code>geom_pointrange</code>。利用<code>pointrange</code>生成图如下：</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="data-visualisation.html#cb54-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> diamonds) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb54-2"><a href="data-visualisation.html#cb54-2"></a><span class="st">  </span><span class="kw">geom_pointrange</span>(</span>
+<span id="cb54-3"><a href="data-visualisation.html#cb54-3"></a>    <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> cut, <span class="dt">y =</span> depth), </span>
+<span id="cb54-4"><a href="data-visualisation.html#cb54-4"></a>    <span class="dt">stat =</span> <span class="st">&quot;summary&quot;</span>,</span>
+<span id="cb54-5"><a href="data-visualisation.html#cb54-5"></a>    <span class="dt">fun.min =</span> min, </span>
+<span id="cb54-6"><a href="data-visualisation.html#cb54-6"></a>    <span class="dt">fun.max =</span> max, </span>
+<span id="cb54-7"><a href="data-visualisation.html#cb54-7"></a>    <span class="dt">fun =</span> median </span>
+<span id="cb54-8"><a href="data-visualisation.html#cb54-8"></a>    )</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-62-1.png" width="70%" style="display: block; margin: auto;" />
+默认是不做统计变换，所以要显示指定一下参数<code>stat</code>。</p>
+<ol start="2" style="list-style-type: decimal">
+<li><code>geom_col()</code>函数的功能是什么？它和<code>geom_bar()</code>函数有何不同？</li>
+</ol>
+<p><code>geom_col()</code>函数默认不使用统计变换，即需要把原始数据中某个变量映射到y轴上。<code>geom_bar()</code>函数默认使用统计变换。</p>
+<ol start="3" style="list-style-type: decimal">
+<li>多数几何对象和统计变换都是成对出现的，总是配合使用。仔细阅读文档，列出所有
+成对的几何对象和统计变换。它们有什么共同之处？</li>
+</ol>
+<p>参考：<a href="https://ggplot2.tidyverse.org/reference/index.html" class="uri">https://ggplot2.tidyverse.org/reference/index.html</a> 。名字大多类似？</p>
+<ol start="4" style="list-style-type: decimal">
+<li><code>stat_smooth()</code>函数会计算出什么变量？哪些参数可以控制它的行为？</li>
+</ol>
+<p><code>y</code>：预测值，<code>ymin,ymax</code>：y均值的置信区间，<code>se</code>：标准误差。嗯…太多了…</p>
+<ol start="5" style="list-style-type: decimal">
+<li>在比例条形图中，我们需要设定<code>group = 1</code>，这是为什么呢？换句话说，以下两张图会
+有什么问题？</li>
+</ol>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="data-visualisation.html#cb55-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> diamonds) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb55-2"><a href="data-visualisation.html#cb55-2"></a><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> cut, <span class="dt">y =</span> ..prop..)) </span>
+<span id="cb55-3"><a href="data-visualisation.html#cb55-3"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> diamonds) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb55-4"><a href="data-visualisation.html#cb55-4"></a><span class="st">  </span><span class="kw">geom_bar</span>( </span>
+<span id="cb55-5"><a href="data-visualisation.html#cb55-5"></a>    <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> cut, <span class="dt">fill =</span> color, <span class="dt">y =</span> ..prop..) </span>
+<span id="cb55-6"><a href="data-visualisation.html#cb55-6"></a>  )</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-63-1.png" width="70%" style="display: block; margin: auto;" /><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-63-2.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>你需要把所有数据放在一个组里面考虑，否则对于<code>cut</code>的每一个值分为一组，<code>prop</code>值都会是1。只需要把一个常量映射为<code>group</code>参数即可。</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="data-visualisation.html#cb56-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> diamonds) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb56-2"><a href="data-visualisation.html#cb56-2"></a><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> cut, <span class="dt">y =</span> ..prop..,<span class="dt">group=</span><span class="st">&quot;hello&quot;</span>)) </span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-64-1.png" width="70%" style="display: block; margin: auto;" /></p>
 
 </div>
 </div>
