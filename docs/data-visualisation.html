@@ -176,6 +176,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="3.9.1" data-path="data-visualisation.html"><a href="data-visualisation.html#练习-3"><i class="fa fa-check"></i><b>3.9.1</b> 练习</a></li>
 </ul></li>
+<li class="chapter" data-level="3.10" data-path="data-visualisation.html"><a href="data-visualisation.html#图形分层语法"><i class="fa fa-check"></i><b>3.10</b> 图形分层语法</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://bookdown.org" target="blank">本书由 bookdown 强力驱动</a></li>
@@ -855,8 +856,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb69-3"><a href="data-visualisation.html#cb69-3"></a><span class="st">  </span><span class="kw">geom_abline</span>()</span></code></pre></div>
 <p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-77-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p><code>geom_abline()</code> 函数的作用是绘制参考直线。</p>
-
 </div>
+</div>
+<div id="图形分层语法" class="section level2" number="3.10">
+<h2><span class="header-section-number">3.10</span> 图形分层语法</h2>
+<p>模板语法：</p>
+<p>如果构建一个图形？</p>
+<p>1.需要有一个数据集<DATA></p>
+<p>2.（通过统计变换<STAT>）将其转换为想要显示的信息</p>
+<p>3.选择一个几何对象<GEOM_FUNCTION>来表示转换后的数据中的每个观测值，</p>
+<p>4.选择几何对象的图形属性来表示数据中的变量，这会将每个变量的值映射<MAPPINGS>为图形属性的水平。</p>
+<p>5.选择放置几何对象的坐标系<COORDINATE_FUNCTION></p>
+<p>6.进一步调整几何对象在坐标系中的位置（位置调整<POSITION>），或者将图划分为多个子图（分面<FACET_FUNCTION>）</p>
+<p>7.添加一个或多个附加图层进行拓展。</p>
+
 </div>
 </div>
 <section style="
