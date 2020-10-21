@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>1 Introduction | r4ds学习笔记</title>
+  <title>4 Workflow: basics | r4ds学习笔记</title>
   <meta name="description" content="这是使用bookdwon编写的书籍。" />
   <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="1 Introduction | r4ds学习笔记" />
+  <meta property="og:title" content="4 Workflow: basics | r4ds学习笔记" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="1 Introduction | r4ds学习笔记" />
+  <meta name="twitter:title" content="4 Workflow: basics | r4ds学习笔记" />
   
   <meta name="twitter:description" content="这是使用bookdwon编写的书籍。" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="explore-intro.html"/>
+<link rel="prev" href="data-visualisation.html"/>
+
 <script src="libs/header-attrs-2.3/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -205,21 +205,39 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="intro" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> Introduction</h1>
-<p>这本书主要讲解的，是如何使用非常重要的数据科学工具，并给出了工具模型</p>
-<div align="center">
-<img src="https://d33wubrfki0l68.cloudfront.net/571b056757d68e6df81a3e3853f54d3c76ad6efc/32d37/diagrams/data-science.png" />
+<div id="workflow-basics" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Workflow: basics</h1>
+<div id="代码基础" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> 代码基础</h2>
+<p>在RStudio中R代码块中使用Alt加减号键，可以打出<code>&lt;-</code>并且左右加上空格，贼方便呀。</p>
 </div>
-<p>其大致的含义如下：</p>
-<div align="center">
-<img src="01-intro_files/r4ds.png" />
+<div id="对象名称" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> 对象名称</h2>
+<p>对象名称必须以字母开头，并且只能包含字母、数字、_ 和 .。如何命名一个对象看个人习惯吧，最好就是能具有描述性。</p>
 </div>
+<div id="函数调用" class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> 函数调用</h2>
+<p>无</p>
+</div>
+<div id="练习" class="section level2" number="4.4">
+<h2><span class="header-section-number">4.4</span> 练习</h2>
+<p>(1)为什么以下代码不能正常运行？</p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="workflow-basics.html#cb71-1"></a>my_variable &lt;-<span class="st"> </span><span class="dv">10</span> </span>
+<span id="cb71-2"><a href="workflow-basics.html#cb71-2"></a>my_varıable </span></code></pre></div>
+<p>上下两个对象名称不同的…</p>
+<p>(2)修改以下每段 R 代码，使其可以正常运行。</p>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="workflow-basics.html#cb72-1"></a><span class="kw">library</span>(tidyverse) </span>
+<span id="cb72-2"><a href="workflow-basics.html#cb72-2"></a> </span>
+<span id="cb72-3"><a href="workflow-basics.html#cb72-3"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg) <span class="op">+</span><span class="st">   </span><span class="co"># dota-&gt;data</span></span>
+<span id="cb72-4"><a href="workflow-basics.html#cb72-4"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> displ, <span class="dt">y =</span> hwy)) </span>
+<span id="cb72-5"><a href="workflow-basics.html#cb72-5"></a> </span>
+<span id="cb72-6"><a href="workflow-basics.html#cb72-6"></a><span class="kw">filter</span>(mpg, cyl <span class="op">==</span><span class="st"> </span><span class="dv">8</span>)  <span class="co"># fliter-&gt;filter,= -&gt; ==</span></span>
+<span id="cb72-7"><a href="workflow-basics.html#cb72-7"></a><span class="kw">filter</span>(diamonds, carat <span class="op">&gt;</span><span class="st"> </span><span class="dv">3</span>) <span class="co"># diamond -&gt; diamonds</span></span></code></pre></div>
+<p>(3)按 Alt+Shift+K 组合键会发生什么情况？如何使用菜单完成同样的操作？</p>
+<p>打开键盘快捷键帮助。菜单操作：Tools-&gt;Keyboard Shortcuts Help</p>
 
 </div>
-
-
-
+</div>
 <section style="
     display: block;
 ">
@@ -236,8 +254,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="explore-intro.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="data-visualisation.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -259,7 +277,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/huanghaicheng1024/r4ds-study-notes/edit/master/01-intro.Rmd",
+"link": "https://github.com/huanghaicheng1024/r4ds-study-notes/edit/master/04-workflow-basics.Rmd",
 "text": "Edit"
 },
 "history": {

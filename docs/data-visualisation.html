@@ -24,7 +24,7 @@
 <meta name="author" content="Huang" />
 
 
-<meta name="date" content="2020-10-20" />
+<meta name="date" content="2020-10-21" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="explore-intro.html"/>
-
+<link rel="next" href="workflow-basics.html"/>
 <script src="libs/header-attrs-2.3/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -177,6 +177,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.9.1" data-path="data-visualisation.html"><a href="data-visualisation.html#练习-3"><i class="fa fa-check"></i><b>3.9.1</b> 练习</a></li>
 </ul></li>
 <li class="chapter" data-level="3.10" data-path="data-visualisation.html"><a href="data-visualisation.html#图形分层语法"><i class="fa fa-check"></i><b>3.10</b> 图形分层语法</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="workflow-basics.html"><a href="workflow-basics.html"><i class="fa fa-check"></i><b>4</b> Workflow: basics</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="workflow-basics.html"><a href="workflow-basics.html#代码基础"><i class="fa fa-check"></i><b>4.1</b> 代码基础</a></li>
+<li class="chapter" data-level="4.2" data-path="workflow-basics.html"><a href="workflow-basics.html#对象名称"><i class="fa fa-check"></i><b>4.2</b> 对象名称</a></li>
+<li class="chapter" data-level="4.3" data-path="workflow-basics.html"><a href="workflow-basics.html#函数调用"><i class="fa fa-check"></i><b>4.3</b> 函数调用</a></li>
+<li class="chapter" data-level="4.4" data-path="data-visualisation.html"><a href="data-visualisation.html#练习"><i class="fa fa-check"></i><b>4.4</b> 练习</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://bookdown.org" target="blank">本书由 bookdown 强力驱动</a></li>
@@ -861,13 +868,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="图形分层语法" class="section level2" number="3.10">
 <h2><span class="header-section-number">3.10</span> 图形分层语法</h2>
 <p>模板语法：</p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="data-visualisation.html#cb70-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> <span class="op">&lt;</span>DATA<span class="op">&gt;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb70-2"><a href="data-visualisation.html#cb70-2"></a><span class="st">  </span><span class="er">&lt;</span>GEOM_FUNCTION<span class="op">&gt;</span>( </span>
+<span id="cb70-3"><a href="data-visualisation.html#cb70-3"></a>     <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="op">&lt;</span>MAPPINGS<span class="op">&gt;</span>), </span>
+<span id="cb70-4"><a href="data-visualisation.html#cb70-4"></a>     <span class="dt">stat =</span> <span class="op">&lt;</span>STAT<span class="op">&gt;</span>, </span>
+<span id="cb70-5"><a href="data-visualisation.html#cb70-5"></a>     <span class="dt">position =</span> <span class="op">&lt;</span>POSITION<span class="op">&gt;</span><span class="st"> </span></span>
+<span id="cb70-6"><a href="data-visualisation.html#cb70-6"></a><span class="st">  </span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb70-7"><a href="data-visualisation.html#cb70-7"></a><span class="st">  </span><span class="er">&lt;</span>COORDINATE_FUNCTION<span class="op">&gt;</span><span class="st"> </span><span class="op">+</span><span class="st"> </span></span>
+<span id="cb70-8"><a href="data-visualisation.html#cb70-8"></a><span class="st">  </span><span class="er">&lt;</span>FACET_FUNCTION<span class="op">&gt;</span></span></code></pre></div>
 <p>如果构建一个图形？</p>
-<p>1.需要有一个数据集<DATA></p>
-<p>2.（通过统计变换<STAT>）将其转换为想要显示的信息</p>
-<p>3.选择一个几何对象<GEOM_FUNCTION>来表示转换后的数据中的每个观测值，</p>
-<p>4.选择几何对象的图形属性来表示数据中的变量，这会将每个变量的值映射<MAPPINGS>为图形属性的水平。</p>
-<p>5.选择放置几何对象的坐标系<COORDINATE_FUNCTION></p>
-<p>6.进一步调整几何对象在坐标系中的位置（位置调整<POSITION>），或者将图划分为多个子图（分面<FACET_FUNCTION>）</p>
+<p>1.需要有一个数据集<code>&lt;DATA&gt;</code></p>
+<p>2.（通过统计变换<code>&lt;STAT&gt;</code>）将其转换为想要显示的信息</p>
+<p>3.选择一个几何对象<code>&lt;GEOM_FUNCTION&gt;</code>来表示转换后的数据中的每个观测值，</p>
+<p>4.选择几何对象的图形属性来表示数据中的变量，这会将每个变量的值映射<code>&lt;MAPPINGS&gt;</code>为图形属性的水平。</p>
+<p>5.选择放置几何对象的坐标系<code>&lt;COORDINATE_FUNCTION&gt;</code></p>
+<p>6.进一步调整几何对象在坐标系中的位置（位置调整<code>&lt;POSITION&gt;</code>），或者将图划分为多个子图（分面<code>&lt;FACET_FUNCTION&gt;</code>）</p>
 <p>7.添加一个或多个附加图层进行拓展。</p>
 
 </div>
@@ -888,8 +903,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="explore-intro.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="explore-intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="workflow-basics.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
