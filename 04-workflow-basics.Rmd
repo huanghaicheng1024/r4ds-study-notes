@@ -1,0 +1,50 @@
+# Workflow: basics
+
+## 代码基础
+
+在RStudio中R代码块中使用Alt加减号键，可以打出`<-`并且左右加上空格，贼方便呀。
+
+## 对象名称
+
+对象名称必须以字母开头，并且只能包含字母、数字、_ 和 .。如何命名一个对象看个人习惯吧，最好就是能具有描述性。
+
+## 函数调用
+
+无
+
+## 练习
+
+(1)为什么以下代码不能正常运行？
+```{r eval=FALSE}
+my_variable <- 10 
+my_varıable 
+```
+上下两个对象名称不同的...
+
+
+(2)修改以下每段 R 代码，使其可以正常运行。
+```{r eval=FALSE}
+library(tidyverse) 
+ 
+ggplot(data = mpg) +   # dota->data
+  geom_point(mapping = aes(x = displ, y = hwy)) 
+ 
+filter(mpg, cyl == 8)  # fliter->filter,= -> ==
+filter(diamonds, carat > 3) # diamond -> diamonds
+```
+
+
+(3)按 Alt+Shift+K 组合键会发生什么情况？如何使用菜单完成同样的操作？
+
+打开键盘快捷键帮助。菜单操作：Tools->Keyboard Shortcuts Help
+
+
+
+
+
+
+
+
+
+
+
