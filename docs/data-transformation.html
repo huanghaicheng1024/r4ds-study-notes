@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>2 Introduction | r4ds学习笔记</title>
+  <title>5 Data transformation | r4ds学习笔记</title>
   <meta name="description" content="这是使用bookdwon编写的书籍。" />
   <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="2 Introduction | r4ds学习笔记" />
+  <meta property="og:title" content="5 Data transformation | r4ds学习笔记" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="2 Introduction | r4ds学习笔记" />
+  <meta name="twitter:title" content="5 Data transformation | r4ds学习笔记" />
   
   <meta name="twitter:description" content="这是使用bookdwon编写的书籍。" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="intro.html"/>
-<link rel="next" href="data-visualisation.html"/>
+<link rel="prev" href="workflow-basics.html"/>
+
 <script src="libs/header-attrs-2.3/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -214,11 +214,41 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="explore-intro" class="section level1" number="2">
-<h1><span class="header-section-number">2</span> Introduction</h1>
-<p>首先开始讲解的是数据探索这部分内容。</p>
-<p>数据探索是一门艺术，它是审视数据、生成假设、假设检验的不断反复的过程。</p>
+<div id="data-transformation" class="section level1" number="5">
+<h1><span class="header-section-number">5</span> Data transformation</h1>
+<div id="简介" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> 简介</h2>
+<p>原始数据总是不会让人满意，为了满足自己分析的需求，对数据进行转换不可避免。这一章我们要学习的是<code>dplyr</code>包，用于转换数据。</p>
+<div id="准备工作" class="section level3" number="5.1.1">
+<h3><span class="header-section-number">5.1.1</span> 准备工作</h3>
+<p>载入<code>tidyverse</code>跟<code>nycflights13</code>包：</p>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="data-transformation.html#cb73-1"></a><span class="kw">library</span>(nycflights13)</span>
+<span id="cb73-2"><a href="data-transformation.html#cb73-2"></a><span class="kw">library</span>(tidyverse)</span></code></pre></div>
+</div>
+<div id="tibble变量类型" class="section level3" number="5.1.2">
+<h3><span class="header-section-number">5.1.2</span> tibble变量类型</h3>
+<p>• <code>int</code> 表示整数型变量。</p>
+<p>• <code>dbl</code> 表示双精度浮点数型变量，或称实数。</p>
+<p>• <code>chr</code> 表示字符向量，或称字符串。</p>
+<p>• <code>dttm</code> 表示日期时间（日期 + 时间）型变量。</p>
+<p>• <code>lgl</code> 表示逻辑型变量，是一个仅包括 TRUE 和 FALSE 的向量。</p>
+<p>• <code>fctr</code> 表示因子，R 用其来表示具有固定数目的值的分类变量。</p>
+<p>• <code>date</code> 表示日期型变量</p>
+<p>实际上就是英文缩写，比较好记。</p>
+</div>
+<div id="dplyr基础" class="section level3" number="5.1.3">
+<h3><span class="header-section-number">5.1.3</span> dplyr基础</h3>
+<p><img src="05-transform_files/原始数据.png" /></p>
+<p>下面五个函数的工作方式是相同的：</p>
+<ol style="list-style-type: decimal">
+<li><p>第一个参数是一个数据框。</p></li>
+<li><p>随后的参数使用变量名称（<strong>不带引号</strong>）描述了在数据框上进行的操作。</p></li>
+<li><p>输出结果是一个新数据框。</p></li>
+</ol>
+<p>这样的属性可以让我们在后面很方便地使用管道实现复杂的数据处理。</p>
 
+</div>
+</div>
 </div>
 <section style="
     display: block;
@@ -236,8 +266,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="data-visualisation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="workflow-basics.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -259,7 +289,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/huanghaicheng1024/r4ds-study-notes/edit/master/02-explore-intro.Rmd",
+"link": "https://github.com/huanghaicheng1024/r4ds-study-notes/edit/master/05-transform.Rmd",
 "text": "Edit"
 },
 "history": {
