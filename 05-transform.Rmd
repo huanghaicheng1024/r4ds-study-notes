@@ -44,3 +44,91 @@ library(tidyverse)
 (3) 输出结果是一个新数据框。
 
 这样的属性可以让我们在后面很方便地使用管道实现复杂的数据处理。
+
+
+## 使用`filter()`筛选行
+
+`filter()`的一般使用方法如下：
+```{r}
+filter(flights,month == 1, day == 1)
+```
+
+第一个参数是数据框，后面的参数是筛选数据框行的表达式。
+
+关于筛选数据框行的表达式，我们常常需要用到：
+
+- 比较运算符，>、>=、<、<=、!=（不等于）和 ==（等于）
+
+- 逻辑运算符，&、|、！（而不是&&，||）
+
+- 其他，像 %in%, between
+
+### 练习
+ 
+(1)找出满足以下条件的所有航班。
+
+a.到达时间延误 2 小时或更多的航班。
+```{r}
+filter(flights,arr_delay>=2*60)
+```
+
+b.飞往休斯顿（IAH 机场或 HOU 机场）的航班。
+```{r}
+filter(flights,dest %in% c("IAH","HOU"))
+```
+
+c.由联合航空（United）、美利坚航空（American）或三角洲航空（Delta）运营的航班。
+```{r}
+filter(flights,carrier %in% c("UA","AA","DL"))
+```
+
+d.夏季（7 月、8 月和 9 月）出发的航班。
+```{r}
+filter(flights,month %in% c(7,8,9))
+```
+
+e.到达时间延误超过 2 小时，但出发时间没有延误的航班。
+```{r}
+filter(flights,arr_delay>=2*60,dep_delay<=0)
+```
+
+f.延误至少 1 小时，但飞行过程弥补回 30 分钟的航班。
+
+也就是，出发时间延误超1小时，但出发时间延误-到达时间延误>=30min
+```{r}
+filter(flights,dep_delay>=1*60,dep_delay-arr_delay>=30)
+```
+
+g.出发时间在午夜和早上 6 点之间（包括 0 点和 6 点）的航班。
+```{r}
+filter(flights,dep_time>=0&dep_time<=600)
+```
+
+(2)dplyr中对筛选有帮助的另一个函数是between()。它的作用是什么？你能使用这个函数来简化解决前面问题的代码吗？
+
+用于实现letf<=x<=right的表达式。上面的g也可以写成
+```{r}
+filter(flights,between(dep_time,0,600))
+```
+
+
+(3)dep_time 有缺失值的航班有多少？其他变量的缺失值情况如何？这样的行表示什么情况？
+```{r}
+filter(flights,is.na(dep_time))
+```
+
+dep_delay,arr_time,arr_delay同时缺失，表示航班取消。
+
+(4)为什么 `NA ^ 0` 的值不是 `NA` ？为什么 `NA | TRUE` 的值不是 `NA` ？为什么 `FALSE & NA` 的值不是 `NA` ？你能找出一般规律吗？（`NA * 0` 则是精妙的反例！）
+
+个人觉得，因为NA表示缺失值，所有有可能取到可取的任意值。
+
+对于`NA^0`，`NA*0`等数学运算，NA可以取任意数值，对于NA所取任意值，如果表达式的值都唯一，那么这个就是该表达式的值，若不唯一，则应为NA。由于对于任意数值，它的0次幂都为1（包括`Inf`、`-Inf`），所以`NA^0==1`，而由于`Inf*0=NaN`，当NA取1时`NA*0==0`，不唯一，故`NA * 0=NA`。
+
+对于`NA | TRUE`，`FALSE & NA`，NA可以取`TRUE`或者`FALSE`，无论取什么值，两个表达式的值都唯一（分别为`TRUE`，`FALSE`），故它们的值都不是NA。
+
+
+
+
+
+
