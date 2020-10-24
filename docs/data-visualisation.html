@@ -24,7 +24,7 @@
 <meta name="author" content="Huang" />
 
 
-<meta name="date" content="2020-10-23" />
+<meta name="date" content="2020-10-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -193,6 +193,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.1.2" data-path="data-transformation.html"><a href="data-transformation.html#tibble变量类型"><i class="fa fa-check"></i><b>5.1.2</b> tibble变量类型</a></li>
 <li class="chapter" data-level="5.1.3" data-path="data-transformation.html"><a href="data-transformation.html#dplyr基础"><i class="fa fa-check"></i><b>5.1.3</b> dplyr基础</a></li>
 </ul></li>
+<li class="chapter" data-level="5.2" data-path="data-transformation.html"><a href="data-transformation.html#使用filter筛选行"><i class="fa fa-check"></i><b>5.2</b> 使用<code>filter()</code>筛选行</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="data-visualisation.html"><a href="data-visualisation.html#练习"><i class="fa fa-check"></i><b>5.2.1</b> 练习</a></li>
+</ul></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://bookdown.org" target="blank">本书由 bookdown 强力驱动</a></li>
@@ -220,15 +224,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">3.1</span> Introduction</h2>
 <p>我们将要学习的第一套工具，<code>ggplot2</code>的程序包，用于绘图。</p>
 <p>首先加载<code>tidyverse</code></p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="data-visualisation.html#cb1-1"></a><span class="kw">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="data-visualisation.html#cb1-2"></a><span class="co">#&gt; -- Attaching packages ------------</span></span>
-<span id="cb1-3"><a href="data-visualisation.html#cb1-3"></a><span class="co">#&gt; √ ggplot2 3.3.2     √ purrr   0.3.4</span></span>
-<span id="cb1-4"><a href="data-visualisation.html#cb1-4"></a><span class="co">#&gt; √ tibble  3.0.3     √ dplyr   1.0.2</span></span>
-<span id="cb1-5"><a href="data-visualisation.html#cb1-5"></a><span class="co">#&gt; √ tidyr   1.1.1     √ stringr 1.4.0</span></span>
-<span id="cb1-6"><a href="data-visualisation.html#cb1-6"></a><span class="co">#&gt; √ readr   1.3.1     √ forcats 0.5.0</span></span>
-<span id="cb1-7"><a href="data-visualisation.html#cb1-7"></a><span class="co">#&gt; -- Conflicts ---------------------</span></span>
-<span id="cb1-8"><a href="data-visualisation.html#cb1-8"></a><span class="co">#&gt; x dplyr::filter() masks stats::filter()</span></span>
-<span id="cb1-9"><a href="data-visualisation.html#cb1-9"></a><span class="co">#&gt; x dplyr::lag()    masks stats::lag()</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="data-visualisation.html#cb1-1"></a><span class="kw">library</span>(tidyverse)</span></code></pre></div>
 </div>
 <div id="first-steps" class="section level2" number="3.2">
 <h2><span class="header-section-number">3.2</span> First steps</h2>
@@ -271,8 +267,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ol start="3" style="list-style-type: decimal">
 <li>变量<code>drv</code>的意义是什么？使用<code>?mpg</code>命令阅读帮助文件以找出答案。</li>
 </ol>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="data-visualisation.html#cb8-1"></a>?mpg</span>
-<span id="cb8-2"><a href="data-visualisation.html#cb8-2"></a><span class="co">#&gt; starting httpd help server ... done</span></span></code></pre></div>
+<pre><code>#&gt; starting httpd help server ... done</code></pre>
 <p>通过阅读帮助文档可以知道</p>
 <blockquote>
 <p>drv: the type of drive train, where f = front-wheel drive, r = rear wheel drive, 4 = 4wd</p>
