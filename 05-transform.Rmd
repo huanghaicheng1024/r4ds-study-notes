@@ -128,7 +128,53 @@ dep_delay,arr_time,arr_delay同时缺失，表示航班取消。
 对于`NA | TRUE`，`FALSE & NA`，NA可以取`TRUE`或者`FALSE`，无论取什么值，两个表达式的值都唯一（分别为`TRUE`，`FALSE`），故它们的值都不是NA。
 
 
+## 使用`arrange()`排列行
 
+工作方式：
+```{r}
+arrange(flights,year,month,day)
+```
 
+将数据框`flights`的行按照`year,month,day`的值升序排序，返回新的数据框。
 
+使用 `desc()` 可以按列进行**降序**排序：
+```{r}
+arrange(flights,desc(dep_delay))
+```
+
+此外，缺失值总是排在**最后**。
+
+### 练习
+
+(1)如何使用 `arrange()` 将缺失值排在最前面？（提示：使用 `is.na()`。）
+
+```{r}
+df <- tibble(x = c(5, 2, NA))
+arrange(df,desc(is.na(df)))
+```
+不知道这算不算一个好的办法。但是要改变非缺失值顺序的同时又把缺失值放在前面，就有点复杂了，需要`arrange`两次。
+
+(2)对`ﬂights`排序以找出延误时间最长的航班。找出出发时间最早的航班。
+```{r}
+arrange(flights,desc(arr_delay))
+```
+```{r}
+arrange(flights,dep_time)
+```
+
+(3)对`flights`排序以找出速度最快的航班。
+
+需要根据`distance`（距离）以及`air_time`（飞行时间）去计算速度，并排序：
+```{r}
+arrange(flights,desc(distance/air_time))
+```
+
+(4)哪个航班的飞行时间最长？哪个最短？
+```{r}
+arrange(flights,air_time)
+```
+
+```{r}
+arrange(flights,desc(air_time))
+```
 
