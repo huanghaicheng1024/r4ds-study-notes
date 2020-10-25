@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>5 Data transformation | r4ds学习笔记</title>
   <meta name="description" content="这是使用bookdwon编写的书籍。" />
-  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
   <meta property="og:title" content="5 Data transformation | r4ds学习笔记" />
   <meta property="og:type" content="book" />
@@ -33,7 +33,7 @@
   
 <link rel="prev" href="workflow-basics.html"/>
 
-<script src="libs/header-attrs-2.3/header-attrs.js"></script>
+<script src="libs/header-attrs-2.5/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -52,6 +52,8 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -183,7 +185,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.1" data-path="workflow-basics.html"><a href="workflow-basics.html#代码基础"><i class="fa fa-check"></i><b>4.1</b> 代码基础</a></li>
 <li class="chapter" data-level="4.2" data-path="workflow-basics.html"><a href="workflow-basics.html#对象名称"><i class="fa fa-check"></i><b>4.2</b> 对象名称</a></li>
 <li class="chapter" data-level="4.3" data-path="workflow-basics.html"><a href="workflow-basics.html#函数调用"><i class="fa fa-check"></i><b>4.3</b> 函数调用</a></li>
-<li class="chapter" data-level="4.4" data-path="data-visualisation.html"><a href="data-visualisation.html#练习"><i class="fa fa-check"></i><b>4.4</b> 练习</a></li>
+<li class="chapter" data-level="4.4" data-path="workflow-basics.html"><a href="workflow-basics.html#练习-4"><i class="fa fa-check"></i><b>4.4</b> 练习</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="data-transformation.html"><a href="data-transformation.html"><i class="fa fa-check"></i><b>5</b> Data transformation</a>
 <ul>
@@ -195,11 +197,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="5.2" data-path="data-transformation.html"><a href="data-transformation.html#使用filter筛选行"><i class="fa fa-check"></i><b>5.2</b> 使用<code>filter()</code>筛选行</a>
 <ul>
-<li class="chapter" data-level="5.2.1" data-path="data-visualisation.html"><a href="data-visualisation.html#练习"><i class="fa fa-check"></i><b>5.2.1</b> 练习</a></li>
+<li class="chapter" data-level="5.2.1" data-path="data-transformation.html"><a href="data-transformation.html#练习-5"><i class="fa fa-check"></i><b>5.2.1</b> 练习</a></li>
 </ul></li>
 <li class="chapter" data-level="5.3" data-path="data-transformation.html"><a href="data-transformation.html#使用arrange排列行"><i class="fa fa-check"></i><b>5.3</b> 使用<code>arrange()</code>排列行</a>
 <ul>
-<li class="chapter" data-level="5.3.1" data-path="data-visualisation.html"><a href="data-visualisation.html#练习-1"><i class="fa fa-check"></i><b>5.3.1</b> 练习</a></li>
+<li class="chapter" data-level="5.3.1" data-path="data-transformation.html"><a href="data-transformation.html#练习-6"><i class="fa fa-check"></i><b>5.3.1</b> 练习</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -279,7 +281,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>逻辑运算符，&amp;、|、！（而不是&amp;&amp;，||）</p></li>
 <li><p>其他，像 %in%, between</p></li>
 </ul>
-<div id="练习" class="section level3" number="5.2.1">
+<div id="练习-5" class="section level3" number="5.2.1">
 <h3><span class="header-section-number">5.2.1</span> 练习</h3>
 <p>(1)找出满足以下条件的所有航班。</p>
 <p>a.到达时间延误 2 小时或更多的航班。</p>
@@ -449,7 +451,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb85-12"><a href="data-transformation.html#cb85-12"></a><span class="co">#&gt; #   carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,</span></span>
 <span id="cb85-13"><a href="data-transformation.html#cb85-13"></a><span class="co">#&gt; #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</span></span></code></pre></div>
 <p>此外，缺失值总是排在<strong>最后</strong>。</p>
-<div id="练习-1" class="section level3" number="5.3.1">
+<div id="练习-6" class="section level3" number="5.3.1">
 <h3><span class="header-section-number">5.3.1</span> 练习</h3>
 <p>(1)如何使用 <code>arrange()</code> 将缺失值排在最前面？（提示：使用 <code>is.na()</code>。）</p>
 <div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="data-transformation.html#cb86-1"></a>df &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">2</span>, <span class="ot">NA</span>))</span>
