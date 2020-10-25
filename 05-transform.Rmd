@@ -178,3 +178,66 @@ arrange(flights,air_time)
 arrange(flights,desc(air_time))
 ```
 
+
+## 使用`select()`选择列
+
+使用方法：
+```{r eval=FALSE}
+select(dataframe,other)
+```
+
+`other`一般可以有：
+
+- 多个变量名标量
+
+- 变量名向量
+
+- 辅助函数，用于匹配变量名，或者将变量移到数据框前面（`everything()`）
+
+### 练习
+
+(1)从`flights`数据集中选择`dep_time`、`dep_delay`、`arr_time`和`arr_delay`，通过头脑风暴找出尽可能多的方法。
+
+```{r eval=FALSE}
+select(flights,dep_time,dep_delay,arr_time,arr_delay)  # 原始方法
+select(flights,dep_time:arr_delay,-c(sched_dep_time,sched_arr_time))  # 向量方法
+select(flights,dep_time:arr_delay,-starts_with("sched"))  # 利用辅助函数匹配需要舍弃的变量名
+select(flights,starts_with("dep"),starts_with("arr"))  # 直接匹配变量名
+select(flights,matches("^(dep|arr)"))  # 利用正则匹配
+```
+
+(2)如果在`select()`函数中多次计入一个变量名，那么会发生什么情况？
+
+```{r}
+select(flights,dep_time,dep_time)
+```
+
+只会选取一列。这就解释了为什么：
+```{r}
+select(flights, time_hour, air_time, everything())
+```
+会把变量移到前面。
+
+(3)`one_of()`函数的作用是什么？为什么它结合以下向量使用时非常有用？
+```{r}
+vars <- c( 
+  "year", "month", "day", "dep_delay", "arr_delay", "hello"
+)
+```
+```{r}
+select(flights,one_of(vars))
+```
+
+选取数据框中包含在`vars`中的变量。
+
+(4)以下代码的运行结果是否出乎意料？选择辅助函数处理大小写的默认方式是什么？如何改变默认方式？
+```{r}
+select(flights, contains("TIME"))
+```
+
+有点出乎意料...查阅文档可以知道，那几个匹配的函数都有参数`ignore.case`（忽略大小写），默认为`TRUE`，修改一下就行了。
+```{r}
+select(flights, contains("TIME",ignore.case = F))
+```
+
+
