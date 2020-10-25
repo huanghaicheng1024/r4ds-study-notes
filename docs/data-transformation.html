@@ -24,7 +24,7 @@
 <meta name="author" content="Huang" />
 
 
-<meta name="date" content="2020-10-24" />
+<meta name="date" content="2020-10-25" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -196,6 +196,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.2" data-path="data-transformation.html"><a href="data-transformation.html#使用filter筛选行"><i class="fa fa-check"></i><b>5.2</b> 使用<code>filter()</code>筛选行</a>
 <ul>
 <li class="chapter" data-level="5.2.1" data-path="data-visualisation.html"><a href="data-visualisation.html#练习"><i class="fa fa-check"></i><b>5.2.1</b> 练习</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="data-transformation.html"><a href="data-transformation.html#使用arrange排列行"><i class="fa fa-check"></i><b>5.3</b> 使用<code>arrange()</code>排列行</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="data-visualisation.html"><a href="data-visualisation.html#练习-1"><i class="fa fa-check"></i><b>5.3.1</b> 练习</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -411,6 +415,121 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>个人觉得，因为NA表示缺失值，所有有可能取到可取的任意值。</p>
 <p>对于<code>NA^0</code>，<code>NA*0</code>等数学运算，NA可以取任意数值，对于NA所取任意值，如果表达式的值都唯一，那么这个就是该表达式的值，若不唯一，则应为NA。由于对于任意数值，它的0次幂都为1（包括<code>Inf</code>、<code>-Inf</code>），所以<code>NA^0==1</code>，而由于<code>Inf*0=NaN</code>，当NA取1时<code>NA*0==0</code>，不唯一，故<code>NA * 0=NA</code>。</p>
 <p>对于<code>NA | TRUE</code>，<code>FALSE &amp; NA</code>，NA可以取<code>TRUE</code>或者<code>FALSE</code>，无论取什么值，两个表达式的值都唯一（分别为<code>TRUE</code>，<code>FALSE</code>），故它们的值都不是NA。</p>
+</div>
+</div>
+<div id="使用arrange排列行" class="section level2" number="5.3">
+<h2><span class="header-section-number">5.3</span> 使用<code>arrange()</code>排列行</h2>
+<p>工作方式：</p>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="data-transformation.html#cb84-1"></a><span class="kw">arrange</span>(flights,year,month,day)</span>
+<span id="cb84-2"><a href="data-transformation.html#cb84-2"></a><span class="co">#&gt; # A tibble: 336,776 x 19</span></span>
+<span id="cb84-3"><a href="data-transformation.html#cb84-3"></a><span class="co">#&gt;    year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time</span></span>
+<span id="cb84-4"><a href="data-transformation.html#cb84-4"></a><span class="co">#&gt;   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;</span></span>
+<span id="cb84-5"><a href="data-transformation.html#cb84-5"></a><span class="co">#&gt; 1  2013     1     1      517            515         2      830            819</span></span>
+<span id="cb84-6"><a href="data-transformation.html#cb84-6"></a><span class="co">#&gt; 2  2013     1     1      533            529         4      850            830</span></span>
+<span id="cb84-7"><a href="data-transformation.html#cb84-7"></a><span class="co">#&gt; 3  2013     1     1      542            540         2      923            850</span></span>
+<span id="cb84-8"><a href="data-transformation.html#cb84-8"></a><span class="co">#&gt; 4  2013     1     1      544            545        -1     1004           1022</span></span>
+<span id="cb84-9"><a href="data-transformation.html#cb84-9"></a><span class="co">#&gt; 5  2013     1     1      554            600        -6      812            837</span></span>
+<span id="cb84-10"><a href="data-transformation.html#cb84-10"></a><span class="co">#&gt; 6  2013     1     1      554            558        -4      740            728</span></span>
+<span id="cb84-11"><a href="data-transformation.html#cb84-11"></a><span class="co">#&gt; # ... with 336,770 more rows, and 11 more variables: arr_delay &lt;dbl&gt;,</span></span>
+<span id="cb84-12"><a href="data-transformation.html#cb84-12"></a><span class="co">#&gt; #   carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,</span></span>
+<span id="cb84-13"><a href="data-transformation.html#cb84-13"></a><span class="co">#&gt; #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</span></span></code></pre></div>
+<p>将数据框<code>flights</code>的行按照<code>year,month,day</code>的值升序排序，返回新的数据框。</p>
+<p>使用 <code>desc()</code> 可以按列进行<strong>降序</strong>排序：</p>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="data-transformation.html#cb85-1"></a><span class="kw">arrange</span>(flights,<span class="kw">desc</span>(dep_delay))</span>
+<span id="cb85-2"><a href="data-transformation.html#cb85-2"></a><span class="co">#&gt; # A tibble: 336,776 x 19</span></span>
+<span id="cb85-3"><a href="data-transformation.html#cb85-3"></a><span class="co">#&gt;    year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time</span></span>
+<span id="cb85-4"><a href="data-transformation.html#cb85-4"></a><span class="co">#&gt;   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;</span></span>
+<span id="cb85-5"><a href="data-transformation.html#cb85-5"></a><span class="co">#&gt; 1  2013     1     9      641            900      1301     1242           1530</span></span>
+<span id="cb85-6"><a href="data-transformation.html#cb85-6"></a><span class="co">#&gt; 2  2013     6    15     1432           1935      1137     1607           2120</span></span>
+<span id="cb85-7"><a href="data-transformation.html#cb85-7"></a><span class="co">#&gt; 3  2013     1    10     1121           1635      1126     1239           1810</span></span>
+<span id="cb85-8"><a href="data-transformation.html#cb85-8"></a><span class="co">#&gt; 4  2013     9    20     1139           1845      1014     1457           2210</span></span>
+<span id="cb85-9"><a href="data-transformation.html#cb85-9"></a><span class="co">#&gt; 5  2013     7    22      845           1600      1005     1044           1815</span></span>
+<span id="cb85-10"><a href="data-transformation.html#cb85-10"></a><span class="co">#&gt; 6  2013     4    10     1100           1900       960     1342           2211</span></span>
+<span id="cb85-11"><a href="data-transformation.html#cb85-11"></a><span class="co">#&gt; # ... with 336,770 more rows, and 11 more variables: arr_delay &lt;dbl&gt;,</span></span>
+<span id="cb85-12"><a href="data-transformation.html#cb85-12"></a><span class="co">#&gt; #   carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,</span></span>
+<span id="cb85-13"><a href="data-transformation.html#cb85-13"></a><span class="co">#&gt; #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</span></span></code></pre></div>
+<p>此外，缺失值总是排在<strong>最后</strong>。</p>
+<div id="练习-1" class="section level3" number="5.3.1">
+<h3><span class="header-section-number">5.3.1</span> 练习</h3>
+<p>(1)如何使用 <code>arrange()</code> 将缺失值排在最前面？（提示：使用 <code>is.na()</code>。）</p>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="data-transformation.html#cb86-1"></a>df &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">2</span>, <span class="ot">NA</span>))</span>
+<span id="cb86-2"><a href="data-transformation.html#cb86-2"></a><span class="kw">arrange</span>(df,<span class="kw">desc</span>(<span class="kw">is.na</span>(df)))</span>
+<span id="cb86-3"><a href="data-transformation.html#cb86-3"></a><span class="co">#&gt; # A tibble: 3 x 1</span></span>
+<span id="cb86-4"><a href="data-transformation.html#cb86-4"></a><span class="co">#&gt;       x</span></span>
+<span id="cb86-5"><a href="data-transformation.html#cb86-5"></a><span class="co">#&gt;   &lt;dbl&gt;</span></span>
+<span id="cb86-6"><a href="data-transformation.html#cb86-6"></a><span class="co">#&gt; 1    NA</span></span>
+<span id="cb86-7"><a href="data-transformation.html#cb86-7"></a><span class="co">#&gt; 2     5</span></span>
+<span id="cb86-8"><a href="data-transformation.html#cb86-8"></a><span class="co">#&gt; 3     2</span></span></code></pre></div>
+<p>不知道这算不算一个好的办法。但是要改变非缺失值顺序的同时又把缺失值放在前面，就有点复杂了，需要<code>arrange</code>两次。</p>
+<p>(2)对<code>ﬂights</code>排序以找出延误时间最长的航班。找出出发时间最早的航班。</p>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="data-transformation.html#cb87-1"></a><span class="kw">arrange</span>(flights,<span class="kw">desc</span>(arr_delay))</span>
+<span id="cb87-2"><a href="data-transformation.html#cb87-2"></a><span class="co">#&gt; # A tibble: 336,776 x 19</span></span>
+<span id="cb87-3"><a href="data-transformation.html#cb87-3"></a><span class="co">#&gt;    year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time</span></span>
+<span id="cb87-4"><a href="data-transformation.html#cb87-4"></a><span class="co">#&gt;   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;</span></span>
+<span id="cb87-5"><a href="data-transformation.html#cb87-5"></a><span class="co">#&gt; 1  2013     1     9      641            900      1301     1242           1530</span></span>
+<span id="cb87-6"><a href="data-transformation.html#cb87-6"></a><span class="co">#&gt; 2  2013     6    15     1432           1935      1137     1607           2120</span></span>
+<span id="cb87-7"><a href="data-transformation.html#cb87-7"></a><span class="co">#&gt; 3  2013     1    10     1121           1635      1126     1239           1810</span></span>
+<span id="cb87-8"><a href="data-transformation.html#cb87-8"></a><span class="co">#&gt; 4  2013     9    20     1139           1845      1014     1457           2210</span></span>
+<span id="cb87-9"><a href="data-transformation.html#cb87-9"></a><span class="co">#&gt; 5  2013     7    22      845           1600      1005     1044           1815</span></span>
+<span id="cb87-10"><a href="data-transformation.html#cb87-10"></a><span class="co">#&gt; 6  2013     4    10     1100           1900       960     1342           2211</span></span>
+<span id="cb87-11"><a href="data-transformation.html#cb87-11"></a><span class="co">#&gt; # ... with 336,770 more rows, and 11 more variables: arr_delay &lt;dbl&gt;,</span></span>
+<span id="cb87-12"><a href="data-transformation.html#cb87-12"></a><span class="co">#&gt; #   carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,</span></span>
+<span id="cb87-13"><a href="data-transformation.html#cb87-13"></a><span class="co">#&gt; #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</span></span></code></pre></div>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="data-transformation.html#cb88-1"></a><span class="kw">arrange</span>(flights,dep_time)</span>
+<span id="cb88-2"><a href="data-transformation.html#cb88-2"></a><span class="co">#&gt; # A tibble: 336,776 x 19</span></span>
+<span id="cb88-3"><a href="data-transformation.html#cb88-3"></a><span class="co">#&gt;    year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time</span></span>
+<span id="cb88-4"><a href="data-transformation.html#cb88-4"></a><span class="co">#&gt;   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;</span></span>
+<span id="cb88-5"><a href="data-transformation.html#cb88-5"></a><span class="co">#&gt; 1  2013     1    13        1           2249        72      108           2357</span></span>
+<span id="cb88-6"><a href="data-transformation.html#cb88-6"></a><span class="co">#&gt; 2  2013     1    31        1           2100       181      124           2225</span></span>
+<span id="cb88-7"><a href="data-transformation.html#cb88-7"></a><span class="co">#&gt; 3  2013    11    13        1           2359         2      442            440</span></span>
+<span id="cb88-8"><a href="data-transformation.html#cb88-8"></a><span class="co">#&gt; 4  2013    12    16        1           2359         2      447            437</span></span>
+<span id="cb88-9"><a href="data-transformation.html#cb88-9"></a><span class="co">#&gt; 5  2013    12    20        1           2359         2      430            440</span></span>
+<span id="cb88-10"><a href="data-transformation.html#cb88-10"></a><span class="co">#&gt; 6  2013    12    26        1           2359         2      437            440</span></span>
+<span id="cb88-11"><a href="data-transformation.html#cb88-11"></a><span class="co">#&gt; # ... with 336,770 more rows, and 11 more variables: arr_delay &lt;dbl&gt;,</span></span>
+<span id="cb88-12"><a href="data-transformation.html#cb88-12"></a><span class="co">#&gt; #   carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,</span></span>
+<span id="cb88-13"><a href="data-transformation.html#cb88-13"></a><span class="co">#&gt; #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</span></span></code></pre></div>
+<p>(3)对<code>flights</code>排序以找出速度最快的航班。</p>
+<p>需要根据<code>distance</code>（距离）以及<code>air_time</code>（飞行时间）去计算速度，并排序：</p>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="data-transformation.html#cb89-1"></a><span class="kw">arrange</span>(flights,<span class="kw">desc</span>(distance<span class="op">/</span>air_time))</span>
+<span id="cb89-2"><a href="data-transformation.html#cb89-2"></a><span class="co">#&gt; # A tibble: 336,776 x 19</span></span>
+<span id="cb89-3"><a href="data-transformation.html#cb89-3"></a><span class="co">#&gt;    year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time</span></span>
+<span id="cb89-4"><a href="data-transformation.html#cb89-4"></a><span class="co">#&gt;   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;</span></span>
+<span id="cb89-5"><a href="data-transformation.html#cb89-5"></a><span class="co">#&gt; 1  2013     5    25     1709           1700         9     1923           1937</span></span>
+<span id="cb89-6"><a href="data-transformation.html#cb89-6"></a><span class="co">#&gt; 2  2013     7     2     1558           1513        45     1745           1719</span></span>
+<span id="cb89-7"><a href="data-transformation.html#cb89-7"></a><span class="co">#&gt; 3  2013     5    13     2040           2025        15     2225           2226</span></span>
+<span id="cb89-8"><a href="data-transformation.html#cb89-8"></a><span class="co">#&gt; 4  2013     3    23     1914           1910         4     2045           2043</span></span>
+<span id="cb89-9"><a href="data-transformation.html#cb89-9"></a><span class="co">#&gt; 5  2013     1    12     1559           1600        -1     1849           1917</span></span>
+<span id="cb89-10"><a href="data-transformation.html#cb89-10"></a><span class="co">#&gt; 6  2013    11    17      650            655        -5     1059           1150</span></span>
+<span id="cb89-11"><a href="data-transformation.html#cb89-11"></a><span class="co">#&gt; # ... with 336,770 more rows, and 11 more variables: arr_delay &lt;dbl&gt;,</span></span>
+<span id="cb89-12"><a href="data-transformation.html#cb89-12"></a><span class="co">#&gt; #   carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,</span></span>
+<span id="cb89-13"><a href="data-transformation.html#cb89-13"></a><span class="co">#&gt; #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</span></span></code></pre></div>
+<p>(4)哪个航班的飞行时间最长？哪个最短？</p>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="data-transformation.html#cb90-1"></a><span class="kw">arrange</span>(flights,air_time)</span>
+<span id="cb90-2"><a href="data-transformation.html#cb90-2"></a><span class="co">#&gt; # A tibble: 336,776 x 19</span></span>
+<span id="cb90-3"><a href="data-transformation.html#cb90-3"></a><span class="co">#&gt;    year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time</span></span>
+<span id="cb90-4"><a href="data-transformation.html#cb90-4"></a><span class="co">#&gt;   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;</span></span>
+<span id="cb90-5"><a href="data-transformation.html#cb90-5"></a><span class="co">#&gt; 1  2013     1    16     1355           1315        40     1442           1411</span></span>
+<span id="cb90-6"><a href="data-transformation.html#cb90-6"></a><span class="co">#&gt; 2  2013     4    13      537            527        10      622            628</span></span>
+<span id="cb90-7"><a href="data-transformation.html#cb90-7"></a><span class="co">#&gt; 3  2013    12     6      922            851        31     1021            954</span></span>
+<span id="cb90-8"><a href="data-transformation.html#cb90-8"></a><span class="co">#&gt; 4  2013     2     3     2153           2129        24     2247           2224</span></span>
+<span id="cb90-9"><a href="data-transformation.html#cb90-9"></a><span class="co">#&gt; 5  2013     2     5     1303           1315       -12     1342           1411</span></span>
+<span id="cb90-10"><a href="data-transformation.html#cb90-10"></a><span class="co">#&gt; 6  2013     2    12     2123           2130        -7     2211           2225</span></span>
+<span id="cb90-11"><a href="data-transformation.html#cb90-11"></a><span class="co">#&gt; # ... with 336,770 more rows, and 11 more variables: arr_delay &lt;dbl&gt;,</span></span>
+<span id="cb90-12"><a href="data-transformation.html#cb90-12"></a><span class="co">#&gt; #   carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,</span></span>
+<span id="cb90-13"><a href="data-transformation.html#cb90-13"></a><span class="co">#&gt; #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</span></span></code></pre></div>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="data-transformation.html#cb91-1"></a><span class="kw">arrange</span>(flights,<span class="kw">desc</span>(air_time))</span>
+<span id="cb91-2"><a href="data-transformation.html#cb91-2"></a><span class="co">#&gt; # A tibble: 336,776 x 19</span></span>
+<span id="cb91-3"><a href="data-transformation.html#cb91-3"></a><span class="co">#&gt;    year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time</span></span>
+<span id="cb91-4"><a href="data-transformation.html#cb91-4"></a><span class="co">#&gt;   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;</span></span>
+<span id="cb91-5"><a href="data-transformation.html#cb91-5"></a><span class="co">#&gt; 1  2013     3    17     1337           1335         2     1937           1836</span></span>
+<span id="cb91-6"><a href="data-transformation.html#cb91-6"></a><span class="co">#&gt; 2  2013     2     6      853            900        -7     1542           1540</span></span>
+<span id="cb91-7"><a href="data-transformation.html#cb91-7"></a><span class="co">#&gt; 3  2013     3    15     1001           1000         1     1551           1530</span></span>
+<span id="cb91-8"><a href="data-transformation.html#cb91-8"></a><span class="co">#&gt; 4  2013     3    17     1006           1000         6     1607           1530</span></span>
+<span id="cb91-9"><a href="data-transformation.html#cb91-9"></a><span class="co">#&gt; 5  2013     3    16     1001           1000         1     1544           1530</span></span>
+<span id="cb91-10"><a href="data-transformation.html#cb91-10"></a><span class="co">#&gt; 6  2013     2     5      900            900         0     1555           1540</span></span>
+<span id="cb91-11"><a href="data-transformation.html#cb91-11"></a><span class="co">#&gt; # ... with 336,770 more rows, and 11 more variables: arr_delay &lt;dbl&gt;,</span></span>
+<span id="cb91-12"><a href="data-transformation.html#cb91-12"></a><span class="co">#&gt; #   carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,</span></span>
+<span id="cb91-13"><a href="data-transformation.html#cb91-13"></a><span class="co">#&gt; #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</span></span></code></pre></div>
 
 </div>
 </div>
