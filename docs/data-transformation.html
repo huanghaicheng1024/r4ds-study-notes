@@ -203,6 +203,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="5.3.1" data-path="data-transformation.html"><a href="data-transformation.html#练习-6"><i class="fa fa-check"></i><b>5.3.1</b> 练习</a></li>
 </ul></li>
+<li class="chapter" data-level="5.4" data-path="data-transformation.html"><a href="data-transformation.html#使用select选择列"><i class="fa fa-check"></i><b>5.4</b> 使用<code>select()</code>选择列</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="data-transformation.html"><a href="data-transformation.html#练习-7"><i class="fa fa-check"></i><b>5.4.1</b> 练习</a></li>
+</ul></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://bookdown.org" target="blank">本书由 bookdown 强力驱动</a></li>
@@ -532,6 +536,86 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb91-11"><a href="data-transformation.html#cb91-11"></a><span class="co">#&gt; # ... with 336,770 more rows, and 11 more variables: arr_delay &lt;dbl&gt;,</span></span>
 <span id="cb91-12"><a href="data-transformation.html#cb91-12"></a><span class="co">#&gt; #   carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,</span></span>
 <span id="cb91-13"><a href="data-transformation.html#cb91-13"></a><span class="co">#&gt; #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</span></span></code></pre></div>
+</div>
+</div>
+<div id="使用select选择列" class="section level2" number="5.4">
+<h2><span class="header-section-number">5.4</span> 使用<code>select()</code>选择列</h2>
+<p>使用方法：</p>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="data-transformation.html#cb92-1"></a><span class="kw">select</span>(dataframe,other)</span></code></pre></div>
+<p><code>other</code>一般可以有：</p>
+<ul>
+<li><p>多个变量名标量</p></li>
+<li><p>变量名向量</p></li>
+<li><p>辅助函数，用于匹配变量名，或者将变量移到数据框前面（<code>everything()</code>）</p></li>
+</ul>
+<div id="练习-7" class="section level3" number="5.4.1">
+<h3><span class="header-section-number">5.4.1</span> 练习</h3>
+<p>(1)从<code>flights</code>数据集中选择<code>dep_time</code>、<code>dep_delay</code>、<code>arr_time</code>和<code>arr_delay</code>，通过头脑风暴找出尽可能多的方法。</p>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="data-transformation.html#cb93-1"></a><span class="kw">select</span>(flights,dep_time,dep_delay,arr_time,arr_delay)  <span class="co"># 原始方法</span></span>
+<span id="cb93-2"><a href="data-transformation.html#cb93-2"></a><span class="kw">select</span>(flights,dep_time<span class="op">:</span>arr_delay,<span class="op">-</span><span class="kw">c</span>(sched_dep_time,sched_arr_time))  <span class="co"># 向量方法</span></span>
+<span id="cb93-3"><a href="data-transformation.html#cb93-3"></a><span class="kw">select</span>(flights,dep_time<span class="op">:</span>arr_delay,<span class="op">-</span><span class="kw">starts_with</span>(<span class="st">&quot;sched&quot;</span>))  <span class="co"># 利用辅助函数匹配需要舍弃的变量名</span></span>
+<span id="cb93-4"><a href="data-transformation.html#cb93-4"></a><span class="kw">select</span>(flights,<span class="kw">starts_with</span>(<span class="st">&quot;dep&quot;</span>),<span class="kw">starts_with</span>(<span class="st">&quot;arr&quot;</span>))  <span class="co"># 直接匹配变量名</span></span>
+<span id="cb93-5"><a href="data-transformation.html#cb93-5"></a><span class="kw">select</span>(flights,<span class="kw">matches</span>(<span class="st">&quot;^(dep|arr)&quot;</span>))  <span class="co"># 利用正则匹配</span></span></code></pre></div>
+<p>(2)如果在<code>select()</code>函数中多次计入一个变量名，那么会发生什么情况？</p>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="data-transformation.html#cb94-1"></a><span class="kw">select</span>(flights,dep_time,dep_time)</span>
+<span id="cb94-2"><a href="data-transformation.html#cb94-2"></a><span class="co">#&gt; # A tibble: 336,776 x 1</span></span>
+<span id="cb94-3"><a href="data-transformation.html#cb94-3"></a><span class="co">#&gt;   dep_time</span></span>
+<span id="cb94-4"><a href="data-transformation.html#cb94-4"></a><span class="co">#&gt;      &lt;int&gt;</span></span>
+<span id="cb94-5"><a href="data-transformation.html#cb94-5"></a><span class="co">#&gt; 1      517</span></span>
+<span id="cb94-6"><a href="data-transformation.html#cb94-6"></a><span class="co">#&gt; 2      533</span></span>
+<span id="cb94-7"><a href="data-transformation.html#cb94-7"></a><span class="co">#&gt; 3      542</span></span>
+<span id="cb94-8"><a href="data-transformation.html#cb94-8"></a><span class="co">#&gt; 4      544</span></span>
+<span id="cb94-9"><a href="data-transformation.html#cb94-9"></a><span class="co">#&gt; 5      554</span></span>
+<span id="cb94-10"><a href="data-transformation.html#cb94-10"></a><span class="co">#&gt; 6      554</span></span>
+<span id="cb94-11"><a href="data-transformation.html#cb94-11"></a><span class="co">#&gt; # ... with 336,770 more rows</span></span></code></pre></div>
+<p>只会选取一列。这就解释了为什么：</p>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="data-transformation.html#cb95-1"></a><span class="kw">select</span>(flights, time_hour, air_time, <span class="kw">everything</span>())</span>
+<span id="cb95-2"><a href="data-transformation.html#cb95-2"></a><span class="co">#&gt; # A tibble: 336,776 x 19</span></span>
+<span id="cb95-3"><a href="data-transformation.html#cb95-3"></a><span class="co">#&gt;   time_hour           air_time  year month   day dep_time sched_dep_time</span></span>
+<span id="cb95-4"><a href="data-transformation.html#cb95-4"></a><span class="co">#&gt;   &lt;dttm&gt;                 &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;</span></span>
+<span id="cb95-5"><a href="data-transformation.html#cb95-5"></a><span class="co">#&gt; 1 2013-01-01 05:00:00      227  2013     1     1      517            515</span></span>
+<span id="cb95-6"><a href="data-transformation.html#cb95-6"></a><span class="co">#&gt; 2 2013-01-01 05:00:00      227  2013     1     1      533            529</span></span>
+<span id="cb95-7"><a href="data-transformation.html#cb95-7"></a><span class="co">#&gt; 3 2013-01-01 05:00:00      160  2013     1     1      542            540</span></span>
+<span id="cb95-8"><a href="data-transformation.html#cb95-8"></a><span class="co">#&gt; 4 2013-01-01 05:00:00      183  2013     1     1      544            545</span></span>
+<span id="cb95-9"><a href="data-transformation.html#cb95-9"></a><span class="co">#&gt; 5 2013-01-01 06:00:00      116  2013     1     1      554            600</span></span>
+<span id="cb95-10"><a href="data-transformation.html#cb95-10"></a><span class="co">#&gt; 6 2013-01-01 05:00:00      150  2013     1     1      554            558</span></span>
+<span id="cb95-11"><a href="data-transformation.html#cb95-11"></a><span class="co">#&gt; # ... with 336,770 more rows, and 12 more variables: dep_delay &lt;dbl&gt;,</span></span>
+<span id="cb95-12"><a href="data-transformation.html#cb95-12"></a><span class="co">#&gt; #   arr_time &lt;int&gt;, sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,</span></span>
+<span id="cb95-13"><a href="data-transformation.html#cb95-13"></a><span class="co">#&gt; #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, distance &lt;dbl&gt;,</span></span>
+<span id="cb95-14"><a href="data-transformation.html#cb95-14"></a><span class="co">#&gt; #   hour &lt;dbl&gt;, minute &lt;dbl&gt;</span></span></code></pre></div>
+<p>会把变量移到前面。</p>
+<p>(3)<code>one_of()</code>函数的作用是什么？为什么它结合以下向量使用时非常有用？</p>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="data-transformation.html#cb96-1"></a>vars &lt;-<span class="st"> </span><span class="kw">c</span>( </span>
+<span id="cb96-2"><a href="data-transformation.html#cb96-2"></a>  <span class="st">&quot;year&quot;</span>, <span class="st">&quot;month&quot;</span>, <span class="st">&quot;day&quot;</span>, <span class="st">&quot;dep_delay&quot;</span>, <span class="st">&quot;arr_delay&quot;</span>, <span class="st">&quot;hello&quot;</span></span>
+<span id="cb96-3"><a href="data-transformation.html#cb96-3"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="data-transformation.html#cb97-1"></a><span class="kw">select</span>(flights,<span class="kw">one_of</span>(vars))</span>
+<span id="cb97-2"><a href="data-transformation.html#cb97-2"></a><span class="co">#&gt; Warning: Unknown columns: `hello`</span></span>
+<span id="cb97-3"><a href="data-transformation.html#cb97-3"></a><span class="co">#&gt; # A tibble: 336,776 x 5</span></span>
+<span id="cb97-4"><a href="data-transformation.html#cb97-4"></a><span class="co">#&gt;    year month   day dep_delay arr_delay</span></span>
+<span id="cb97-5"><a href="data-transformation.html#cb97-5"></a><span class="co">#&gt;   &lt;int&gt; &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;dbl&gt;</span></span>
+<span id="cb97-6"><a href="data-transformation.html#cb97-6"></a><span class="co">#&gt; 1  2013     1     1         2        11</span></span>
+<span id="cb97-7"><a href="data-transformation.html#cb97-7"></a><span class="co">#&gt; 2  2013     1     1         4        20</span></span>
+<span id="cb97-8"><a href="data-transformation.html#cb97-8"></a><span class="co">#&gt; 3  2013     1     1         2        33</span></span>
+<span id="cb97-9"><a href="data-transformation.html#cb97-9"></a><span class="co">#&gt; 4  2013     1     1        -1       -18</span></span>
+<span id="cb97-10"><a href="data-transformation.html#cb97-10"></a><span class="co">#&gt; 5  2013     1     1        -6       -25</span></span>
+<span id="cb97-11"><a href="data-transformation.html#cb97-11"></a><span class="co">#&gt; 6  2013     1     1        -4        12</span></span>
+<span id="cb97-12"><a href="data-transformation.html#cb97-12"></a><span class="co">#&gt; # ... with 336,770 more rows</span></span></code></pre></div>
+<p>选取数据框中包含在<code>vars</code>中的变量。</p>
+<p>(4)以下代码的运行结果是否出乎意料？选择辅助函数处理大小写的默认方式是什么？如何改变默认方式？</p>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="data-transformation.html#cb98-1"></a><span class="kw">select</span>(flights, <span class="kw">contains</span>(<span class="st">&quot;TIME&quot;</span>))</span>
+<span id="cb98-2"><a href="data-transformation.html#cb98-2"></a><span class="co">#&gt; # A tibble: 336,776 x 6</span></span>
+<span id="cb98-3"><a href="data-transformation.html#cb98-3"></a><span class="co">#&gt;   dep_time sched_dep_time arr_time sched_arr_time air_time time_hour          </span></span>
+<span id="cb98-4"><a href="data-transformation.html#cb98-4"></a><span class="co">#&gt;      &lt;int&gt;          &lt;int&gt;    &lt;int&gt;          &lt;int&gt;    &lt;dbl&gt; &lt;dttm&gt;             </span></span>
+<span id="cb98-5"><a href="data-transformation.html#cb98-5"></a><span class="co">#&gt; 1      517            515      830            819      227 2013-01-01 05:00:00</span></span>
+<span id="cb98-6"><a href="data-transformation.html#cb98-6"></a><span class="co">#&gt; 2      533            529      850            830      227 2013-01-01 05:00:00</span></span>
+<span id="cb98-7"><a href="data-transformation.html#cb98-7"></a><span class="co">#&gt; 3      542            540      923            850      160 2013-01-01 05:00:00</span></span>
+<span id="cb98-8"><a href="data-transformation.html#cb98-8"></a><span class="co">#&gt; 4      544            545     1004           1022      183 2013-01-01 05:00:00</span></span>
+<span id="cb98-9"><a href="data-transformation.html#cb98-9"></a><span class="co">#&gt; 5      554            600      812            837      116 2013-01-01 06:00:00</span></span>
+<span id="cb98-10"><a href="data-transformation.html#cb98-10"></a><span class="co">#&gt; 6      554            558      740            728      150 2013-01-01 05:00:00</span></span>
+<span id="cb98-11"><a href="data-transformation.html#cb98-11"></a><span class="co">#&gt; # ... with 336,770 more rows</span></span></code></pre></div>
+<p>有点出乎意料…查阅文档可以知道，那几个匹配的函数都有参数<code>ignore.case</code>（忽略大小写），默认为<code>TRUE</code>，修改一下就行了。</p>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="data-transformation.html#cb99-1"></a><span class="kw">select</span>(flights, <span class="kw">contains</span>(<span class="st">&quot;TIME&quot;</span>,<span class="dt">ignore.case =</span> F))</span>
+<span id="cb99-2"><a href="data-transformation.html#cb99-2"></a><span class="co">#&gt; # A tibble: 336,776 x 0</span></span></code></pre></div>
 
 </div>
 </div>

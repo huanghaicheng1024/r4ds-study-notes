@@ -38,3 +38,5 @@ dplyr基础
 练习-5
 使用arrange排列行
 练习-6
+使用select选择列
+练习-7
