@@ -194,6 +194,9 @@ select(dataframe,other)
 
 - 辅助函数，用于匹配变量名，或者将变量移到数据框前面（`everything()`）
 
+位于前面的变量名参数的优先级更高，如果跟后面的变量名参数冲突（相同）会覆盖它。（可以参考练习(2)）。
+
+
 ### 练习
 
 (1)从`flights`数据集中选择`dep_time`、`dep_delay`、`arr_time`和`arr_delay`，通过头脑风暴找出尽可能多的方法。
@@ -239,5 +242,84 @@ select(flights, contains("TIME"))
 ```{r}
 select(flights, contains("TIME",ignore.case = F))
 ```
+
+
+## 使用`mutate()`添加新变量
+
+我们可以使用`mutate()`添加新变量，也就是新的列，它往往是原有列的函数。
+
+- `mutate()`总是将新列添加在数据集的最后
+
+- 一旦创建，新列就可以立即使用。不用等到返回数据框再使用新列。
+
+- 如果**只想保留新变量**，可以使用`transmute()`函数。使用`mutate()`函数会保留原数据框的所有列，新列加在后面。
+
+### 常用创建函数
+
+创建新变量的多种函数可供同`mutate()`一同使用。最重要的一点是，这种函数必须是向
+量化的。这个不难理解，毕竟我们是输入原有列（向量）而得到新列（向量）。
+
+主要有：
+
+- 算术运算符：+、-、*、/、^
+
+- 模运算符：%/%（整除） 和 %%（求余）
+
+- 对数函数：log()、log2() 和 log10()
+
+- 偏移函数：lead()、lag()
+
+- 累加和滚动聚合：cumsum()、cumprod()、commin() 和 cummax()，以及cummean()
+
+- 逻辑比较：<、<=、>、>= 和 !=
+
+- 排秩：min_rank()、 row_number()、dense_rank()、percent_rank()、cume_dist()和 ntile()
+
+### 练习
+
+(1)虽然现在的`dep_time`和`sched_dep_time`变量方便阅读，但不适合计算，因为它们实际上并不是连续型数值。将它们转换成一种更方便的表示形式，即从午夜开始的分钟数。
+
+```{r}
+transmute(flights,
+          dep_min=(dep_time %/% 100)*60+(dep_time %% 100),
+          sched_dep_min = (sched_dep_time %/% 100)*60+(sched_dep_time %% 100))
+```
+
+
+(2)比较 `air_time` 和`arr_time–dep_time`。你期望看到什么？实际又看到了什么？如何解决这个问题？
+
+
+```{r}
+transmute(flights,air_time=air_time,t=arr_time-dep_time)
+```
+
+因为`arr_time,dep_time`的格式都是HMM或者HHMM，`air_time`格式是分钟，所以前者直接相减是不会等于后者。一种方法把它们都转换成分钟。
+```{r}
+flights%>%
+  transmute(air_time,
+            arr_min = (arr_time %/% 100)*60+(arr_time %% 100),
+            dep_min = (dep_time %/% 100)*60+(dep_time %% 100),
+            t_min = arr_min-dep_min
+            )
+```
+
+本以为`air_time`会与`t_min`相等，但是并不是...大于小于都有，这就很奇怪了，特别是`air_time`大于`t_min`这是啥意思...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
