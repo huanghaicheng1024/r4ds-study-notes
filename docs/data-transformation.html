@@ -693,6 +693,35 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb102-15"><a href="data-transformation.html#cb102-15"></a><span class="co">#&gt; 6      150     460     354   106</span></span>
 <span id="cb102-16"><a href="data-transformation.html#cb102-16"></a><span class="co">#&gt; # ... with 336,770 more rows</span></span></code></pre></div>
 <p>本以为<code>air_time</code>会与<code>t_min</code>相等，但是并不是…大于小于都有，这就很奇怪了，特别是<code>air_time</code>大于<code>t_min</code>这是啥意思…</p>
+<p>(4)使用排秩函数找出 10 个延误时间最长的航班。如何处理名次相同的情况？仔细阅读
+<code>min_rank()</code> 的帮助文件。</p>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="data-transformation.html#cb103-1"></a>flights<span class="op">%&gt;%</span></span>
+<span id="cb103-2"><a href="data-transformation.html#cb103-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">rank=</span><span class="kw">min_rank</span>(<span class="kw">desc</span>(arr_delay)))<span class="op">%&gt;%</span></span>
+<span id="cb103-3"><a href="data-transformation.html#cb103-3"></a><span class="st">  </span><span class="kw">filter</span>(rank<span class="op">&lt;=</span><span class="dv">10</span>)<span class="op">%&gt;%</span></span>
+<span id="cb103-4"><a href="data-transformation.html#cb103-4"></a><span class="st">  </span><span class="kw">arrange</span>(rank)</span>
+<span id="cb103-5"><a href="data-transformation.html#cb103-5"></a><span class="co">#&gt; # A tibble: 10 x 20</span></span>
+<span id="cb103-6"><a href="data-transformation.html#cb103-6"></a><span class="co">#&gt;    year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time</span></span>
+<span id="cb103-7"><a href="data-transformation.html#cb103-7"></a><span class="co">#&gt;   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;</span></span>
+<span id="cb103-8"><a href="data-transformation.html#cb103-8"></a><span class="co">#&gt; 1  2013     1     9      641            900      1301     1242           1530</span></span>
+<span id="cb103-9"><a href="data-transformation.html#cb103-9"></a><span class="co">#&gt; 2  2013     6    15     1432           1935      1137     1607           2120</span></span>
+<span id="cb103-10"><a href="data-transformation.html#cb103-10"></a><span class="co">#&gt; 3  2013     1    10     1121           1635      1126     1239           1810</span></span>
+<span id="cb103-11"><a href="data-transformation.html#cb103-11"></a><span class="co">#&gt; 4  2013     9    20     1139           1845      1014     1457           2210</span></span>
+<span id="cb103-12"><a href="data-transformation.html#cb103-12"></a><span class="co">#&gt; 5  2013     7    22      845           1600      1005     1044           1815</span></span>
+<span id="cb103-13"><a href="data-transformation.html#cb103-13"></a><span class="co">#&gt; 6  2013     4    10     1100           1900       960     1342           2211</span></span>
+<span id="cb103-14"><a href="data-transformation.html#cb103-14"></a><span class="co">#&gt; # ... with 4 more rows, and 12 more variables: arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,</span></span>
+<span id="cb103-15"><a href="data-transformation.html#cb103-15"></a><span class="co">#&gt; #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;,</span></span>
+<span id="cb103-16"><a href="data-transformation.html#cb103-16"></a><span class="co">#&gt; #   distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, rank &lt;int&gt;</span></span></code></pre></div>
+<p>(5)<code>1:3 + 1:10</code>会返回什么？为什么？</p>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="data-transformation.html#cb104-1"></a><span class="dv">1</span><span class="op">:</span><span class="dv">3</span><span class="op">+</span><span class="dv">1</span><span class="op">:</span><span class="dv">10</span></span>
+<span id="cb104-2"><a href="data-transformation.html#cb104-2"></a><span class="co">#&gt; Warning in 1:3 + 1:10: 长的对象长度不是短的对象长度的整倍数</span></span>
+<span id="cb104-3"><a href="data-transformation.html#cb104-3"></a><span class="co">#&gt;  [1]  2  4  6  5  7  9  8 10 12 11</span></span></code></pre></div>
+<p>相当于这样，长度不一样的向量运算时，短向量会“广播”：</p>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="data-transformation.html#cb105-1"></a><span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>,<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>,<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>,<span class="dv">1</span>)<span class="op">+</span><span class="dv">1</span><span class="op">:</span><span class="dv">10</span></span>
+<span id="cb105-2"><a href="data-transformation.html#cb105-2"></a><span class="co">#&gt;  [1]  2  4  6  5  7  9  8 10 12 11</span></span></code></pre></div>
+<p>(6)R提供了哪些三角函数？</p>
+<p>利用</p>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="data-transformation.html#cb106-1"></a>?Trig</span></code></pre></div>
+<p>可以得到。</p>
 
 </div>
 </div>
