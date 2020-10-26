@@ -24,7 +24,7 @@
 <meta name="author" content="Huang" />
 
 
-<meta name="date" content="2020-10-25" />
+<meta name="date" content="2020-10-26" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -206,6 +206,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.4" data-path="data-transformation.html"><a href="data-transformation.html#使用select选择列"><i class="fa fa-check"></i><b>5.4</b> 使用<code>select()</code>选择列</a>
 <ul>
 <li class="chapter" data-level="5.4.1" data-path="data-transformation.html"><a href="data-transformation.html#练习-7"><i class="fa fa-check"></i><b>5.4.1</b> 练习</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="data-transformation.html"><a href="data-transformation.html#使用mutate添加新变量"><i class="fa fa-check"></i><b>5.5</b> 使用<code>mutate()</code>添加新变量</a>
+<ul>
+<li class="chapter" data-level="5.5.1" data-path="data-transformation.html"><a href="data-transformation.html#常用创建函数"><i class="fa fa-check"></i><b>5.5.1</b> 常用创建函数</a></li>
+<li class="chapter" data-level="5.5.2" data-path="data-transformation.html"><a href="data-transformation.html#练习-8"><i class="fa fa-check"></i><b>5.5.2</b> 练习</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -548,6 +553,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>变量名向量</p></li>
 <li><p>辅助函数，用于匹配变量名，或者将变量移到数据框前面（<code>everything()</code>）</p></li>
 </ul>
+<p>位于前面的变量名参数的优先级更高，如果跟后面的变量名参数冲突（相同）会覆盖它。（可以参考练习(2)）。</p>
 <div id="练习-7" class="section level3" number="5.4.1">
 <h3><span class="header-section-number">5.4.1</span> 练习</h3>
 <p>(1)从<code>flights</code>数据集中选择<code>dep_time</code>、<code>dep_delay</code>、<code>arr_time</code>和<code>arr_delay</code>，通过头脑风暴找出尽可能多的方法。</p>
@@ -616,6 +622,77 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>有点出乎意料…查阅文档可以知道，那几个匹配的函数都有参数<code>ignore.case</code>（忽略大小写），默认为<code>TRUE</code>，修改一下就行了。</p>
 <div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="data-transformation.html#cb99-1"></a><span class="kw">select</span>(flights, <span class="kw">contains</span>(<span class="st">&quot;TIME&quot;</span>,<span class="dt">ignore.case =</span> F))</span>
 <span id="cb99-2"><a href="data-transformation.html#cb99-2"></a><span class="co">#&gt; # A tibble: 336,776 x 0</span></span></code></pre></div>
+</div>
+</div>
+<div id="使用mutate添加新变量" class="section level2" number="5.5">
+<h2><span class="header-section-number">5.5</span> 使用<code>mutate()</code>添加新变量</h2>
+<p>我们可以使用<code>mutate()</code>添加新变量，也就是新的列，它往往是原有列的函数。</p>
+<ul>
+<li><p><code>mutate()</code>总是将新列添加在数据集的最后</p></li>
+<li><p>一旦创建，新列就可以立即使用。不用等到返回数据框再使用新列。</p></li>
+<li><p>如果<strong>只想保留新变量</strong>，可以使用<code>transmute()</code>函数。使用<code>mutate()</code>函数会保留原数据框的所有列，新列加在后面。</p></li>
+</ul>
+<div id="常用创建函数" class="section level3" number="5.5.1">
+<h3><span class="header-section-number">5.5.1</span> 常用创建函数</h3>
+<p>创建新变量的多种函数可供同<code>mutate()</code>一同使用。最重要的一点是，这种函数必须是向
+量化的。这个不难理解，毕竟我们是输入原有列（向量）而得到新列（向量）。</p>
+<p>主要有：</p>
+<ul>
+<li><p>算术运算符：+、-、*、/、^</p></li>
+<li><p>模运算符：%/%（整除） 和 %%（求余）</p></li>
+<li><p>对数函数：log()、log2() 和 log10()</p></li>
+<li><p>偏移函数：lead()、lag()</p></li>
+<li><p>累加和滚动聚合：cumsum()、cumprod()、commin() 和 cummax()，以及cummean()</p></li>
+<li><p>逻辑比较：&lt;、&lt;=、&gt;、&gt;= 和 !=</p></li>
+<li><p>排秩：min_rank()、 row_number()、dense_rank()、percent_rank()、cume_dist()和 ntile()</p></li>
+</ul>
+</div>
+<div id="练习-8" class="section level3" number="5.5.2">
+<h3><span class="header-section-number">5.5.2</span> 练习</h3>
+<p>(1)虽然现在的<code>dep_time</code>和<code>sched_dep_time</code>变量方便阅读，但不适合计算，因为它们实际上并不是连续型数值。将它们转换成一种更方便的表示形式，即从午夜开始的分钟数。</p>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="data-transformation.html#cb100-1"></a><span class="kw">transmute</span>(flights,</span>
+<span id="cb100-2"><a href="data-transformation.html#cb100-2"></a>          <span class="dt">dep_min=</span>(dep_time <span class="op">%/%</span><span class="st"> </span><span class="dv">100</span>)<span class="op">*</span><span class="dv">60</span><span class="op">+</span>(dep_time <span class="op">%%</span><span class="st"> </span><span class="dv">100</span>),</span>
+<span id="cb100-3"><a href="data-transformation.html#cb100-3"></a>          <span class="dt">sched_dep_min =</span> (sched_dep_time <span class="op">%/%</span><span class="st"> </span><span class="dv">100</span>)<span class="op">*</span><span class="dv">60</span><span class="op">+</span>(sched_dep_time <span class="op">%%</span><span class="st"> </span><span class="dv">100</span>))</span>
+<span id="cb100-4"><a href="data-transformation.html#cb100-4"></a><span class="co">#&gt; # A tibble: 336,776 x 2</span></span>
+<span id="cb100-5"><a href="data-transformation.html#cb100-5"></a><span class="co">#&gt;   dep_min sched_dep_min</span></span>
+<span id="cb100-6"><a href="data-transformation.html#cb100-6"></a><span class="co">#&gt;     &lt;dbl&gt;         &lt;dbl&gt;</span></span>
+<span id="cb100-7"><a href="data-transformation.html#cb100-7"></a><span class="co">#&gt; 1     317           315</span></span>
+<span id="cb100-8"><a href="data-transformation.html#cb100-8"></a><span class="co">#&gt; 2     333           329</span></span>
+<span id="cb100-9"><a href="data-transformation.html#cb100-9"></a><span class="co">#&gt; 3     342           340</span></span>
+<span id="cb100-10"><a href="data-transformation.html#cb100-10"></a><span class="co">#&gt; 4     344           345</span></span>
+<span id="cb100-11"><a href="data-transformation.html#cb100-11"></a><span class="co">#&gt; 5     354           360</span></span>
+<span id="cb100-12"><a href="data-transformation.html#cb100-12"></a><span class="co">#&gt; 6     354           358</span></span>
+<span id="cb100-13"><a href="data-transformation.html#cb100-13"></a><span class="co">#&gt; # ... with 336,770 more rows</span></span></code></pre></div>
+<p>(2)比较 <code>air_time</code> 和<code>arr_time–dep_time</code>。你期望看到什么？实际又看到了什么？如何解决这个问题？</p>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="data-transformation.html#cb101-1"></a><span class="kw">transmute</span>(flights,<span class="dt">air_time=</span>air_time,<span class="dt">t=</span>arr_time<span class="op">-</span>dep_time)</span>
+<span id="cb101-2"><a href="data-transformation.html#cb101-2"></a><span class="co">#&gt; # A tibble: 336,776 x 2</span></span>
+<span id="cb101-3"><a href="data-transformation.html#cb101-3"></a><span class="co">#&gt;   air_time     t</span></span>
+<span id="cb101-4"><a href="data-transformation.html#cb101-4"></a><span class="co">#&gt;      &lt;dbl&gt; &lt;int&gt;</span></span>
+<span id="cb101-5"><a href="data-transformation.html#cb101-5"></a><span class="co">#&gt; 1      227   313</span></span>
+<span id="cb101-6"><a href="data-transformation.html#cb101-6"></a><span class="co">#&gt; 2      227   317</span></span>
+<span id="cb101-7"><a href="data-transformation.html#cb101-7"></a><span class="co">#&gt; 3      160   381</span></span>
+<span id="cb101-8"><a href="data-transformation.html#cb101-8"></a><span class="co">#&gt; 4      183   460</span></span>
+<span id="cb101-9"><a href="data-transformation.html#cb101-9"></a><span class="co">#&gt; 5      116   258</span></span>
+<span id="cb101-10"><a href="data-transformation.html#cb101-10"></a><span class="co">#&gt; 6      150   186</span></span>
+<span id="cb101-11"><a href="data-transformation.html#cb101-11"></a><span class="co">#&gt; # ... with 336,770 more rows</span></span></code></pre></div>
+<p>因为<code>arr_time,dep_time</code>的格式都是HMM或者HHMM，<code>air_time</code>格式是分钟，所以前者直接相减是不会等于后者。一种方法把它们都转换成分钟。</p>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="data-transformation.html#cb102-1"></a>flights<span class="op">%&gt;%</span></span>
+<span id="cb102-2"><a href="data-transformation.html#cb102-2"></a><span class="st">  </span><span class="kw">transmute</span>(air_time,</span>
+<span id="cb102-3"><a href="data-transformation.html#cb102-3"></a>            <span class="dt">arr_min =</span> (arr_time <span class="op">%/%</span><span class="st"> </span><span class="dv">100</span>)<span class="op">*</span><span class="dv">60</span><span class="op">+</span>(arr_time <span class="op">%%</span><span class="st"> </span><span class="dv">100</span>),</span>
+<span id="cb102-4"><a href="data-transformation.html#cb102-4"></a>            <span class="dt">dep_min =</span> (dep_time <span class="op">%/%</span><span class="st"> </span><span class="dv">100</span>)<span class="op">*</span><span class="dv">60</span><span class="op">+</span>(dep_time <span class="op">%%</span><span class="st"> </span><span class="dv">100</span>),</span>
+<span id="cb102-5"><a href="data-transformation.html#cb102-5"></a>            <span class="dt">t_min =</span> arr_min<span class="op">-</span>dep_min</span>
+<span id="cb102-6"><a href="data-transformation.html#cb102-6"></a>            )</span>
+<span id="cb102-7"><a href="data-transformation.html#cb102-7"></a><span class="co">#&gt; # A tibble: 336,776 x 4</span></span>
+<span id="cb102-8"><a href="data-transformation.html#cb102-8"></a><span class="co">#&gt;   air_time arr_min dep_min t_min</span></span>
+<span id="cb102-9"><a href="data-transformation.html#cb102-9"></a><span class="co">#&gt;      &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb102-10"><a href="data-transformation.html#cb102-10"></a><span class="co">#&gt; 1      227     510     317   193</span></span>
+<span id="cb102-11"><a href="data-transformation.html#cb102-11"></a><span class="co">#&gt; 2      227     530     333   197</span></span>
+<span id="cb102-12"><a href="data-transformation.html#cb102-12"></a><span class="co">#&gt; 3      160     563     342   221</span></span>
+<span id="cb102-13"><a href="data-transformation.html#cb102-13"></a><span class="co">#&gt; 4      183     604     344   260</span></span>
+<span id="cb102-14"><a href="data-transformation.html#cb102-14"></a><span class="co">#&gt; 5      116     492     354   138</span></span>
+<span id="cb102-15"><a href="data-transformation.html#cb102-15"></a><span class="co">#&gt; 6      150     460     354   106</span></span>
+<span id="cb102-16"><a href="data-transformation.html#cb102-16"></a><span class="co">#&gt; # ... with 336,770 more rows</span></span></code></pre></div>
+<p>本以为<code>air_time</code>会与<code>t_min</code>相等，但是并不是…大于小于都有，这就很奇怪了，特别是<code>air_time</code>大于<code>t_min</code>这是啥意思…</p>
 
 </div>
 </div>
