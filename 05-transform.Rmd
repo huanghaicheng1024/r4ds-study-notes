@@ -338,8 +338,95 @@ c(1:3,1:3,1:3,1)+1:10
 可以得到。
 
 
+## 使用`summarize()`进行分组摘要
+```{r}
+not_cancelled <- flights %>% 
+  filter(!is.na(dep_delay), !is.na(arr_delay)) 
+```
 
 
+### 使用管道组合多种操作
+
+`x %>% f(y)`会转换成`f(x,y)`，依此类推。
+
+在RStudio中管道` %>% `的默认快捷键是Ctrl+Shift+M
+
+### 练习
+
+(1)通过头脑风暴，至少找出5种方法来确定一组航班的典型延误特征。思考以下场景。
+
+• 一架航班 50% 的时间会提前 15 分钟，50% 的时间会延误 15 分钟。
+
+• 一架航班总是会延误 10 分钟。
+
+• 一架航班 50% 的时间会提前 30 分钟，50% 的时间会延误 30 分钟。
+
+• 一架航班 99% 的时间会准时，1% 的时间会延误 2 个小时。
+
+哪一种更重要：到达延误还是出发延误？
+
+那当然是到达延误更重要。
+
+(2)找出另外一种方法，这种方法要可以给出与 `not_cancelled %>% count(dest)`和`not_cancelled %>% count(tailnum, wt = distance)`同样的输出（不能使用 count()）。
+
+```{r message=FALSE}
+not_cancelled %>% count(dest)
+not_cancelled %>% 
+  group_by(dest) %>% 
+  summarise(n=n())
+```
+```{r message=FALSE}
+not_cancelled %>% count(tailnum, wt = distance) 
+not_cancelled %>% 
+  group_by(tailnum) %>% 
+  summarise(n=sum(distance))
+```
+
+
+(3)我们对已取消航班的定义`(is.na(dep_delay))|(is.na(arr_delay))`稍有欠佳。为什么？哪一列才是最重要的？
+
+我觉得，`dep_time`（出发时间）最重要，出发时间缺失明确表示航班取消。
+
+(4)查看每天取消的航班数量。其中存在模式吗？已取消航班的比例与平均延误时间有关
+系吗？
+
+```{r message=FALSE}
+flights %>% 
+  group_by(year,month,day) %>% 
+  summarise(scale = mean(is.na(dep_time)),
+            delay = mean(arr_delay,na.rm = T)) %>% 
+  filter(scale<0.5) %>% # 去除两个离群点
+  ggplot(mapping = aes(x=scale,y=delay)) +
+    geom_point()+
+    geom_smooth()
+```
+
+可以看到，已取消航班的比例升高，平均延误时间先较快增加随之变缓。
+
+(5)哪个航空公司的延误情况最严重？挑战：你能否分清这是由于糟糕的机场设备，还是航空公司的问题？为什么能？为什么不能？（提示：考虑一下 `flights %>% group_by(carrier, dest) %>% summarize(n())`。）
+
+不太明白...占个坑先。
+
+(6)计算每架飞机在第一次延误超过1小时前的飞行次数。
+
+有比较麻烦的做法...
+
+(7)`count()`函数中的`sort`参数的作用是什么？何时应该使用这个参数？
+
+没设置之前是这样的：
+```{r}
+not_cancelled %>% count(dest)
+```
+
+设置之后：
+```{r}
+not_cancelled %>% count(dest,sort = T)
+```
+
+
+返回数据框的行会按照计数的大小进行降序排序。
+
+## 分组新变量（和筛选器）
 
 
 
