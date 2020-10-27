@@ -24,7 +24,7 @@
 <meta name="author" content="Huang" />
 
 
-<meta name="date" content="2020-10-26" />
+<meta name="date" content="2020-10-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -212,6 +212,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.5.1" data-path="data-transformation.html"><a href="data-transformation.html#常用创建函数"><i class="fa fa-check"></i><b>5.5.1</b> 常用创建函数</a></li>
 <li class="chapter" data-level="5.5.2" data-path="data-transformation.html"><a href="data-transformation.html#练习-8"><i class="fa fa-check"></i><b>5.5.2</b> 练习</a></li>
 </ul></li>
+<li class="chapter" data-level="5.6" data-path="data-transformation.html"><a href="data-transformation.html#使用summarize进行分组摘要"><i class="fa fa-check"></i><b>5.6</b> 使用<code>summarize()</code>进行分组摘要</a>
+<ul>
+<li class="chapter" data-level="5.6.1" data-path="data-transformation.html"><a href="data-transformation.html#使用管道组合多种操作"><i class="fa fa-check"></i><b>5.6.1</b> 使用管道组合多种操作</a></li>
+<li class="chapter" data-level="5.6.2" data-path="data-transformation.html"><a href="data-transformation.html#练习-9"><i class="fa fa-check"></i><b>5.6.2</b> 练习</a></li>
+</ul></li>
+<li class="chapter" data-level="5.7" data-path="data-transformation.html"><a href="data-transformation.html#分组新变量和筛选器"><i class="fa fa-check"></i><b>5.7</b> 分组新变量（和筛选器）</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://bookdown.org" target="blank">本书由 bookdown 强力驱动</a></li>
@@ -722,8 +728,124 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>利用</p>
 <div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="data-transformation.html#cb106-1"></a>?Trig</span></code></pre></div>
 <p>可以得到。</p>
-
 </div>
+</div>
+<div id="使用summarize进行分组摘要" class="section level2" number="5.6">
+<h2><span class="header-section-number">5.6</span> 使用<code>summarize()</code>进行分组摘要</h2>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="data-transformation.html#cb107-1"></a>not_cancelled &lt;-<span class="st"> </span>flights <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb107-2"><a href="data-transformation.html#cb107-2"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(dep_delay), <span class="op">!</span><span class="kw">is.na</span>(arr_delay)) </span></code></pre></div>
+<div id="使用管道组合多种操作" class="section level3" number="5.6.1">
+<h3><span class="header-section-number">5.6.1</span> 使用管道组合多种操作</h3>
+<p><code>x %&gt;% f(y)</code>会转换成<code>f(x,y)</code>，依此类推。</p>
+<p>在RStudio中管道<code>%&gt;%</code>的默认快捷键是Ctrl+Shift+M</p>
+</div>
+<div id="练习-9" class="section level3" number="5.6.2">
+<h3><span class="header-section-number">5.6.2</span> 练习</h3>
+<p>(1)通过头脑风暴，至少找出5种方法来确定一组航班的典型延误特征。思考以下场景。</p>
+<p>• 一架航班 50% 的时间会提前 15 分钟，50% 的时间会延误 15 分钟。</p>
+<p>• 一架航班总是会延误 10 分钟。</p>
+<p>• 一架航班 50% 的时间会提前 30 分钟，50% 的时间会延误 30 分钟。</p>
+<p>• 一架航班 99% 的时间会准时，1% 的时间会延误 2 个小时。</p>
+<p>哪一种更重要：到达延误还是出发延误？</p>
+<p>那当然是到达延误更重要。</p>
+<p>(2)找出另外一种方法，这种方法要可以给出与 <code>not_cancelled %&gt;% count(dest)</code>和<code>not_cancelled %&gt;% count(tailnum, wt = distance)</code>同样的输出（不能使用 count()）。</p>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="data-transformation.html#cb108-1"></a>not_cancelled <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(dest)</span>
+<span id="cb108-2"><a href="data-transformation.html#cb108-2"></a><span class="co">#&gt; # A tibble: 104 x 2</span></span>
+<span id="cb108-3"><a href="data-transformation.html#cb108-3"></a><span class="co">#&gt;   dest      n</span></span>
+<span id="cb108-4"><a href="data-transformation.html#cb108-4"></a><span class="co">#&gt;   &lt;chr&gt; &lt;int&gt;</span></span>
+<span id="cb108-5"><a href="data-transformation.html#cb108-5"></a><span class="co">#&gt; 1 ABQ     254</span></span>
+<span id="cb108-6"><a href="data-transformation.html#cb108-6"></a><span class="co">#&gt; 2 ACK     264</span></span>
+<span id="cb108-7"><a href="data-transformation.html#cb108-7"></a><span class="co">#&gt; 3 ALB     418</span></span>
+<span id="cb108-8"><a href="data-transformation.html#cb108-8"></a><span class="co">#&gt; 4 ANC       8</span></span>
+<span id="cb108-9"><a href="data-transformation.html#cb108-9"></a><span class="co">#&gt; 5 ATL   16837</span></span>
+<span id="cb108-10"><a href="data-transformation.html#cb108-10"></a><span class="co">#&gt; 6 AUS    2411</span></span>
+<span id="cb108-11"><a href="data-transformation.html#cb108-11"></a><span class="co">#&gt; # ... with 98 more rows</span></span>
+<span id="cb108-12"><a href="data-transformation.html#cb108-12"></a>not_cancelled <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb108-13"><a href="data-transformation.html#cb108-13"></a><span class="st">  </span><span class="kw">group_by</span>(dest) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb108-14"><a href="data-transformation.html#cb108-14"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n=</span><span class="kw">n</span>())</span>
+<span id="cb108-15"><a href="data-transformation.html#cb108-15"></a><span class="co">#&gt; # A tibble: 104 x 2</span></span>
+<span id="cb108-16"><a href="data-transformation.html#cb108-16"></a><span class="co">#&gt;   dest      n</span></span>
+<span id="cb108-17"><a href="data-transformation.html#cb108-17"></a><span class="co">#&gt;   &lt;chr&gt; &lt;int&gt;</span></span>
+<span id="cb108-18"><a href="data-transformation.html#cb108-18"></a><span class="co">#&gt; 1 ABQ     254</span></span>
+<span id="cb108-19"><a href="data-transformation.html#cb108-19"></a><span class="co">#&gt; 2 ACK     264</span></span>
+<span id="cb108-20"><a href="data-transformation.html#cb108-20"></a><span class="co">#&gt; 3 ALB     418</span></span>
+<span id="cb108-21"><a href="data-transformation.html#cb108-21"></a><span class="co">#&gt; 4 ANC       8</span></span>
+<span id="cb108-22"><a href="data-transformation.html#cb108-22"></a><span class="co">#&gt; 5 ATL   16837</span></span>
+<span id="cb108-23"><a href="data-transformation.html#cb108-23"></a><span class="co">#&gt; 6 AUS    2411</span></span>
+<span id="cb108-24"><a href="data-transformation.html#cb108-24"></a><span class="co">#&gt; # ... with 98 more rows</span></span></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="data-transformation.html#cb109-1"></a>not_cancelled <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(tailnum, <span class="dt">wt =</span> distance) </span>
+<span id="cb109-2"><a href="data-transformation.html#cb109-2"></a><span class="co">#&gt; # A tibble: 4,037 x 2</span></span>
+<span id="cb109-3"><a href="data-transformation.html#cb109-3"></a><span class="co">#&gt;   tailnum      n</span></span>
+<span id="cb109-4"><a href="data-transformation.html#cb109-4"></a><span class="co">#&gt;   &lt;chr&gt;    &lt;dbl&gt;</span></span>
+<span id="cb109-5"><a href="data-transformation.html#cb109-5"></a><span class="co">#&gt; 1 D942DN    3418</span></span>
+<span id="cb109-6"><a href="data-transformation.html#cb109-6"></a><span class="co">#&gt; 2 N0EGMQ  239143</span></span>
+<span id="cb109-7"><a href="data-transformation.html#cb109-7"></a><span class="co">#&gt; 3 N10156  109664</span></span>
+<span id="cb109-8"><a href="data-transformation.html#cb109-8"></a><span class="co">#&gt; 4 N102UW   25722</span></span>
+<span id="cb109-9"><a href="data-transformation.html#cb109-9"></a><span class="co">#&gt; 5 N103US   24619</span></span>
+<span id="cb109-10"><a href="data-transformation.html#cb109-10"></a><span class="co">#&gt; 6 N104UW   24616</span></span>
+<span id="cb109-11"><a href="data-transformation.html#cb109-11"></a><span class="co">#&gt; # ... with 4,031 more rows</span></span>
+<span id="cb109-12"><a href="data-transformation.html#cb109-12"></a>not_cancelled <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb109-13"><a href="data-transformation.html#cb109-13"></a><span class="st">  </span><span class="kw">group_by</span>(tailnum) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb109-14"><a href="data-transformation.html#cb109-14"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n=</span><span class="kw">sum</span>(distance))</span>
+<span id="cb109-15"><a href="data-transformation.html#cb109-15"></a><span class="co">#&gt; # A tibble: 4,037 x 2</span></span>
+<span id="cb109-16"><a href="data-transformation.html#cb109-16"></a><span class="co">#&gt;   tailnum      n</span></span>
+<span id="cb109-17"><a href="data-transformation.html#cb109-17"></a><span class="co">#&gt;   &lt;chr&gt;    &lt;dbl&gt;</span></span>
+<span id="cb109-18"><a href="data-transformation.html#cb109-18"></a><span class="co">#&gt; 1 D942DN    3418</span></span>
+<span id="cb109-19"><a href="data-transformation.html#cb109-19"></a><span class="co">#&gt; 2 N0EGMQ  239143</span></span>
+<span id="cb109-20"><a href="data-transformation.html#cb109-20"></a><span class="co">#&gt; 3 N10156  109664</span></span>
+<span id="cb109-21"><a href="data-transformation.html#cb109-21"></a><span class="co">#&gt; 4 N102UW   25722</span></span>
+<span id="cb109-22"><a href="data-transformation.html#cb109-22"></a><span class="co">#&gt; 5 N103US   24619</span></span>
+<span id="cb109-23"><a href="data-transformation.html#cb109-23"></a><span class="co">#&gt; 6 N104UW   24616</span></span>
+<span id="cb109-24"><a href="data-transformation.html#cb109-24"></a><span class="co">#&gt; # ... with 4,031 more rows</span></span></code></pre></div>
+<p>(3)我们对已取消航班的定义<code>(is.na(dep_delay))|(is.na(arr_delay))</code>稍有欠佳。为什么？哪一列才是最重要的？</p>
+<p>我觉得，<code>dep_time</code>（出发时间）最重要，出发时间缺失明确表示航班取消。</p>
+<p>(4)查看每天取消的航班数量。其中存在模式吗？已取消航班的比例与平均延误时间有关
+系吗？</p>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="data-transformation.html#cb110-1"></a>flights <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb110-2"><a href="data-transformation.html#cb110-2"></a><span class="st">  </span><span class="kw">group_by</span>(year,month,day) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb110-3"><a href="data-transformation.html#cb110-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">scale =</span> <span class="kw">mean</span>(<span class="kw">is.na</span>(dep_time)),</span>
+<span id="cb110-4"><a href="data-transformation.html#cb110-4"></a>            <span class="dt">delay =</span> <span class="kw">mean</span>(arr_delay,<span class="dt">na.rm =</span> T)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb110-5"><a href="data-transformation.html#cb110-5"></a><span class="st">  </span><span class="kw">filter</span>(scale<span class="op">&lt;</span><span class="fl">0.5</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># 去除两个离群点</span></span>
+<span id="cb110-6"><a href="data-transformation.html#cb110-6"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x=</span>scale,<span class="dt">y=</span>delay)) <span class="op">+</span></span>
+<span id="cb110-7"><a href="data-transformation.html#cb110-7"></a><span class="st">    </span><span class="kw">geom_point</span>()<span class="op">+</span></span>
+<span id="cb110-8"><a href="data-transformation.html#cb110-8"></a><span class="st">    </span><span class="kw">geom_smooth</span>()</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-120-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>可以看到，已取消航班的比例升高，平均延误时间先较快增加随之变缓。</p>
+<p>(5)哪个航空公司的延误情况最严重？挑战：你能否分清这是由于糟糕的机场设备，还是航空公司的问题？为什么能？为什么不能？（提示：考虑一下 <code>flights %&gt;% group_by(carrier, dest) %&gt;% summarize(n())</code>。）</p>
+<p>不太明白…占个坑先。</p>
+<p>(6)计算每架飞机在第一次延误超过1小时前的飞行次数。</p>
+<p>有比较麻烦的做法…</p>
+<p>(7)<code>count()</code>函数中的<code>sort</code>参数的作用是什么？何时应该使用这个参数？</p>
+<p>没设置之前是这样的：</p>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="data-transformation.html#cb111-1"></a>not_cancelled <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(dest)</span>
+<span id="cb111-2"><a href="data-transformation.html#cb111-2"></a><span class="co">#&gt; # A tibble: 104 x 2</span></span>
+<span id="cb111-3"><a href="data-transformation.html#cb111-3"></a><span class="co">#&gt;   dest      n</span></span>
+<span id="cb111-4"><a href="data-transformation.html#cb111-4"></a><span class="co">#&gt;   &lt;chr&gt; &lt;int&gt;</span></span>
+<span id="cb111-5"><a href="data-transformation.html#cb111-5"></a><span class="co">#&gt; 1 ABQ     254</span></span>
+<span id="cb111-6"><a href="data-transformation.html#cb111-6"></a><span class="co">#&gt; 2 ACK     264</span></span>
+<span id="cb111-7"><a href="data-transformation.html#cb111-7"></a><span class="co">#&gt; 3 ALB     418</span></span>
+<span id="cb111-8"><a href="data-transformation.html#cb111-8"></a><span class="co">#&gt; 4 ANC       8</span></span>
+<span id="cb111-9"><a href="data-transformation.html#cb111-9"></a><span class="co">#&gt; 5 ATL   16837</span></span>
+<span id="cb111-10"><a href="data-transformation.html#cb111-10"></a><span class="co">#&gt; 6 AUS    2411</span></span>
+<span id="cb111-11"><a href="data-transformation.html#cb111-11"></a><span class="co">#&gt; # ... with 98 more rows</span></span></code></pre></div>
+<p>设置之后：</p>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="data-transformation.html#cb112-1"></a>not_cancelled <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(dest,<span class="dt">sort =</span> T)</span>
+<span id="cb112-2"><a href="data-transformation.html#cb112-2"></a><span class="co">#&gt; # A tibble: 104 x 2</span></span>
+<span id="cb112-3"><a href="data-transformation.html#cb112-3"></a><span class="co">#&gt;   dest      n</span></span>
+<span id="cb112-4"><a href="data-transformation.html#cb112-4"></a><span class="co">#&gt;   &lt;chr&gt; &lt;int&gt;</span></span>
+<span id="cb112-5"><a href="data-transformation.html#cb112-5"></a><span class="co">#&gt; 1 ATL   16837</span></span>
+<span id="cb112-6"><a href="data-transformation.html#cb112-6"></a><span class="co">#&gt; 2 ORD   16566</span></span>
+<span id="cb112-7"><a href="data-transformation.html#cb112-7"></a><span class="co">#&gt; 3 LAX   16026</span></span>
+<span id="cb112-8"><a href="data-transformation.html#cb112-8"></a><span class="co">#&gt; 4 BOS   15022</span></span>
+<span id="cb112-9"><a href="data-transformation.html#cb112-9"></a><span class="co">#&gt; 5 MCO   13967</span></span>
+<span id="cb112-10"><a href="data-transformation.html#cb112-10"></a><span class="co">#&gt; 6 CLT   13674</span></span>
+<span id="cb112-11"><a href="data-transformation.html#cb112-11"></a><span class="co">#&gt; # ... with 98 more rows</span></span></code></pre></div>
+<p>返回数据框的行会按照计数的大小进行降序排序。</p>
+</div>
+</div>
+<div id="分组新变量和筛选器" class="section level2" number="5.7">
+<h2><span class="header-section-number">5.7</span> 分组新变量（和筛选器）</h2>
+
 </div>
 </div>
 <section style="
