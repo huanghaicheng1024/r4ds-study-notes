@@ -24,7 +24,7 @@
 <meta name="author" content="Huang" />
 
 
-<meta name="date" content="2020-10-27" />
+<meta name="date" content="2020-11-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -217,7 +217,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.6.1" data-path="data-transformation.html"><a href="data-transformation.html#使用管道组合多种操作"><i class="fa fa-check"></i><b>5.6.1</b> 使用管道组合多种操作</a></li>
 <li class="chapter" data-level="5.6.2" data-path="data-transformation.html"><a href="data-transformation.html#练习-9"><i class="fa fa-check"></i><b>5.6.2</b> 练习</a></li>
 </ul></li>
-<li class="chapter" data-level="5.7" data-path="data-transformation.html"><a href="data-transformation.html#分组新变量和筛选器"><i class="fa fa-check"></i><b>5.7</b> 分组新变量（和筛选器）</a></li>
+<li class="chapter" data-level="5.7" data-path="data-transformation.html"><a href="data-transformation.html#分组新变量和筛选器"><i class="fa fa-check"></i><b>5.7</b> 分组新变量（和筛选器）</a>
+<ul>
+<li class="chapter" data-level="5.7.1" data-path="data-transformation.html"><a href="data-transformation.html#练习-10"><i class="fa fa-check"></i><b>5.7.1</b> 练习</a></li>
+</ul></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://bookdown.org" target="blank">本书由 bookdown 强力驱动</a></li>
@@ -699,6 +702,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb102-15"><a href="data-transformation.html#cb102-15"></a><span class="co">#&gt; 6      150     460     354   106</span></span>
 <span id="cb102-16"><a href="data-transformation.html#cb102-16"></a><span class="co">#&gt; # ... with 336,770 more rows</span></span></code></pre></div>
 <p>本以为<code>air_time</code>会与<code>t_min</code>相等，但是并不是…大于小于都有，这就很奇怪了，特别是<code>air_time</code>大于<code>t_min</code>这是啥意思…</p>
+<blockquote>
+<p>update:因为出发和到达时间都是当地时间，所以可能不同。可以将时间转为标准时间再计算。</p>
+</blockquote>
 <p>(4)使用排秩函数找出 10 个延误时间最长的航班。如何处理名次相同的情况？仔细阅读
 <code>min_rank()</code> 的帮助文件。</p>
 <div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="data-transformation.html#cb103-1"></a>flights<span class="op">%&gt;%</span></span>
@@ -845,7 +851,78 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="分组新变量和筛选器" class="section level2" number="5.7">
 <h2><span class="header-section-number">5.7</span> 分组新变量（和筛选器）</h2>
+<p>将分组与与<code>mutate()</code>和<code>filter()</code>函数结合。</p>
+<div id="练习-10" class="section level3" number="5.7.1">
+<h3><span class="header-section-number">5.7.1</span> 练习</h3>
+<p>(2)哪一架飞机（用机尾编号来识别，tailnum）具有最差的准点记录？</p>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="data-transformation.html#cb113-1"></a>flights <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb113-2"><a href="data-transformation.html#cb113-2"></a><span class="st">  </span><span class="kw">group_by</span>(tailnum) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb113-3"><a href="data-transformation.html#cb113-3"></a><span class="st">  </span><span class="kw">transmute</span>(<span class="dt">delay =</span> <span class="kw">mean</span>(arr_delay,<span class="dt">na.rm =</span> T)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb113-4"><a href="data-transformation.html#cb113-4"></a><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(delay)) </span>
+<span id="cb113-5"><a href="data-transformation.html#cb113-5"></a><span class="co">#&gt; # A tibble: 336,776 x 2</span></span>
+<span id="cb113-6"><a href="data-transformation.html#cb113-6"></a><span class="co">#&gt; # Groups:   tailnum [4,044]</span></span>
+<span id="cb113-7"><a href="data-transformation.html#cb113-7"></a><span class="co">#&gt;   tailnum delay</span></span>
+<span id="cb113-8"><a href="data-transformation.html#cb113-8"></a><span class="co">#&gt;   &lt;chr&gt;   &lt;dbl&gt;</span></span>
+<span id="cb113-9"><a href="data-transformation.html#cb113-9"></a><span class="co">#&gt; 1 N844MH    320</span></span>
+<span id="cb113-10"><a href="data-transformation.html#cb113-10"></a><span class="co">#&gt; 2 N911DA    294</span></span>
+<span id="cb113-11"><a href="data-transformation.html#cb113-11"></a><span class="co">#&gt; 3 N922EV    276</span></span>
+<span id="cb113-12"><a href="data-transformation.html#cb113-12"></a><span class="co">#&gt; 4 N587NW    264</span></span>
+<span id="cb113-13"><a href="data-transformation.html#cb113-13"></a><span class="co">#&gt; 5 N851NW    219</span></span>
+<span id="cb113-14"><a href="data-transformation.html#cb113-14"></a><span class="co">#&gt; 6 N928DN    201</span></span>
+<span id="cb113-15"><a href="data-transformation.html#cb113-15"></a><span class="co">#&gt; # ... with 336,770 more rows</span></span></code></pre></div>
+<p>(3)如果想要尽量避免航班延误，那么应该在一天中的哪个时间搭乘飞机？</p>
+<p>假如从纽约出发，不妨以每辆航班计划出发的时间小时作分组，然后统计该小时内航班延误数量。</p>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="data-transformation.html#cb114-1"></a>not_cancelled <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb114-2"><a href="data-transformation.html#cb114-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sched_dep_hour =</span> sched_dep_time <span class="op">%/%</span><span class="st"> </span><span class="dv">100</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb114-3"><a href="data-transformation.html#cb114-3"></a><span class="st">  </span><span class="kw">group_by</span>(sched_dep_hour) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb114-4"><a href="data-transformation.html#cb114-4"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n=</span><span class="kw">sum</span>(dep_delay<span class="op">&gt;</span><span class="dv">0</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb114-5"><a href="data-transformation.html#cb114-5"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x=</span>sched_dep_hour,<span class="dt">y=</span>n))<span class="op">+</span></span>
+<span id="cb114-6"><a href="data-transformation.html#cb114-6"></a><span class="st">    </span><span class="kw">geom_line</span>()<span class="op">+</span></span>
+<span id="cb114-7"><a href="data-transformation.html#cb114-7"></a><span class="st">    </span><span class="kw">geom_point</span>()</span>
+<span id="cb114-8"><a href="data-transformation.html#cb114-8"></a><span class="co">#&gt; `summarise()` ungrouping output (override with `.groups` argument)</span></span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-124-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>(4)计算每个目的地的延误总时间的分钟数，以及每架航班到每个目的地的延误时间比例。</p>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="data-transformation.html#cb115-1"></a>not_cancelled <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb115-2"><a href="data-transformation.html#cb115-2"></a><span class="st">  </span><span class="kw">group_by</span>(dest) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb115-3"><a href="data-transformation.html#cb115-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">destsum =</span> <span class="kw">sum</span>(arr_delay)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb115-4"><a href="data-transformation.html#cb115-4"></a><span class="st">  </span><span class="kw">group_by</span>(dest,tailnum) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb115-5"><a href="data-transformation.html#cb115-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">tailnumsum =</span> <span class="kw">sum</span>(arr_delay)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb115-6"><a href="data-transformation.html#cb115-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">delayscale =</span> tailnumsum<span class="op">/</span>destsum) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb115-7"><a href="data-transformation.html#cb115-7"></a><span class="st">  </span><span class="kw">select</span>(dest,destsum,tailnum,tailnumsum,delayscale) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb115-8"><a href="data-transformation.html#cb115-8"></a><span class="st">  </span><span class="kw">arrange</span>(dest)</span>
+<span id="cb115-9"><a href="data-transformation.html#cb115-9"></a><span class="co">#&gt; # A tibble: 327,346 x 5</span></span>
+<span id="cb115-10"><a href="data-transformation.html#cb115-10"></a><span class="co">#&gt; # Groups:   dest, tailnum [44,173]</span></span>
+<span id="cb115-11"><a href="data-transformation.html#cb115-11"></a><span class="co">#&gt;   dest  destsum tailnum tailnumsum delayscale</span></span>
+<span id="cb115-12"><a href="data-transformation.html#cb115-12"></a><span class="co">#&gt;   &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt;      &lt;dbl&gt;</span></span>
+<span id="cb115-13"><a href="data-transformation.html#cb115-13"></a><span class="co">#&gt; 1 ABQ      1113 N554JB         -98   -0.0881 </span></span>
+<span id="cb115-14"><a href="data-transformation.html#cb115-14"></a><span class="co">#&gt; 2 ABQ      1113 N607JB          97    0.0872 </span></span>
+<span id="cb115-15"><a href="data-transformation.html#cb115-15"></a><span class="co">#&gt; 3 ABQ      1113 N591JB          12    0.0108 </span></span>
+<span id="cb115-16"><a href="data-transformation.html#cb115-16"></a><span class="co">#&gt; 4 ABQ      1113 N662JB         -40   -0.0359 </span></span>
+<span id="cb115-17"><a href="data-transformation.html#cb115-17"></a><span class="co">#&gt; 5 ABQ      1113 N580JB           9    0.00809</span></span>
+<span id="cb115-18"><a href="data-transformation.html#cb115-18"></a><span class="co">#&gt; 6 ABQ      1113 N507JB           8    0.00719</span></span>
+<span id="cb115-19"><a href="data-transformation.html#cb115-19"></a><span class="co">#&gt; # ... with 327,340 more rows</span></span></code></pre></div>
+<p>就不区分延误时间的正负了。</p>
+<p>(5)延误通常是由临时原因造成的：即使最初引起延误的问题已经解决，但因为要让前面的航班先起飞，所以后面的航班也会延误。使用<code>lag()</code>函数探究一架航班延误与前一架航班延误之间的关系。</p>
+<p>探究一下前一架航班出发延误与后一架航班出发延误时间上的关系：</p>
+<p>没弄明白航班的含义，先待续。</p>
+<p>(6)查看每个目的地。你能否发现有些航班的速度快得可疑？（也就是说，这些航班的数据可能是错误的。）计算出到目的地的最短航线的飞行时间。哪架航班在空中的延误时间
+最长？</p>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="data-transformation.html#cb116-1"></a>not_cancelled <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb116-2"><a href="data-transformation.html#cb116-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">speed =</span> distance<span class="op">/</span>air_time) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb116-3"><a href="data-transformation.html#cb116-3"></a><span class="st">  </span><span class="kw">select</span>(tailnum,speed) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb116-4"><a href="data-transformation.html#cb116-4"></a><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(speed))</span>
+<span id="cb116-5"><a href="data-transformation.html#cb116-5"></a><span class="co">#&gt; # A tibble: 327,346 x 2</span></span>
+<span id="cb116-6"><a href="data-transformation.html#cb116-6"></a><span class="co">#&gt;   tailnum speed</span></span>
+<span id="cb116-7"><a href="data-transformation.html#cb116-7"></a><span class="co">#&gt;   &lt;chr&gt;   &lt;dbl&gt;</span></span>
+<span id="cb116-8"><a href="data-transformation.html#cb116-8"></a><span class="co">#&gt; 1 N666DN  11.7 </span></span>
+<span id="cb116-9"><a href="data-transformation.html#cb116-9"></a><span class="co">#&gt; 2 N17196  10.8 </span></span>
+<span id="cb116-10"><a href="data-transformation.html#cb116-10"></a><span class="co">#&gt; 3 N14568  10.8 </span></span>
+<span id="cb116-11"><a href="data-transformation.html#cb116-11"></a><span class="co">#&gt; 4 N12567  10.7 </span></span>
+<span id="cb116-12"><a href="data-transformation.html#cb116-12"></a><span class="co">#&gt; 5 N956DL   9.86</span></span>
+<span id="cb116-13"><a href="data-transformation.html#cb116-13"></a><span class="co">#&gt; 6 N3768    9.4 </span></span>
+<span id="cb116-14"><a href="data-transformation.html#cb116-14"></a><span class="co">#&gt; # ... with 327,340 more rows</span></span></code></pre></div>
 
+</div>
 </div>
 </div>
 <section style="
