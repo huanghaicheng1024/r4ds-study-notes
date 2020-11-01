@@ -305,6 +305,8 @@ flights%>%
 
 本以为`air_time`会与`t_min`相等，但是并不是...大于小于都有，这就很奇怪了，特别是`air_time`大于`t_min`这是啥意思...
 
+> update:因为出发和到达时间都是当地时间，所以可能不同。可以将时间转为标准时间再计算。
+
 
 (4)使用排秩函数找出 10 个延误时间最长的航班。如何处理名次相同的情况？仔细阅读
 `min_rank()` 的帮助文件。
@@ -427,6 +429,69 @@ not_cancelled %>% count(dest,sort = T)
 返回数据框的行会按照计数的大小进行降序排序。
 
 ## 分组新变量（和筛选器）
+
+将分组与与`mutate()`和`filter()`函数结合。
+
+### 练习
+
+(2)哪一架飞机（用机尾编号来识别，tailnum）具有最差的准点记录？
+
+```{r}
+flights %>% 
+  group_by(tailnum) %>% 
+  transmute(delay = mean(arr_delay,na.rm = T)) %>% 
+  arrange(desc(delay)) 
+```
+
+(3)如果想要尽量避免航班延误，那么应该在一天中的哪个时间搭乘飞机？
+
+假如从纽约出发，不妨以每辆航班计划出发的时间小时作分组，然后统计该小时内航班延误数量。
+```{r}
+not_cancelled %>% 
+  mutate(sched_dep_hour = sched_dep_time %/% 100) %>% 
+  group_by(sched_dep_hour) %>% 
+  summarise(n=sum(dep_delay>0)) %>% 
+  ggplot(mapping = aes(x=sched_dep_hour,y=n))+
+    geom_line()+
+    geom_point()
+```
+
+
+(4)计算每个目的地的延误总时间的分钟数，以及每架航班到每个目的地的延误时间比例。
+
+```{r}
+not_cancelled %>% 
+  group_by(dest) %>% 
+  mutate(destsum = sum(arr_delay)) %>% 
+  group_by(dest,tailnum) %>% 
+  mutate(tailnumsum = sum(arr_delay)) %>% 
+  mutate(delayscale = tailnumsum/destsum) %>% 
+  select(dest,destsum,tailnum,tailnumsum,delayscale) %>% 
+  arrange(dest)
+```
+
+就不区分延误时间的正负了。
+
+(5)延误通常是由临时原因造成的：即使最初引起延误的问题已经解决，但因为要让前面的航班先起飞，所以后面的航班也会延误。使用`lag()`函数探究一架航班延误与前一架航班延误之间的关系。
+
+探究一下前一架航班出发延误与后一架航班出发延误时间上的关系：
+
+没弄明白航班的含义，先待续。
+
+(6)查看每个目的地。你能否发现有些航班的速度快得可疑？（也就是说，这些航班的数据可能是错误的。）计算出到目的地的最短航线的飞行时间。哪架航班在空中的延误时间
+最长？
+
+```{r}
+not_cancelled %>% 
+  mutate(speed = distance/air_time) %>% 
+  select(tailnum,speed) %>% 
+  arrange(desc(speed))
+```
+
+
+
+
+
 
 
 
