@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>2 Introduction | r4ds学习笔记</title>
+  <title>6 Exploratory Data Analysis | r4ds学习笔记</title>
   <meta name="description" content="这是使用bookdwon编写的书籍。" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="2 Introduction | r4ds学习笔记" />
+  <meta property="og:title" content="6 Exploratory Data Analysis | r4ds学习笔记" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="2 Introduction | r4ds学习笔记" />
+  <meta name="twitter:title" content="6 Exploratory Data Analysis | r4ds学习笔记" />
   
   <meta name="twitter:description" content="这是使用bookdwon编写的书籍。" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="intro.html"/>
-<link rel="next" href="data-visualisation.html"/>
+<link rel="prev" href="data-transformation.html"/>
+
 <script src="libs/header-attrs-2.5/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -251,11 +251,70 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="explore-intro" class="section level1" number="2">
-<h1><span class="header-section-number">2</span> Introduction</h1>
-<p>首先开始讲解的是数据探索这部分内容。</p>
-<p>数据探索是一门艺术，它是审视数据、生成假设、假设检验的不断反复的过程。</p>
+<div id="exploratory-data-analysis" class="section level1" number="6">
+<h1><span class="header-section-number">6</span> Exploratory Data Analysis</h1>
+<p>探索性数据分析（EDA）是一个天马行空的不断迭代循环的思考过程，主要作用：</p>
+<ol style="list-style-type: decimal">
+<li><p>对数据提出问题
+。</p></li>
+<li><p>对数据进行可视化、转换和建模，进而找出问题的答案。</p></li>
+<li><p>使用上一个步骤的结果来精炼问题，并提出新问题。</p></li>
+</ol>
+<div id="两类问题" class="section level2" number="6.1">
+<h2><span class="header-section-number">6.1</span> 两类问题</h2>
+<p>对于数据，我们可以粗略地提出两大类问题：</p>
+<ol style="list-style-type: decimal">
+<li><p>变量本身会发生何种变动？</p></li>
+<li><p>不同变量之间会发生何种相关变动？</p></li>
+</ol>
+<div align="center">
+<img src="06-EDA_files/EDA两类问题.png" style="width:80.0%" />
+</div>
+</div>
+<div id="一些tips" class="section level2" number="6.2">
+<h2><span class="header-section-number">6.2</span> 一些tips</h2>
+<blockquote>
+<p>使用带有异常值和不带异常值的数据分别进行分析，是一种良好的做法。如果两次分析的
+结果差别不大，而你又无法说明为什么会有异常值，那么完全可以用缺失值替代异常值，
+然后继续进行分析。但如果两次分析的结果有显著差别，那么你就不能在没有正当理由的
+情况下丢弃它们。你需要弄清出现异常值的原因（如数据输入错误），并在文章中说明丢弃它们的理由。</p>
+</blockquote>
+</div>
+<div id="练习-11" class="section level2" number="6.3">
+<h2><span class="header-section-number">6.3</span> 练习</h2>
+<div id="变动" class="section level3" number="6.3.1">
+<h3><span class="header-section-number">6.3.1</span> 5.3 变动</h3>
+<p>(1)研究 x、y 和 z 变量在diamonds数据集中的分布。你能发现什么？思考一下，对于一条钻石数据，如何确定表示长、宽和高的变量？</p>
+<p>利用直方图探究连续变量的变动：</p>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="exploratory-data-analysis.html#cb117-1"></a>diamonds <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb117-2"><a href="exploratory-data-analysis.html#cb117-2"></a><span class="st">  </span><span class="kw">ggplot</span>()<span class="op">+</span></span>
+<span id="cb117-3"><a href="exploratory-data-analysis.html#cb117-3"></a><span class="st">    </span><span class="kw">geom_freqpoly</span>(<span class="kw">aes</span>(x), <span class="dt">binwidth =</span> <span class="fl">0.5</span>,<span class="dt">color=</span><span class="st">&quot;black&quot;</span>)<span class="op">+</span></span>
+<span id="cb117-4"><a href="exploratory-data-analysis.html#cb117-4"></a><span class="st">    </span><span class="kw">geom_freqpoly</span>(<span class="kw">aes</span>(y), <span class="dt">binwidth =</span> <span class="fl">0.5</span>,<span class="dt">color=</span><span class="st">&quot;red&quot;</span>)<span class="op">+</span></span>
+<span id="cb117-5"><a href="exploratory-data-analysis.html#cb117-5"></a><span class="st">    </span><span class="kw">geom_freqpoly</span>(<span class="kw">aes</span>(z), <span class="dt">binwidth =</span> <span class="fl">0.5</span>,<span class="dt">color=</span><span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-129-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>可以看到，x（长）和y（宽）变量在数据集中的分布高度一致，它们与z（高）变量的分布形状类似。</p>
+<p>(2)研究price的分布，你能发现不寻常或令人惊奇的事情吗？（提示：仔细考虑一下binwidth参数，并确定试验了足够多的取值。）</p>
+<p>利用直方图探究连续变量的变动，多次调整值发现：</p>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="exploratory-data-analysis.html#cb118-1"></a>diamonds <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb118-2"><a href="exploratory-data-analysis.html#cb118-2"></a><span class="st">  </span><span class="kw">ggplot</span>()<span class="op">+</span></span>
+<span id="cb118-3"><a href="exploratory-data-analysis.html#cb118-3"></a><span class="st">    </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(price),<span class="dt">binwidth =</span> <span class="dv">50</span>)<span class="op">+</span></span>
+<span id="cb118-4"><a href="exploratory-data-analysis.html#cb118-4"></a><span class="st">    </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">1450</span>,<span class="dv">1600</span>))</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-130-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>在1475-1525区间中是没有数据的，好像是有点奇怪…</p>
+<p>(3)0.99克拉的钻石有多少？1克拉的钻石有多少？造成这种区别的原因是什么？</p>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="exploratory-data-analysis.html#cb119-1"></a>diamonds <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb119-2"><a href="exploratory-data-analysis.html#cb119-2"></a><span class="st">  </span><span class="kw">filter</span>(<span class="kw">between</span>(carat,<span class="fl">0.99</span>,<span class="fl">1.01</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb119-3"><a href="exploratory-data-analysis.html#cb119-3"></a><span class="st">  </span><span class="kw">count</span>(carat)</span>
+<span id="cb119-4"><a href="exploratory-data-analysis.html#cb119-4"></a><span class="co">#&gt; # A tibble: 3 x 2</span></span>
+<span id="cb119-5"><a href="exploratory-data-analysis.html#cb119-5"></a><span class="co">#&gt;   carat     n</span></span>
+<span id="cb119-6"><a href="exploratory-data-analysis.html#cb119-6"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;int&gt;</span></span>
+<span id="cb119-7"><a href="exploratory-data-analysis.html#cb119-7"></a><span class="co">#&gt; 1  0.99    23</span></span>
+<span id="cb119-8"><a href="exploratory-data-analysis.html#cb119-8"></a><span class="co">#&gt; 2  1     1558</span></span>
+<span id="cb119-9"><a href="exploratory-data-analysis.html#cb119-9"></a><span class="co">#&gt; 3  1.01  2242</span></span></code></pre></div>
+<p>估计大多数0.99克拉的钻石都会被当作1克拉对外宣称…就像一些人身高168的说自己170一样…</p>
 
+</div>
+</div>
 </div>
 <section style="
     display: block;
@@ -273,8 +332,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="data-visualisation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="data-transformation.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -296,7 +355,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/huanghaicheng1024/r4ds-study-notes/edit/master/02-explore-intro.Rmd",
+"link": "https://github.com/huanghaicheng1024/r4ds-study-notes/edit/master/06-EDA.Rmd",
 "text": "Edit"
 },
 "history": {

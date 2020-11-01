@@ -48,3 +48,8 @@ dplyr基础
 练习-9
 分组新变量和筛选器
 练习-10
+exploratory-data-analysis
+两类问题
+一些tips
+练习-11
+变动
