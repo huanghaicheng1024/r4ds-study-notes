@@ -2,6 +2,7 @@
 
 ```{r include=FALSE}
 library(tidyverse)
+library(nycflights13)
 ```
 
 
@@ -33,7 +34,7 @@ library(tidyverse)
 
 ## 练习
 
-### 5.3 变动
+### 3-变动
 
 (1)研究 x、y 和 z 变量在diamonds数据集中的分布。你能发现什么？思考一下，对于一条钻石数据，如何确定表示长、宽和高的变量？
 
@@ -70,6 +71,41 @@ diamonds %>%
 ```
 
 估计大多数0.99克拉的钻石都会被当作1克拉对外宣称...就像一些人身高168的说自己170一样...
+
+### 4-缺失值
+
+(1)直方图如何处理缺失值？条形图如何处理缺失值？为什么会有这种区别？
+
+>参考https://jrnold.github.io/r4ds-exercise-solutions/exploratory-data-analysis.html#exercise-7.4.1
+
+```{r}
+diamonds2 <- diamonds %>%
+  mutate(y = ifelse(y < 3 | y > 20, NA, y))
+
+ggplot(diamonds2, aes(x = y)) +
+  geom_histogram()
+```
+
+```{r}
+diamonds %>%
+  mutate(cut = if_else(runif(n()) < 0.1, NA_character_, as.character(cut))) %>%
+  ggplot() +
+  geom_bar(mapping = aes(x = cut))
+```
+
+直方图会丢弃NA值，条形图会把NA值作为一个取值。
+
+(2)`na.rm = TRUE`在`mean()`和`sum()`函数中的作用是什么？
+
+```{r}
+a <- c(1:5,NA,NA)
+sum(a)
+sum(a,na.rm = T)
+mean(a)
+mean(a,na.rm = T)
+```
+
+求非NA值的和以及求非NA值的均值（分母为非NA值的个数）。
 
 
 
