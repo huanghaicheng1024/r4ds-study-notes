@@ -24,7 +24,7 @@
 <meta name="author" content="Huang" />
 
 
-<meta name="date" content="2020-11-01" />
+<meta name="date" content="2020-11-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -228,7 +228,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.2" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html#一些tips"><i class="fa fa-check"></i><b>6.2</b> 一些tips</a></li>
 <li class="chapter" data-level="6.3" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html#练习-11"><i class="fa fa-check"></i><b>6.3</b> 练习</a>
 <ul>
-<li class="chapter" data-level="6.3.1" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html#变动"><i class="fa fa-check"></i><b>6.3.1</b> 5.3 变动</a></li>
+<li class="chapter" data-level="6.3.1" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html#变动"><i class="fa fa-check"></i><b>6.3.1</b> 3-变动</a></li>
+<li class="chapter" data-level="6.3.2" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html#缺失值"><i class="fa fa-check"></i><b>6.3.2</b> 4-缺失值</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -283,7 +284,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="练习-11" class="section level2" number="6.3">
 <h2><span class="header-section-number">6.3</span> 练习</h2>
 <div id="变动" class="section level3" number="6.3.1">
-<h3><span class="header-section-number">6.3.1</span> 5.3 变动</h3>
+<h3><span class="header-section-number">6.3.1</span> 3-变动</h3>
 <p>(1)研究 x、y 和 z 变量在diamonds数据集中的分布。你能发现什么？思考一下，对于一条钻石数据，如何确定表示长、宽和高的变量？</p>
 <p>利用直方图探究连续变量的变动：</p>
 <div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="exploratory-data-analysis.html#cb117-1"></a>diamonds <span class="op">%&gt;%</span><span class="st"> </span></span>
@@ -312,6 +313,38 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb119-8"><a href="exploratory-data-analysis.html#cb119-8"></a><span class="co">#&gt; 2  1     1558</span></span>
 <span id="cb119-9"><a href="exploratory-data-analysis.html#cb119-9"></a><span class="co">#&gt; 3  1.01  2242</span></span></code></pre></div>
 <p>估计大多数0.99克拉的钻石都会被当作1克拉对外宣称…就像一些人身高168的说自己170一样…</p>
+</div>
+<div id="缺失值" class="section level3" number="6.3.2">
+<h3><span class="header-section-number">6.3.2</span> 4-缺失值</h3>
+<p>(1)直方图如何处理缺失值？条形图如何处理缺失值？为什么会有这种区别？</p>
+<blockquote>
+<p>参考https://jrnold.github.io/r4ds-exercise-solutions/exploratory-data-analysis.html#exercise-7.4.1</p>
+</blockquote>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="exploratory-data-analysis.html#cb120-1"></a>diamonds2 &lt;-<span class="st"> </span>diamonds <span class="op">%&gt;%</span></span>
+<span id="cb120-2"><a href="exploratory-data-analysis.html#cb120-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">y =</span> <span class="kw">ifelse</span>(y <span class="op">&lt;</span><span class="st"> </span><span class="dv">3</span> <span class="op">|</span><span class="st"> </span>y <span class="op">&gt;</span><span class="st"> </span><span class="dv">20</span>, <span class="ot">NA</span>, y))</span>
+<span id="cb120-3"><a href="exploratory-data-analysis.html#cb120-3"></a></span>
+<span id="cb120-4"><a href="exploratory-data-analysis.html#cb120-4"></a><span class="kw">ggplot</span>(diamonds2, <span class="kw">aes</span>(<span class="dt">x =</span> y)) <span class="op">+</span></span>
+<span id="cb120-5"><a href="exploratory-data-analysis.html#cb120-5"></a><span class="st">  </span><span class="kw">geom_histogram</span>()</span>
+<span id="cb120-6"><a href="exploratory-data-analysis.html#cb120-6"></a><span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></span>
+<span id="cb120-7"><a href="exploratory-data-analysis.html#cb120-7"></a><span class="co">#&gt; Warning: Removed 9 rows containing non-finite values (stat_bin).</span></span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-132-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="exploratory-data-analysis.html#cb121-1"></a>diamonds <span class="op">%&gt;%</span></span>
+<span id="cb121-2"><a href="exploratory-data-analysis.html#cb121-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">cut =</span> <span class="kw">if_else</span>(<span class="kw">runif</span>(<span class="kw">n</span>()) <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.1</span>, <span class="ot">NA_character_</span>, <span class="kw">as.character</span>(cut))) <span class="op">%&gt;%</span></span>
+<span id="cb121-3"><a href="exploratory-data-analysis.html#cb121-3"></a><span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span></span>
+<span id="cb121-4"><a href="exploratory-data-analysis.html#cb121-4"></a><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> cut))</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-133-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>直方图会丢弃NA值，条形图会把NA值作为一个取值。</p>
+<p>(2)<code>na.rm = TRUE</code>在<code>mean()</code>和<code>sum()</code>函数中的作用是什么？</p>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="exploratory-data-analysis.html#cb122-1"></a>a &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>,<span class="ot">NA</span>,<span class="ot">NA</span>)</span>
+<span id="cb122-2"><a href="exploratory-data-analysis.html#cb122-2"></a><span class="kw">sum</span>(a)</span>
+<span id="cb122-3"><a href="exploratory-data-analysis.html#cb122-3"></a><span class="co">#&gt; [1] NA</span></span>
+<span id="cb122-4"><a href="exploratory-data-analysis.html#cb122-4"></a><span class="kw">sum</span>(a,<span class="dt">na.rm =</span> T)</span>
+<span id="cb122-5"><a href="exploratory-data-analysis.html#cb122-5"></a><span class="co">#&gt; [1] 15</span></span>
+<span id="cb122-6"><a href="exploratory-data-analysis.html#cb122-6"></a><span class="kw">mean</span>(a)</span>
+<span id="cb122-7"><a href="exploratory-data-analysis.html#cb122-7"></a><span class="co">#&gt; [1] NA</span></span>
+<span id="cb122-8"><a href="exploratory-data-analysis.html#cb122-8"></a><span class="kw">mean</span>(a,<span class="dt">na.rm =</span> T)</span>
+<span id="cb122-9"><a href="exploratory-data-analysis.html#cb122-9"></a><span class="co">#&gt; [1] 3</span></span></code></pre></div>
+<p>求非NA值的和以及求非NA值的均值（分母为非NA值的个数）。</p>
 
 </div>
 </div>
