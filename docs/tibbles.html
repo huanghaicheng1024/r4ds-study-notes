@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>1 Introduction | r4ds学习笔记</title>
+  <title>7 Tibbles | r4ds学习笔记</title>
   <meta name="description" content="这是使用bookdwon编写的书籍。" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="1 Introduction | r4ds学习笔记" />
+  <meta property="og:title" content="7 Tibbles | r4ds学习笔记" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="1 Introduction | r4ds学习笔记" />
+  <meta name="twitter:title" content="7 Tibbles | r4ds学习笔记" />
   
   <meta name="twitter:description" content="这是使用bookdwon编写的书籍。" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="explore-intro.html"/>
+<link rel="prev" href="exploratory-data-analysis.html"/>
+
 <script src="libs/header-attrs-2.5/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -265,21 +265,108 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="intro" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> Introduction</h1>
-<p>这本书主要讲解的，是如何使用非常重要的数据科学工具，并给出了工具模型</p>
-<div align="center">
-<img src="https://d33wubrfki0l68.cloudfront.net/571b056757d68e6df81a3e3853f54d3c76ad6efc/32d37/diagrams/data-science.png" />
+<div id="tibbles" class="section level1" number="7">
+<h1><span class="header-section-number">7</span> Tibbles</h1>
+<div id="准备工作-1" class="section level2" number="7.1">
+<h2><span class="header-section-number">7.1</span> 准备工作</h2>
+<p>类似与<code>data.frame</code>的<code>tibble</code>。</p>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="tibbles.html#cb123-1"></a><span class="kw">library</span>(tidyverse)</span></code></pre></div>
 </div>
-<p>其大致的含义如下：</p>
-<div align="center">
-<img src="01-intro_files/r4ds.png" />
+<div id="创建tibble" class="section level2" number="7.2">
+<h2><span class="header-section-number">7.2</span> 创建tibble</h2>
+<div id="导图" class="section level3" number="7.2.1">
+<h3><span class="header-section-number">7.2.1</span> 导图</h3>
+<p><img src="07-tibbles_files/创建tibble.png" /></p>
 </div>
+<div id="实践" class="section level3" number="7.2.2">
+<h3><span class="header-section-number">7.2.2</span> 实践</h3>
+<p>首先，<code>iris</code>数据集是<code>data.frame</code>而不是<code>tibble</code>。</p>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="tibbles.html#cb124-1"></a><span class="kw">is.data.frame</span>(iris)</span>
+<span id="cb124-2"><a href="tibbles.html#cb124-2"></a><span class="co">#&gt; [1] TRUE</span></span>
+<span id="cb124-3"><a href="tibbles.html#cb124-3"></a><span class="kw">is_tibble</span>(iris)</span>
+<span id="cb124-4"><a href="tibbles.html#cb124-4"></a><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
+<ul>
+<li>利用tidyverse函数得到tibble</li>
+</ul>
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="tibbles.html#cb125-1"></a>iris1 &lt;-<span class="st"> </span>iris <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb125-2"><a href="tibbles.html#cb125-2"></a><span class="st">  </span><span class="kw">filter</span>(Sepal.Width<span class="op">&gt;</span><span class="dv">3</span>)</span>
+<span id="cb125-3"><a href="tibbles.html#cb125-3"></a><span class="kw">is_tibble</span>(iris1)</span>
+<span id="cb125-4"><a href="tibbles.html#cb125-4"></a><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
+<p>实践失败了…利用<code>tidyverse</code>函数，传入数据框，处理之后仍然是数据框。</p>
+<ul>
+<li>利用<code>as_tibble</code>创建tibble</li>
+</ul>
+<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="tibbles.html#cb126-1"></a>iris_tibble &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(iris)</span>
+<span id="cb126-2"><a href="tibbles.html#cb126-2"></a><span class="kw">is_tibble</span>(iris_tibble)</span>
+<span id="cb126-3"><a href="tibbles.html#cb126-3"></a><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
+<ul>
+<li>使用向量创建</li>
+</ul>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="tibbles.html#cb127-1"></a>x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>)</span>
+<span id="cb127-2"><a href="tibbles.html#cb127-2"></a>y &lt;-<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb127-3"><a href="tibbles.html#cb127-3"></a>z &lt;-<span class="st"> </span>x<span class="op">+</span>y</span>
+<span id="cb127-4"><a href="tibbles.html#cb127-4"></a>a &lt;-<span class="st"> </span><span class="kw">tibble</span>(x,y,z)</span>
+<span id="cb127-5"><a href="tibbles.html#cb127-5"></a><span class="kw">str</span>(a)</span>
+<span id="cb127-6"><a href="tibbles.html#cb127-6"></a><span class="co">#&gt; tibble [3 x 3] (S3: tbl_df/tbl/data.frame)</span></span>
+<span id="cb127-7"><a href="tibbles.html#cb127-7"></a><span class="co">#&gt;  $ x: num [1:3] 1 2 3</span></span>
+<span id="cb127-8"><a href="tibbles.html#cb127-8"></a><span class="co">#&gt;  $ y: num [1:3] 1 1 1</span></span>
+<span id="cb127-9"><a href="tibbles.html#cb127-9"></a><span class="co">#&gt;  $ z: num [1:3] 2 3 4</span></span></code></pre></div>
+<ul>
+<li>使用<code>tribble</code>创建</li>
+</ul>
+<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb128-1"><a href="tibbles.html#cb128-1"></a>a &lt;-<span class="st"> </span><span class="kw">tribble</span>(</span>
+<span id="cb128-2"><a href="tibbles.html#cb128-2"></a>  <span class="op">~</span>x,<span class="op">~</span>y,<span class="op">~</span>z,</span>
+<span id="cb128-3"><a href="tibbles.html#cb128-3"></a>  <span class="st">&quot;a&quot;</span>,<span class="dv">1</span>,<span class="fl">1.1</span>,</span>
+<span id="cb128-4"><a href="tibbles.html#cb128-4"></a>  <span class="st">&quot;b&quot;</span>,<span class="dv">2</span>,<span class="fl">0.5</span> </span>
+<span id="cb128-5"><a href="tibbles.html#cb128-5"></a>)</span>
+<span id="cb128-6"><a href="tibbles.html#cb128-6"></a><span class="kw">str</span>(a)</span>
+<span id="cb128-7"><a href="tibbles.html#cb128-7"></a><span class="co">#&gt; tibble [2 x 3] (S3: tbl_df/tbl/data.frame)</span></span>
+<span id="cb128-8"><a href="tibbles.html#cb128-8"></a><span class="co">#&gt;  $ x: chr [1:2] &quot;a&quot; &quot;b&quot;</span></span>
+<span id="cb128-9"><a href="tibbles.html#cb128-9"></a><span class="co">#&gt;  $ y: num [1:2] 1 2</span></span>
+<span id="cb128-10"><a href="tibbles.html#cb128-10"></a><span class="co">#&gt;  $ z: num [1:2] 1.1 0.5</span></span></code></pre></div>
+<p>这个的语法比较新鲜。</p>
+</div>
+</div>
+<div id="对比tibble与data.frame" class="section level2" number="7.3">
+<h2><span class="header-section-number">7.3</span> 对比<code>tibble</code>与<code>data.frame</code></h2>
+<p><strong>打印<code>print</code>：</strong><code>tibble</code>默认只显示前 10 行结果，并且列也是适合屏幕的，还会打印出列的类型。可以通过<code>print</code>的参数或者<code>option</code>修改默认设置。</p>
+<p><strong>取子集：</strong><code>tibble</code>不能进行部分匹配，如果想要访问的列不存在，会生成一条警告信息。</p>
+</div>
+<div id="与旧代码进行交互" class="section level2" number="7.4">
+<h2><span class="header-section-number">7.4</span> 与旧代码进行交互</h2>
+<p>使用<code>as.data.frame()</code>可以将<code>tible</code>转换为<code>data.frame</code>。</p>
+</div>
+<div id="练习-12" class="section level2" number="7.5">
+<h2><span class="header-section-number">7.5</span> 练习</h2>
+<p>(2)对比 <code>data.frame</code>和等价的<code>tibble</code>上进行的以下操作。有何区别？为什么默认的数据框操作会让人感到沮丧？</p>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="tibbles.html#cb129-1"></a>df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">abc =</span> <span class="dv">1</span>, <span class="dt">xyz =</span> <span class="st">&quot;a&quot;</span>) </span>
+<span id="cb129-2"><a href="tibbles.html#cb129-2"></a>df<span class="op">$</span>x </span>
+<span id="cb129-3"><a href="tibbles.html#cb129-3"></a><span class="co">#&gt; [1] a</span></span>
+<span id="cb129-4"><a href="tibbles.html#cb129-4"></a><span class="co">#&gt; Levels: a</span></span>
+<span id="cb129-5"><a href="tibbles.html#cb129-5"></a>df[, <span class="st">&quot;xyz&quot;</span>] </span>
+<span id="cb129-6"><a href="tibbles.html#cb129-6"></a><span class="co">#&gt; [1] a</span></span>
+<span id="cb129-7"><a href="tibbles.html#cb129-7"></a><span class="co">#&gt; Levels: a</span></span>
+<span id="cb129-8"><a href="tibbles.html#cb129-8"></a>df[, <span class="kw">c</span>(<span class="st">&quot;abc&quot;</span>, <span class="st">&quot;xyz&quot;</span>)]</span>
+<span id="cb129-9"><a href="tibbles.html#cb129-9"></a><span class="co">#&gt;   abc xyz</span></span>
+<span id="cb129-10"><a href="tibbles.html#cb129-10"></a><span class="co">#&gt; 1   1   a</span></span></code></pre></div>
+<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb130-1"><a href="tibbles.html#cb130-1"></a>df &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(df)</span>
+<span id="cb130-2"><a href="tibbles.html#cb130-2"></a>df<span class="op">$</span>x </span>
+<span id="cb130-3"><a href="tibbles.html#cb130-3"></a><span class="co">#&gt; Warning: Unknown or uninitialised column: `x`.</span></span>
+<span id="cb130-4"><a href="tibbles.html#cb130-4"></a><span class="co">#&gt; NULL</span></span>
+<span id="cb130-5"><a href="tibbles.html#cb130-5"></a>df[, <span class="st">&quot;xyz&quot;</span>] </span>
+<span id="cb130-6"><a href="tibbles.html#cb130-6"></a><span class="co">#&gt; # A tibble: 1 x 1</span></span>
+<span id="cb130-7"><a href="tibbles.html#cb130-7"></a><span class="co">#&gt;   xyz  </span></span>
+<span id="cb130-8"><a href="tibbles.html#cb130-8"></a><span class="co">#&gt;   &lt;fct&gt;</span></span>
+<span id="cb130-9"><a href="tibbles.html#cb130-9"></a><span class="co">#&gt; 1 a</span></span>
+<span id="cb130-10"><a href="tibbles.html#cb130-10"></a>df[, <span class="kw">c</span>(<span class="st">&quot;abc&quot;</span>, <span class="st">&quot;xyz&quot;</span>)]</span>
+<span id="cb130-11"><a href="tibbles.html#cb130-11"></a><span class="co">#&gt; # A tibble: 1 x 2</span></span>
+<span id="cb130-12"><a href="tibbles.html#cb130-12"></a><span class="co">#&gt;     abc xyz  </span></span>
+<span id="cb130-13"><a href="tibbles.html#cb130-13"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;fct&gt;</span></span>
+<span id="cb130-14"><a href="tibbles.html#cb130-14"></a><span class="co">#&gt; 1     1 a</span></span></code></pre></div>
+<p>区别：<code>tibble</code>不能进行部分匹配，而<code>data.frame</code>可以。并且，<code>data.frame</code>在取一列的时候返回的是向量而不是<code>data.frame</code>，当列名是一个变量时不好处理（你不知道返回的是向量还是<code>data.frame</code>），而<code>tibble</code>则会一致地返回<code>tibble</code>。</p>
 
 </div>
-
-
-
+</div>
 <section style="
     display: block;
 ">
@@ -296,8 +383,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="explore-intro.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="exploratory-data-analysis.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -319,7 +406,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/huanghaicheng1024/r4ds-study-notes/edit/master/01-intro.Rmd",
+"link": "https://github.com/huanghaicheng1024/r4ds-study-notes/edit/master/07-tibbles.Rmd",
 "text": "Edit"
 },
 "history": {

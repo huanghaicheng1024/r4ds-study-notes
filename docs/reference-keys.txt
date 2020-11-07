@@ -54,3 +54,11 @@ exploratory-data-analysis
 练习-11
 变动
 缺失值
+tibbles
+准备工作-1
+创建tibble
+导图
+实践
+对比tibble与data.frame
+与旧代码进行交互
+练习-12
