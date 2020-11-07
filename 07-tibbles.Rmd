@@ -1,0 +1,94 @@
+# (PART) Wrangle {-}
+
+# Tibbles
+
+## 准备工作
+
+类似与`data.frame`的`tibble`。
+```{r}
+library(tidyverse)
+```
+
+
+## 创建tibble
+
+### 导图
+![](07-tibbles_files/创建tibble.png)
+
+### 实践
+
+首先，`iris`数据集是`data.frame`而不是`tibble`。
+```{r}
+is.data.frame(iris)
+is_tibble(iris)
+```
+
+
+- 利用tidyverse函数得到tibble
+```{r}
+iris1 <- iris %>% 
+  filter(Sepal.Width>3)
+is_tibble(iris1)
+```
+实践失败了...利用`tidyverse`函数，传入数据框，处理之后仍然是数据框。
+
+
+- 利用`as_tibble`创建tibble
+```{r}
+iris_tibble <- as_tibble(iris)
+is_tibble(iris_tibble)
+```
+
+- 使用向量创建
+```{r}
+x <- c(1,2,3)
+y <- 1
+z <- x+y
+a <- tibble(x,y,z)
+str(a)
+```
+
+- 使用`tribble`创建
+```{r}
+a <- tribble(
+  ~x,~y,~z,
+  "a",1,1.1,
+  "b",2,0.5 
+)
+str(a)
+```
+这个的语法比较新鲜。
+
+## 对比`tibble`与`data.frame`
+
+**打印`print`：**`tibble`默认只显示前 10 行结果，并且列也是适合屏幕的，还会打印出列的类型。可以通过`print`的参数或者`option`修改默认设置。
+
+**取子集：**`tibble`不能进行部分匹配，如果想要访问的列不存在，会生成一条警告信息。
+
+
+## 与旧代码进行交互
+
+使用`as.data.frame()`可以将`tible`转换为`data.frame`。
+
+## 练习
+
+(2)对比 `data.frame`和等价的`tibble`上进行的以下操作。有何区别？为什么默认的数据框操作会让人感到沮丧？
+```{r}
+df <- data.frame(abc = 1, xyz = "a") 
+df$x 
+df[, "xyz"] 
+df[, c("abc", "xyz")]
+```
+```{r}
+df <- as_tibble(df)
+df$x 
+df[, "xyz"] 
+df[, c("abc", "xyz")]
+```
+
+区别：`tibble`不能进行部分匹配，而`data.frame`可以。并且，`data.frame`在取一列的时候返回的是向量而不是`data.frame`，当列名是一个变量时不好处理（你不知道返回的是向量还是`data.frame`），而`tibble`则会一致地返回`tibble`。
+
+
+
+
+
