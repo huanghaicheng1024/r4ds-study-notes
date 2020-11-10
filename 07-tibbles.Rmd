@@ -4,7 +4,7 @@
 
 ## 准备工作
 
-类似与`data.frame`的`tibble`。
+类似于`data.frame`的`tibble`。
 ```{r}
 library(tidyverse)
 ```
