@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>2 Introduction | r4ds学习笔记</title>
+  <title>9 Tidy data | r4ds学习笔记</title>
   <meta name="description" content="这是使用bookdwon编写的书籍。" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="2 Introduction | r4ds学习笔记" />
+  <meta property="og:title" content="9 Tidy data | r4ds学习笔记" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="2 Introduction | r4ds学习笔记" />
+  <meta name="twitter:title" content="9 Tidy data | r4ds学习笔记" />
   
   <meta name="twitter:description" content="这是使用bookdwon编写的书籍。" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="intro.html"/>
-<link rel="next" href="data-visualisation.html"/>
+<link rel="prev" href="data-import.html"/>
+
 <script src="libs/header-attrs-2.5/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -288,11 +288,59 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="explore-intro" class="section level1" number="2">
-<h1><span class="header-section-number">2</span> Introduction</h1>
-<p>首先开始讲解的是数据探索这部分内容。</p>
-<p>数据探索是一门艺术，它是审视数据、生成假设、假设检验的不断反复的过程。</p>
+<div id="tidy-data" class="section level1" number="9">
+<h1><span class="header-section-number">9</span> Tidy data</h1>
+<p>学习利用<code>dplyr</code>中的函数处理关系数据，其实也就是实现SQL里边的一些内容。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="tidy-data.html#cb1-1"></a><span class="kw">library</span>(tidyverse) </span>
+<span id="cb1-2"><a href="tidy-data.html#cb1-2"></a><span class="kw">library</span>(nycflights13)</span></code></pre></div>
+<div id="键" class="section level2" number="9.1">
+<h2><span class="header-section-number">9.1</span> 键</h2>
+<p>类似于数据库的定义，不再赘述。</p>
+<p>关于如何验证表的主键，一种验证方法是对主键进行<code>count()</code>操作，然后查看是否有n大于1的记录，即看看是否违背唯一确定的性质：</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="tidy-data.html#cb2-1"></a>planes <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb2-2"><a href="tidy-data.html#cb2-2"></a><span class="st">  </span><span class="kw">count</span>(tailnum) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb2-3"><a href="tidy-data.html#cb2-3"></a><span class="st">  </span><span class="kw">filter</span>(n<span class="op">&gt;</span><span class="dv">1</span>)</span>
+<span id="cb2-4"><a href="tidy-data.html#cb2-4"></a><span class="co">#&gt; # A tibble: 0 x 2</span></span>
+<span id="cb2-5"><a href="tidy-data.html#cb2-5"></a><span class="co">#&gt; # ... with 2 variables: tailnum &lt;chr&gt;, n &lt;int&gt;</span></span></code></pre></div>
+<p>关于如何建立代理键，可以利用<code>mutate</code>与<code>row_number()</code>:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="tidy-data.html#cb3-1"></a>x &lt;-<span class="st"> </span><span class="kw">tribble</span>(</span>
+<span id="cb3-2"><a href="tidy-data.html#cb3-2"></a>  <span class="op">~</span>a,<span class="op">~</span>b,</span>
+<span id="cb3-3"><a href="tidy-data.html#cb3-3"></a>  <span class="dv">1</span>,<span class="dv">2</span>,</span>
+<span id="cb3-4"><a href="tidy-data.html#cb3-4"></a>  <span class="dv">1</span>,<span class="dv">3</span>,</span>
+<span id="cb3-5"><a href="tidy-data.html#cb3-5"></a>  <span class="dv">2</span>,<span class="dv">3</span></span>
+<span id="cb3-6"><a href="tidy-data.html#cb3-6"></a>)</span>
+<span id="cb3-7"><a href="tidy-data.html#cb3-7"></a>(x <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb3-8"><a href="tidy-data.html#cb3-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">key=</span><span class="kw">row_number</span>()) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb3-9"><a href="tidy-data.html#cb3-9"></a><span class="st">  </span><span class="kw">select</span>(key,<span class="kw">everything</span>()))</span>
+<span id="cb3-10"><a href="tidy-data.html#cb3-10"></a><span class="co">#&gt; # A tibble: 3 x 3</span></span>
+<span id="cb3-11"><a href="tidy-data.html#cb3-11"></a><span class="co">#&gt;     key     a     b</span></span>
+<span id="cb3-12"><a href="tidy-data.html#cb3-12"></a><span class="co">#&gt;   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb3-13"><a href="tidy-data.html#cb3-13"></a><span class="co">#&gt; 1     1     1     2</span></span>
+<span id="cb3-14"><a href="tidy-data.html#cb3-14"></a><span class="co">#&gt; 2     2     1     3</span></span>
+<span id="cb3-15"><a href="tidy-data.html#cb3-15"></a><span class="co">#&gt; 3     3     2     3</span></span></code></pre></div>
+</div>
+<div id="处理关系数据的三种操作" class="section level2" number="9.2">
+<h2><span class="header-section-number">9.2</span> 处理关系数据的三种操作</h2>
+<p><img src="images/tidy-data-处理关系数据.png" width="70%" style="display: block; margin: auto;" /></p>
+<div id="定义键列" class="section level3" number="9.2.1">
+<h3><span class="header-section-number">9.2.1</span> 定义键列</h3>
+<p>通过上述函数的参数<code>by</code>来设置。</p>
+<ul>
+<li><p>默认值<code>by = NULL</code>，自然连接。</p></li>
+<li><p>字符向量<code>by = "x"</code>。这种方式与自然连接很相似，但只使用指定的公共变量。</p></li>
+<li><p>命名字符向量<code>by = c("a" = "b")</code>。这种方式会匹配<code>x</code>表中的<code>a</code>变量和<code>y</code>表中的<code>b</code>变量。输出结果中使用的是<code>x</code>表中的变量。适用于含义一样但名字不同的变量之间连接。</p></li>
+</ul>
+</div>
+<div id="连接中的问题" class="section level3" number="9.2.2">
+<h3><span class="header-section-number">9.2.2</span> 连接中的问题</h3>
+<ul>
+<li><p>首先，需要找出每个表中可以作为主键的变量。一般应该基于对数据的理解来确定主键，而不是凭经验寻找能作为唯一标识符的变量组合。从含义出发！</p></li>
+<li><p>确保主键中的每个变量都没有缺失值。（实体完整性…）</p></li>
+<li><p>检查外键是否与另一张表的主键相匹配。最好的方法是使用<code>anti_join()</code>，由于数据录入错误，外键和主键不匹配的情况很常见。解决这种问题通常需要大量工作。</p></li>
+</ul>
 
+</div>
+</div>
 </div>
 <section style="
     display: block;
@@ -310,8 +358,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="data-visualisation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="data-import.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -333,7 +381,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/huanghaicheng1024/r4ds-study-notes/edit/master/02-explore-intro.Rmd",
+"link": "https://github.com/huanghaicheng1024/r4ds-study-notes/edit/master/09-tidy-data.Rmd",
 "text": "Edit"
 },
 "history": {
