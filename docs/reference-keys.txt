@@ -72,8 +72,9 @@ data-import
 其他策略
 写入文件
 练习-13
-tidy-data
+relational-data
 键
 处理关系数据的三种操作
 定义键列
 连接中的问题
+练习-14
