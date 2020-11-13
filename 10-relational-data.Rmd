@@ -1,4 +1,4 @@
-# Tidy data
+# Relational data
 
 学习利用`dplyr`中的函数处理关系数据，其实也就是实现SQL里边的一些内容。
 ```{r}
@@ -33,7 +33,7 @@ x <- tribble(
 ## 处理关系数据的三种操作
 
 ```{r echo=FALSE}
-knitr::include_graphics(path = "images/tidy-data-处理关系数据.png")
+knitr::include_graphics(path = "images/relational-data-处理关系数据.png")
 ```
 
 ### 定义键列
@@ -55,9 +55,58 @@ knitr::include_graphics(path = "images/tidy-data-处理关系数据.png")
 - 检查外键是否与另一张表的主键相匹配。最好的方法是使用`anti_join()`，由于数据录入错误，外键和主键不匹配的情况很常见。解决这种问题通常需要大量工作。
 
 
+## 练习
 
+（1）将起点机场和终点机场的位置信息（即`lat`和`lon`）添加到`flights`中。
 
+先去掉`airports`中多余的变量，再两次左外连接：
+```{r}
+airport_locations <- airports %>%
+  select(faa, lat, lon)
 
+flights %>%
+  select(year:day, hour, origin, dest) %>%
+  left_join(
+    airport_locations,
+    by = c("origin" = "faa")
+  ) %>%
+  left_join(
+    airport_locations,
+    by = c("dest" = "faa")
+  )
+
+```
+
+为什么是左外连接而不是内连接？先看看内连接：
+```{r}
+flights %>%
+  select(year:day, hour, origin, dest) %>%
+  inner_join(
+    airport_locations,
+    by = c("origin" = "faa")
+  ) %>%
+  inner_join(
+    airport_locations,
+    by = c("dest" = "faa")
+  )
+```
+
+行数要少很多，说明有很多是没有匹配到的。
+
+另一个问题，对于重复的变量`lat,lot`，连接时会默认添加`.x,.y`用于区分，可以使用参数`suffix`来修改。如：
+```{r}
+flights %>%
+  select(year:day, hour, origin, dest) %>%
+  left_join(
+    airport_locations,
+    by = c("origin" = "faa")
+  ) %>%
+  left_join(
+    airport_locations,
+    by = c("dest" = "faa"),
+    suffix = c("_origin", "_dest")
+  )
+```
 
 
 
