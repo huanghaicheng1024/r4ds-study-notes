@@ -24,7 +24,7 @@
 <meta name="author" content="Huang" />
 
 
-<meta name="date" content="2020-11-12" />
+<meta name="date" content="2020-11-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="data-import.html"/>
-
+<link rel="next" href="relational-data.html"/>
 <script src="libs/header-attrs-2.5/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -261,12 +261,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="9" data-path="tidy-data.html"><a href="tidy-data.html"><i class="fa fa-check"></i><b>9</b> Tidy data</a>
 <ul>
-<li class="chapter" data-level="9.1" data-path="tidy-data.html"><a href="tidy-data.html#键"><i class="fa fa-check"></i><b>9.1</b> 键</a></li>
-<li class="chapter" data-level="9.2" data-path="tidy-data.html"><a href="tidy-data.html#处理关系数据的三种操作"><i class="fa fa-check"></i><b>9.2</b> 处理关系数据的三种操作</a>
-<ul>
-<li class="chapter" data-level="9.2.1" data-path="tidy-data.html"><a href="tidy-data.html#定义键列"><i class="fa fa-check"></i><b>9.2.1</b> 定义键列</a></li>
-<li class="chapter" data-level="9.2.2" data-path="tidy-data.html"><a href="tidy-data.html#连接中的问题"><i class="fa fa-check"></i><b>9.2.2</b> 连接中的问题</a></li>
+<li class="chapter" data-level="9.1" data-path="tidy-data.html"><a href="tidy-data.html#整齐的数据"><i class="fa fa-check"></i><b>9.1</b> 整齐的数据</a></li>
+<li class="chapter" data-level="9.2" data-path="tidy-data.html"><a href="tidy-data.html#数据的常见问题与整理方法"><i class="fa fa-check"></i><b>9.2</b> 数据的常见问题与整理方法</a></li>
+<li class="chapter" data-level="9.3" data-path="tidy-data.html"><a href="tidy-data.html#缺失值-1"><i class="fa fa-check"></i><b>9.3</b> 缺失值</a></li>
+<li class="chapter" data-level="9.4" data-path="tidy-data.html"><a href="tidy-data.html#练习-14"><i class="fa fa-check"></i><b>9.4</b> 练习</a></li>
 </ul></li>
+<li class="chapter" data-level="10" data-path="relational-data.html"><a href="relational-data.html"><i class="fa fa-check"></i><b>10</b> Relational data</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="relational-data.html"><a href="relational-data.html#键"><i class="fa fa-check"></i><b>10.1</b> 键</a></li>
+<li class="chapter" data-level="10.2" data-path="relational-data.html"><a href="relational-data.html#处理关系数据的三种操作"><i class="fa fa-check"></i><b>10.2</b> 处理关系数据的三种操作</a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="relational-data.html"><a href="relational-data.html#定义键列"><i class="fa fa-check"></i><b>10.2.1</b> 定义键列</a></li>
+<li class="chapter" data-level="10.2.2" data-path="relational-data.html"><a href="relational-data.html#连接中的问题"><i class="fa fa-check"></i><b>10.2.2</b> 连接中的问题</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="relational-data.html"><a href="relational-data.html#练习-15"><i class="fa fa-check"></i><b>10.3</b> 练习</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://bookdown.org" target="blank">本书由 bookdown 强力驱动</a></li>
@@ -290,56 +298,103 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="tidy-data" class="section level1" number="9">
 <h1><span class="header-section-number">9</span> Tidy data</h1>
-<p>学习利用<code>dplyr</code>中的函数处理关系数据，其实也就是实现SQL里边的一些内容。</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="tidy-data.html#cb1-1"></a><span class="kw">library</span>(tidyverse) </span>
-<span id="cb1-2"><a href="tidy-data.html#cb1-2"></a><span class="kw">library</span>(nycflights13)</span></code></pre></div>
-<div id="键" class="section level2" number="9.1">
-<h2><span class="header-section-number">9.1</span> 键</h2>
-<p>类似于数据库的定义，不再赘述。</p>
-<p>关于如何验证表的主键，一种验证方法是对主键进行<code>count()</code>操作，然后查看是否有n大于1的记录，即看看是否违背唯一确定的性质：</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="tidy-data.html#cb2-1"></a>planes <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb2-2"><a href="tidy-data.html#cb2-2"></a><span class="st">  </span><span class="kw">count</span>(tailnum) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb2-3"><a href="tidy-data.html#cb2-3"></a><span class="st">  </span><span class="kw">filter</span>(n<span class="op">&gt;</span><span class="dv">1</span>)</span>
-<span id="cb2-4"><a href="tidy-data.html#cb2-4"></a><span class="co">#&gt; # A tibble: 0 x 2</span></span>
-<span id="cb2-5"><a href="tidy-data.html#cb2-5"></a><span class="co">#&gt; # ... with 2 variables: tailnum &lt;chr&gt;, n &lt;int&gt;</span></span></code></pre></div>
-<p>关于如何建立代理键，可以利用<code>mutate</code>与<code>row_number()</code>:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="tidy-data.html#cb3-1"></a>x &lt;-<span class="st"> </span><span class="kw">tribble</span>(</span>
-<span id="cb3-2"><a href="tidy-data.html#cb3-2"></a>  <span class="op">~</span>a,<span class="op">~</span>b,</span>
-<span id="cb3-3"><a href="tidy-data.html#cb3-3"></a>  <span class="dv">1</span>,<span class="dv">2</span>,</span>
-<span id="cb3-4"><a href="tidy-data.html#cb3-4"></a>  <span class="dv">1</span>,<span class="dv">3</span>,</span>
-<span id="cb3-5"><a href="tidy-data.html#cb3-5"></a>  <span class="dv">2</span>,<span class="dv">3</span></span>
-<span id="cb3-6"><a href="tidy-data.html#cb3-6"></a>)</span>
-<span id="cb3-7"><a href="tidy-data.html#cb3-7"></a>(x <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb3-8"><a href="tidy-data.html#cb3-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">key=</span><span class="kw">row_number</span>()) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb3-9"><a href="tidy-data.html#cb3-9"></a><span class="st">  </span><span class="kw">select</span>(key,<span class="kw">everything</span>()))</span>
-<span id="cb3-10"><a href="tidy-data.html#cb3-10"></a><span class="co">#&gt; # A tibble: 3 x 3</span></span>
-<span id="cb3-11"><a href="tidy-data.html#cb3-11"></a><span class="co">#&gt;     key     a     b</span></span>
-<span id="cb3-12"><a href="tidy-data.html#cb3-12"></a><span class="co">#&gt;   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
-<span id="cb3-13"><a href="tidy-data.html#cb3-13"></a><span class="co">#&gt; 1     1     1     2</span></span>
-<span id="cb3-14"><a href="tidy-data.html#cb3-14"></a><span class="co">#&gt; 2     2     1     3</span></span>
-<span id="cb3-15"><a href="tidy-data.html#cb3-15"></a><span class="co">#&gt; 3     3     2     3</span></span></code></pre></div>
+<p>学习<code>tidyr</code>包，用于整理（整齐）数据。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="tidy-data.html#cb1-1"></a><span class="kw">library</span>(tidyverse)</span></code></pre></div>
+<div id="整齐的数据" class="section level2" number="9.1">
+<h2><span class="header-section-number">9.1</span> 整齐的数据</h2>
+<p>想要整理数据，就得先知道我们的目标，即所谓<strong>“整齐的数据（tidy data）”</strong>指的是怎样的数据。</p>
+<p>类似于数据库关系数据理论的1NF，整齐的数据需满足：</p>
+<ol style="list-style-type: decimal">
+<li><p>每个变量必须有自己的列</p></li>
+<li><p>每个观察值必须有自己的一行</p></li>
+<li><p>每个值都必须有自己的单元格</p></li>
+</ol>
+<p>在我们<code>tidyverse</code>的工具下，应当做到：</p>
+<ol style="list-style-type: decimal">
+<li><p>将每个数据集放在一个tibble中</p></li>
+<li><p>将每个变量放在一列中</p></li>
+</ol>
+<p>整齐数据的优势主要有两个：<strong>得到一致性的数据结构</strong>、<strong>使R的矢量化运算发挥作用</strong>。</p>
 </div>
-<div id="处理关系数据的三种操作" class="section level2" number="9.2">
-<h2><span class="header-section-number">9.2</span> 处理关系数据的三种操作</h2>
-<p><img src="images/tidy-data-处理关系数据.png" width="70%" style="display: block; margin: auto;" /></p>
-<div id="定义键列" class="section level3" number="9.2.1">
-<h3><span class="header-section-number">9.2.1</span> 定义键列</h3>
-<p>通过上述函数的参数<code>by</code>来设置。</p>
+<div id="数据的常见问题与整理方法" class="section level2" number="9.2">
+<h2><span class="header-section-number">9.2</span> 数据的常见问题与整理方法</h2>
+<p><img src="images/tidy%20data.png" width="90%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="缺失值-1" class="section level2" number="9.3">
+<h2><span class="header-section-number">9.3</span> 缺失值</h2>
+<p>一个值可能会以两种方式丢失：显示与隐式。</p>
+<blockquote>
+<p>An explicit missing value is the presence of an absence; an implicit missing value is the absence of a presence.</p>
+</blockquote>
+<p>处理缺失值的几种方法：</p>
 <ul>
-<li><p>默认值<code>by = NULL</code>，自然连接。</p></li>
-<li><p>字符向量<code>by = "x"</code>。这种方式与自然连接很相似，但只使用指定的公共变量。</p></li>
-<li><p>命名字符向量<code>by = c("a" = "b")</code>。这种方式会匹配<code>x</code>表中的<code>a</code>变量和<code>y</code>表中的<code>b</code>变量。输出结果中使用的是<code>x</code>表中的变量。适用于含义一样但名字不同的变量之间连接。</p></li>
+<li><p>不同的数据表示使隐式缺失值值显式化，或者可以设置隐式转换显式缺失值</p></li>
+<li><p>显式显示缺失值：<code>complete()</code></p></li>
+<li><p><code>fill()</code>：将缺失值替换为最近的非缺失值</p></li>
 </ul>
 </div>
-<div id="连接中的问题" class="section level3" number="9.2.2">
-<h3><span class="header-section-number">9.2.2</span> 连接中的问题</h3>
-<ul>
-<li><p>首先，需要找出每个表中可以作为主键的变量。一般应该基于对数据的理解来确定主键，而不是凭经验寻找能作为唯一标识符的变量组合。从含义出发！</p></li>
-<li><p>确保主键中的每个变量都没有缺失值。（实体完整性…）</p></li>
-<li><p>检查外键是否与另一张表的主键相匹配。最好的方法是使用<code>anti_join()</code>，由于数据录入错误，外键和主键不匹配的情况很常见。解决这种问题通常需要大量工作。</p></li>
-</ul>
+<div id="练习-14" class="section level2" number="9.4">
+<h2><span class="header-section-number">9.4</span> 练习</h2>
+<p>（1）What would happen if you widen this table? Why? How could you add a new column to uniquely identify each value?</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="tidy-data.html#cb2-1"></a>people &lt;-<span class="st"> </span><span class="kw">tribble</span>(</span>
+<span id="cb2-2"><a href="tidy-data.html#cb2-2"></a>  <span class="op">~</span>name, <span class="op">~</span>key, <span class="op">~</span>value,</span>
+<span id="cb2-3"><a href="tidy-data.html#cb2-3"></a>  <span class="co">#-----------------|--------|------</span></span>
+<span id="cb2-4"><a href="tidy-data.html#cb2-4"></a>  <span class="st">&quot;Phillip Woods&quot;</span>,  <span class="st">&quot;age&quot;</span>, <span class="dv">45</span>,</span>
+<span id="cb2-5"><a href="tidy-data.html#cb2-5"></a>  <span class="st">&quot;Phillip Woods&quot;</span>, <span class="st">&quot;height&quot;</span>, <span class="dv">186</span>,</span>
+<span id="cb2-6"><a href="tidy-data.html#cb2-6"></a>  <span class="st">&quot;Phillip Woods&quot;</span>, <span class="st">&quot;age&quot;</span>, <span class="dv">50</span>,</span>
+<span id="cb2-7"><a href="tidy-data.html#cb2-7"></a>  <span class="st">&quot;Jessica Cordero&quot;</span>, <span class="st">&quot;age&quot;</span>, <span class="dv">37</span>,</span>
+<span id="cb2-8"><a href="tidy-data.html#cb2-8"></a>  <span class="st">&quot;Jessica Cordero&quot;</span>, <span class="st">&quot;height&quot;</span>, <span class="dv">156</span></span>
+<span id="cb2-9"><a href="tidy-data.html#cb2-9"></a>)</span>
+<span id="cb2-10"><a href="tidy-data.html#cb2-10"></a></span>
+<span id="cb2-11"><a href="tidy-data.html#cb2-11"></a><span class="co"># name与key不能确定value</span></span>
+<span id="cb2-12"><a href="tidy-data.html#cb2-12"></a>people <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb2-13"><a href="tidy-data.html#cb2-13"></a><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from=</span><span class="st">&quot;key&quot;</span>,<span class="dt">values_from =</span> <span class="st">&quot;value&quot;</span>)</span>
+<span id="cb2-14"><a href="tidy-data.html#cb2-14"></a><span class="co">#&gt; Warning: Values are not uniquely identified; output will contain list-cols.</span></span>
+<span id="cb2-15"><a href="tidy-data.html#cb2-15"></a><span class="co">#&gt; * Use `values_fn = list` to suppress this warning.</span></span>
+<span id="cb2-16"><a href="tidy-data.html#cb2-16"></a><span class="co">#&gt; * Use `values_fn = length` to identify where the duplicates arise</span></span>
+<span id="cb2-17"><a href="tidy-data.html#cb2-17"></a><span class="co">#&gt; * Use `values_fn = {summary_fun}` to summarise duplicates</span></span>
+<span id="cb2-18"><a href="tidy-data.html#cb2-18"></a><span class="co">#&gt; # A tibble: 2 x 3</span></span>
+<span id="cb2-19"><a href="tidy-data.html#cb2-19"></a><span class="co">#&gt;   name            age       height   </span></span>
+<span id="cb2-20"><a href="tidy-data.html#cb2-20"></a><span class="co">#&gt;   &lt;chr&gt;           &lt;list&gt;    &lt;list&gt;   </span></span>
+<span id="cb2-21"><a href="tidy-data.html#cb2-21"></a><span class="co">#&gt; 1 Phillip Woods   &lt;dbl [2]&gt; &lt;dbl [1]&gt;</span></span>
+<span id="cb2-22"><a href="tidy-data.html#cb2-22"></a><span class="co">#&gt; 2 Jessica Cordero &lt;dbl [1]&gt; &lt;dbl [1]&gt;</span></span>
+<span id="cb2-23"><a href="tidy-data.html#cb2-23"></a></span>
+<span id="cb2-24"><a href="tidy-data.html#cb2-24"></a><span class="co"># 添加新列</span></span>
+<span id="cb2-25"><a href="tidy-data.html#cb2-25"></a>people <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb2-26"><a href="tidy-data.html#cb2-26"></a><span class="st">  </span><span class="kw">group_by</span>(name,key) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb2-27"><a href="tidy-data.html#cb2-27"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">no =</span> <span class="kw">row_number</span>()) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb2-28"><a href="tidy-data.html#cb2-28"></a><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> <span class="st">&quot;name&quot;</span>,<span class="dt">values_from=</span><span class="st">&quot;value&quot;</span>)</span>
+<span id="cb2-29"><a href="tidy-data.html#cb2-29"></a><span class="co">#&gt; # A tibble: 3 x 4</span></span>
+<span id="cb2-30"><a href="tidy-data.html#cb2-30"></a><span class="co">#&gt; # Groups:   key [2]</span></span>
+<span id="cb2-31"><a href="tidy-data.html#cb2-31"></a><span class="co">#&gt;   key       no `Phillip Woods` `Jessica Cordero`</span></span>
+<span id="cb2-32"><a href="tidy-data.html#cb2-32"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;int&gt;           &lt;dbl&gt;             &lt;dbl&gt;</span></span>
+<span id="cb2-33"><a href="tidy-data.html#cb2-33"></a><span class="co">#&gt; 1 age        1              45                37</span></span>
+<span id="cb2-34"><a href="tidy-data.html#cb2-34"></a><span class="co">#&gt; 2 height     1             186               156</span></span>
+<span id="cb2-35"><a href="tidy-data.html#cb2-35"></a><span class="co">#&gt; 3 age        2              50                NA</span></span></code></pre></div>
+<p>（2）Tidy the simple tibble below. Do you need to make it wider or longer? What are the variables?</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="tidy-data.html#cb3-1"></a>preg &lt;-<span class="st"> </span><span class="kw">tribble</span>(</span>
+<span id="cb3-2"><a href="tidy-data.html#cb3-2"></a>  <span class="op">~</span>pregnant, <span class="op">~</span>male, <span class="op">~</span>female,</span>
+<span id="cb3-3"><a href="tidy-data.html#cb3-3"></a>  <span class="st">&quot;yes&quot;</span>,     <span class="ot">NA</span>,    <span class="dv">10</span>,</span>
+<span id="cb3-4"><a href="tidy-data.html#cb3-4"></a>  <span class="st">&quot;no&quot;</span>,      <span class="dv">20</span>,    <span class="dv">12</span></span>
+<span id="cb3-5"><a href="tidy-data.html#cb3-5"></a>)</span>
+<span id="cb3-6"><a href="tidy-data.html#cb3-6"></a></span>
+<span id="cb3-7"><a href="tidy-data.html#cb3-7"></a><span class="co"># longer</span></span>
+<span id="cb3-8"><a href="tidy-data.html#cb3-8"></a>preg <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb3-9"><a href="tidy-data.html#cb3-9"></a><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="dt">cols =</span> <span class="kw">c</span>(<span class="st">&quot;male&quot;</span>,<span class="st">&quot;female&quot;</span>),</span>
+<span id="cb3-10"><a href="tidy-data.html#cb3-10"></a>               <span class="dt">names_to =</span> <span class="st">&quot;sex&quot;</span>,</span>
+<span id="cb3-11"><a href="tidy-data.html#cb3-11"></a>               <span class="dt">values_drop_na=</span>T) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># 去缺失值（怀孕，男）</span></span>
+<span id="cb3-12"><a href="tidy-data.html#cb3-12"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb3-13"><a href="tidy-data.html#cb3-13"></a>    <span class="dt">female =</span> (sex<span class="op">==</span><span class="st">&quot;female&quot;</span>),</span>
+<span id="cb3-14"><a href="tidy-data.html#cb3-14"></a>    <span class="dt">pregnant =</span> (pregnant<span class="op">==</span><span class="st">&quot;yes&quot;</span>)  <span class="co"># 受启发，改为逻辑变量</span></span>
+<span id="cb3-15"><a href="tidy-data.html#cb3-15"></a>  ) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb3-16"><a href="tidy-data.html#cb3-16"></a><span class="st">  </span><span class="kw">select</span>(female,pregnant,value)</span>
+<span id="cb3-17"><a href="tidy-data.html#cb3-17"></a><span class="co">#&gt; # A tibble: 3 x 3</span></span>
+<span id="cb3-18"><a href="tidy-data.html#cb3-18"></a><span class="co">#&gt;   female pregnant value</span></span>
+<span id="cb3-19"><a href="tidy-data.html#cb3-19"></a><span class="co">#&gt;   &lt;lgl&gt;  &lt;lgl&gt;    &lt;dbl&gt;</span></span>
+<span id="cb3-20"><a href="tidy-data.html#cb3-20"></a><span class="co">#&gt; 1 TRUE   TRUE        10</span></span>
+<span id="cb3-21"><a href="tidy-data.html#cb3-21"></a><span class="co">#&gt; 2 FALSE  FALSE       20</span></span>
+<span id="cb3-22"><a href="tidy-data.html#cb3-22"></a><span class="co">#&gt; 3 TRUE   FALSE       12</span></span></code></pre></div>
 
-</div>
 </div>
 </div>
 <section style="
@@ -358,8 +413,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="data-import.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="data-import.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="relational-data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
