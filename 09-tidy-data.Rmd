@@ -28,7 +28,7 @@ library(tidyverse)
 
 ## 数据的常见问题与整理方法
 
-```{r echo=FALSE}
+```{r echo=FALSE,out.width = "90%"}
 knitr::include_graphics("images/tidy data.png")
 ```
 
