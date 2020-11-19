@@ -24,7 +24,7 @@
 <meta name="author" content="Huang" />
 
 
-<meta name="date" content="2020-11-16" />
+<meta name="date" content="2020-11-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -54,6 +54,9 @@
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 <link href="libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.0/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<link href="libs/str_view-0.1.0/str_view.css" rel="stylesheet" />
+<script src="libs/str_view-binding-1.4.0/str_view.js"></script>
 
 
 <style type="text/css">
@@ -276,6 +279,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="10.3" data-path="relational-data.html"><a href="relational-data.html#练习-15"><i class="fa fa-check"></i><b>10.3</b> 练习</a></li>
 </ul></li>
+<li class="chapter" data-level="11" data-path="strings.html"><a href="strings.html"><i class="fa fa-check"></i><b>11</b> Strings</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="strings.html"><a href="strings.html#字符串基础"><i class="fa fa-check"></i><b>11.1</b> 字符串基础</a></li>
+<li class="chapter" data-level="11.2" data-path="strings.html"><a href="strings.html#使用正则表达式进行模式匹配"><i class="fa fa-check"></i><b>11.2</b> 使用正则表达式进行模式匹配</a>
+<ul>
+<li class="chapter" data-level="11.2.1" data-path="strings.html"><a href="strings.html#练习-16"><i class="fa fa-check"></i><b>11.2.1</b> 练习</a></li>
+</ul></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://bookdown.org" target="blank">本书由 bookdown 强力驱动</a></li>
 
@@ -299,7 +310,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="tidy-data" class="section level1" number="9">
 <h1><span class="header-section-number">9</span> Tidy data</h1>
 <p>学习<code>tidyr</code>包，用于整理（整齐）数据。</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="tidy-data.html#cb1-1"></a><span class="kw">library</span>(tidyverse)</span></code></pre></div>
+<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="tidy-data.html#cb137-1"></a><span class="kw">library</span>(tidyverse)</span></code></pre></div>
 <div id="整齐的数据" class="section level2" number="9.1">
 <h2><span class="header-section-number">9.1</span> 整齐的数据</h2>
 <p>想要整理数据，就得先知道我们的目标，即所谓<strong>“整齐的数据（tidy data）”</strong>指的是怎样的数据。</p>
@@ -336,64 +347,64 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="练习-14" class="section level2" number="9.4">
 <h2><span class="header-section-number">9.4</span> 练习</h2>
 <p>（1）What would happen if you widen this table? Why? How could you add a new column to uniquely identify each value?</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="tidy-data.html#cb2-1"></a>people &lt;-<span class="st"> </span><span class="kw">tribble</span>(</span>
-<span id="cb2-2"><a href="tidy-data.html#cb2-2"></a>  <span class="op">~</span>name, <span class="op">~</span>key, <span class="op">~</span>value,</span>
-<span id="cb2-3"><a href="tidy-data.html#cb2-3"></a>  <span class="co">#-----------------|--------|------</span></span>
-<span id="cb2-4"><a href="tidy-data.html#cb2-4"></a>  <span class="st">&quot;Phillip Woods&quot;</span>,  <span class="st">&quot;age&quot;</span>, <span class="dv">45</span>,</span>
-<span id="cb2-5"><a href="tidy-data.html#cb2-5"></a>  <span class="st">&quot;Phillip Woods&quot;</span>, <span class="st">&quot;height&quot;</span>, <span class="dv">186</span>,</span>
-<span id="cb2-6"><a href="tidy-data.html#cb2-6"></a>  <span class="st">&quot;Phillip Woods&quot;</span>, <span class="st">&quot;age&quot;</span>, <span class="dv">50</span>,</span>
-<span id="cb2-7"><a href="tidy-data.html#cb2-7"></a>  <span class="st">&quot;Jessica Cordero&quot;</span>, <span class="st">&quot;age&quot;</span>, <span class="dv">37</span>,</span>
-<span id="cb2-8"><a href="tidy-data.html#cb2-8"></a>  <span class="st">&quot;Jessica Cordero&quot;</span>, <span class="st">&quot;height&quot;</span>, <span class="dv">156</span></span>
-<span id="cb2-9"><a href="tidy-data.html#cb2-9"></a>)</span>
-<span id="cb2-10"><a href="tidy-data.html#cb2-10"></a></span>
-<span id="cb2-11"><a href="tidy-data.html#cb2-11"></a><span class="co"># name与key不能确定value</span></span>
-<span id="cb2-12"><a href="tidy-data.html#cb2-12"></a>people <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb2-13"><a href="tidy-data.html#cb2-13"></a><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from=</span><span class="st">&quot;key&quot;</span>,<span class="dt">values_from =</span> <span class="st">&quot;value&quot;</span>)</span>
-<span id="cb2-14"><a href="tidy-data.html#cb2-14"></a><span class="co">#&gt; Warning: Values are not uniquely identified; output will contain list-cols.</span></span>
-<span id="cb2-15"><a href="tidy-data.html#cb2-15"></a><span class="co">#&gt; * Use `values_fn = list` to suppress this warning.</span></span>
-<span id="cb2-16"><a href="tidy-data.html#cb2-16"></a><span class="co">#&gt; * Use `values_fn = length` to identify where the duplicates arise</span></span>
-<span id="cb2-17"><a href="tidy-data.html#cb2-17"></a><span class="co">#&gt; * Use `values_fn = {summary_fun}` to summarise duplicates</span></span>
-<span id="cb2-18"><a href="tidy-data.html#cb2-18"></a><span class="co">#&gt; # A tibble: 2 x 3</span></span>
-<span id="cb2-19"><a href="tidy-data.html#cb2-19"></a><span class="co">#&gt;   name            age       height   </span></span>
-<span id="cb2-20"><a href="tidy-data.html#cb2-20"></a><span class="co">#&gt;   &lt;chr&gt;           &lt;list&gt;    &lt;list&gt;   </span></span>
-<span id="cb2-21"><a href="tidy-data.html#cb2-21"></a><span class="co">#&gt; 1 Phillip Woods   &lt;dbl [2]&gt; &lt;dbl [1]&gt;</span></span>
-<span id="cb2-22"><a href="tidy-data.html#cb2-22"></a><span class="co">#&gt; 2 Jessica Cordero &lt;dbl [1]&gt; &lt;dbl [1]&gt;</span></span>
-<span id="cb2-23"><a href="tidy-data.html#cb2-23"></a></span>
-<span id="cb2-24"><a href="tidy-data.html#cb2-24"></a><span class="co"># 添加新列</span></span>
-<span id="cb2-25"><a href="tidy-data.html#cb2-25"></a>people <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb2-26"><a href="tidy-data.html#cb2-26"></a><span class="st">  </span><span class="kw">group_by</span>(name,key) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb2-27"><a href="tidy-data.html#cb2-27"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">no =</span> <span class="kw">row_number</span>()) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb2-28"><a href="tidy-data.html#cb2-28"></a><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> <span class="st">&quot;name&quot;</span>,<span class="dt">values_from=</span><span class="st">&quot;value&quot;</span>)</span>
-<span id="cb2-29"><a href="tidy-data.html#cb2-29"></a><span class="co">#&gt; # A tibble: 3 x 4</span></span>
-<span id="cb2-30"><a href="tidy-data.html#cb2-30"></a><span class="co">#&gt; # Groups:   key [2]</span></span>
-<span id="cb2-31"><a href="tidy-data.html#cb2-31"></a><span class="co">#&gt;   key       no `Phillip Woods` `Jessica Cordero`</span></span>
-<span id="cb2-32"><a href="tidy-data.html#cb2-32"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;int&gt;           &lt;dbl&gt;             &lt;dbl&gt;</span></span>
-<span id="cb2-33"><a href="tidy-data.html#cb2-33"></a><span class="co">#&gt; 1 age        1              45                37</span></span>
-<span id="cb2-34"><a href="tidy-data.html#cb2-34"></a><span class="co">#&gt; 2 height     1             186               156</span></span>
-<span id="cb2-35"><a href="tidy-data.html#cb2-35"></a><span class="co">#&gt; 3 age        2              50                NA</span></span></code></pre></div>
+<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="tidy-data.html#cb138-1"></a>people &lt;-<span class="st"> </span><span class="kw">tribble</span>(</span>
+<span id="cb138-2"><a href="tidy-data.html#cb138-2"></a>  <span class="op">~</span>name, <span class="op">~</span>key, <span class="op">~</span>value,</span>
+<span id="cb138-3"><a href="tidy-data.html#cb138-3"></a>  <span class="co">#-----------------|--------|------</span></span>
+<span id="cb138-4"><a href="tidy-data.html#cb138-4"></a>  <span class="st">&quot;Phillip Woods&quot;</span>,  <span class="st">&quot;age&quot;</span>, <span class="dv">45</span>,</span>
+<span id="cb138-5"><a href="tidy-data.html#cb138-5"></a>  <span class="st">&quot;Phillip Woods&quot;</span>, <span class="st">&quot;height&quot;</span>, <span class="dv">186</span>,</span>
+<span id="cb138-6"><a href="tidy-data.html#cb138-6"></a>  <span class="st">&quot;Phillip Woods&quot;</span>, <span class="st">&quot;age&quot;</span>, <span class="dv">50</span>,</span>
+<span id="cb138-7"><a href="tidy-data.html#cb138-7"></a>  <span class="st">&quot;Jessica Cordero&quot;</span>, <span class="st">&quot;age&quot;</span>, <span class="dv">37</span>,</span>
+<span id="cb138-8"><a href="tidy-data.html#cb138-8"></a>  <span class="st">&quot;Jessica Cordero&quot;</span>, <span class="st">&quot;height&quot;</span>, <span class="dv">156</span></span>
+<span id="cb138-9"><a href="tidy-data.html#cb138-9"></a>)</span>
+<span id="cb138-10"><a href="tidy-data.html#cb138-10"></a></span>
+<span id="cb138-11"><a href="tidy-data.html#cb138-11"></a><span class="co"># name与key不能确定value</span></span>
+<span id="cb138-12"><a href="tidy-data.html#cb138-12"></a>people <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb138-13"><a href="tidy-data.html#cb138-13"></a><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from=</span><span class="st">&quot;key&quot;</span>,<span class="dt">values_from =</span> <span class="st">&quot;value&quot;</span>)</span>
+<span id="cb138-14"><a href="tidy-data.html#cb138-14"></a><span class="co">#&gt; Warning: Values are not uniquely identified; output will contain list-cols.</span></span>
+<span id="cb138-15"><a href="tidy-data.html#cb138-15"></a><span class="co">#&gt; * Use `values_fn = list` to suppress this warning.</span></span>
+<span id="cb138-16"><a href="tidy-data.html#cb138-16"></a><span class="co">#&gt; * Use `values_fn = length` to identify where the duplicates arise</span></span>
+<span id="cb138-17"><a href="tidy-data.html#cb138-17"></a><span class="co">#&gt; * Use `values_fn = {summary_fun}` to summarise duplicates</span></span>
+<span id="cb138-18"><a href="tidy-data.html#cb138-18"></a><span class="co">#&gt; # A tibble: 2 x 3</span></span>
+<span id="cb138-19"><a href="tidy-data.html#cb138-19"></a><span class="co">#&gt;   name            age       height   </span></span>
+<span id="cb138-20"><a href="tidy-data.html#cb138-20"></a><span class="co">#&gt;   &lt;chr&gt;           &lt;list&gt;    &lt;list&gt;   </span></span>
+<span id="cb138-21"><a href="tidy-data.html#cb138-21"></a><span class="co">#&gt; 1 Phillip Woods   &lt;dbl [2]&gt; &lt;dbl [1]&gt;</span></span>
+<span id="cb138-22"><a href="tidy-data.html#cb138-22"></a><span class="co">#&gt; 2 Jessica Cordero &lt;dbl [1]&gt; &lt;dbl [1]&gt;</span></span>
+<span id="cb138-23"><a href="tidy-data.html#cb138-23"></a></span>
+<span id="cb138-24"><a href="tidy-data.html#cb138-24"></a><span class="co"># 添加新列</span></span>
+<span id="cb138-25"><a href="tidy-data.html#cb138-25"></a>people <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb138-26"><a href="tidy-data.html#cb138-26"></a><span class="st">  </span><span class="kw">group_by</span>(name,key) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb138-27"><a href="tidy-data.html#cb138-27"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">no =</span> <span class="kw">row_number</span>()) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb138-28"><a href="tidy-data.html#cb138-28"></a><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> <span class="st">&quot;name&quot;</span>,<span class="dt">values_from=</span><span class="st">&quot;value&quot;</span>)</span>
+<span id="cb138-29"><a href="tidy-data.html#cb138-29"></a><span class="co">#&gt; # A tibble: 3 x 4</span></span>
+<span id="cb138-30"><a href="tidy-data.html#cb138-30"></a><span class="co">#&gt; # Groups:   key [2]</span></span>
+<span id="cb138-31"><a href="tidy-data.html#cb138-31"></a><span class="co">#&gt;   key       no `Phillip Woods` `Jessica Cordero`</span></span>
+<span id="cb138-32"><a href="tidy-data.html#cb138-32"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;int&gt;           &lt;dbl&gt;             &lt;dbl&gt;</span></span>
+<span id="cb138-33"><a href="tidy-data.html#cb138-33"></a><span class="co">#&gt; 1 age        1              45                37</span></span>
+<span id="cb138-34"><a href="tidy-data.html#cb138-34"></a><span class="co">#&gt; 2 height     1             186               156</span></span>
+<span id="cb138-35"><a href="tidy-data.html#cb138-35"></a><span class="co">#&gt; 3 age        2              50                NA</span></span></code></pre></div>
 <p>（2）Tidy the simple tibble below. Do you need to make it wider or longer? What are the variables?</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="tidy-data.html#cb3-1"></a>preg &lt;-<span class="st"> </span><span class="kw">tribble</span>(</span>
-<span id="cb3-2"><a href="tidy-data.html#cb3-2"></a>  <span class="op">~</span>pregnant, <span class="op">~</span>male, <span class="op">~</span>female,</span>
-<span id="cb3-3"><a href="tidy-data.html#cb3-3"></a>  <span class="st">&quot;yes&quot;</span>,     <span class="ot">NA</span>,    <span class="dv">10</span>,</span>
-<span id="cb3-4"><a href="tidy-data.html#cb3-4"></a>  <span class="st">&quot;no&quot;</span>,      <span class="dv">20</span>,    <span class="dv">12</span></span>
-<span id="cb3-5"><a href="tidy-data.html#cb3-5"></a>)</span>
-<span id="cb3-6"><a href="tidy-data.html#cb3-6"></a></span>
-<span id="cb3-7"><a href="tidy-data.html#cb3-7"></a><span class="co"># longer</span></span>
-<span id="cb3-8"><a href="tidy-data.html#cb3-8"></a>preg <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb3-9"><a href="tidy-data.html#cb3-9"></a><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="dt">cols =</span> <span class="kw">c</span>(<span class="st">&quot;male&quot;</span>,<span class="st">&quot;female&quot;</span>),</span>
-<span id="cb3-10"><a href="tidy-data.html#cb3-10"></a>               <span class="dt">names_to =</span> <span class="st">&quot;sex&quot;</span>,</span>
-<span id="cb3-11"><a href="tidy-data.html#cb3-11"></a>               <span class="dt">values_drop_na=</span>T) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># 去缺失值（怀孕，男）</span></span>
-<span id="cb3-12"><a href="tidy-data.html#cb3-12"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
-<span id="cb3-13"><a href="tidy-data.html#cb3-13"></a>    <span class="dt">female =</span> (sex<span class="op">==</span><span class="st">&quot;female&quot;</span>),</span>
-<span id="cb3-14"><a href="tidy-data.html#cb3-14"></a>    <span class="dt">pregnant =</span> (pregnant<span class="op">==</span><span class="st">&quot;yes&quot;</span>)  <span class="co"># 受启发，改为逻辑变量</span></span>
-<span id="cb3-15"><a href="tidy-data.html#cb3-15"></a>  ) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb3-16"><a href="tidy-data.html#cb3-16"></a><span class="st">  </span><span class="kw">select</span>(female,pregnant,value)</span>
-<span id="cb3-17"><a href="tidy-data.html#cb3-17"></a><span class="co">#&gt; # A tibble: 3 x 3</span></span>
-<span id="cb3-18"><a href="tidy-data.html#cb3-18"></a><span class="co">#&gt;   female pregnant value</span></span>
-<span id="cb3-19"><a href="tidy-data.html#cb3-19"></a><span class="co">#&gt;   &lt;lgl&gt;  &lt;lgl&gt;    &lt;dbl&gt;</span></span>
-<span id="cb3-20"><a href="tidy-data.html#cb3-20"></a><span class="co">#&gt; 1 TRUE   TRUE        10</span></span>
-<span id="cb3-21"><a href="tidy-data.html#cb3-21"></a><span class="co">#&gt; 2 FALSE  FALSE       20</span></span>
-<span id="cb3-22"><a href="tidy-data.html#cb3-22"></a><span class="co">#&gt; 3 TRUE   FALSE       12</span></span></code></pre></div>
+<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb139-1"><a href="tidy-data.html#cb139-1"></a>preg &lt;-<span class="st"> </span><span class="kw">tribble</span>(</span>
+<span id="cb139-2"><a href="tidy-data.html#cb139-2"></a>  <span class="op">~</span>pregnant, <span class="op">~</span>male, <span class="op">~</span>female,</span>
+<span id="cb139-3"><a href="tidy-data.html#cb139-3"></a>  <span class="st">&quot;yes&quot;</span>,     <span class="ot">NA</span>,    <span class="dv">10</span>,</span>
+<span id="cb139-4"><a href="tidy-data.html#cb139-4"></a>  <span class="st">&quot;no&quot;</span>,      <span class="dv">20</span>,    <span class="dv">12</span></span>
+<span id="cb139-5"><a href="tidy-data.html#cb139-5"></a>)</span>
+<span id="cb139-6"><a href="tidy-data.html#cb139-6"></a></span>
+<span id="cb139-7"><a href="tidy-data.html#cb139-7"></a><span class="co"># longer</span></span>
+<span id="cb139-8"><a href="tidy-data.html#cb139-8"></a>preg <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb139-9"><a href="tidy-data.html#cb139-9"></a><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="dt">cols =</span> <span class="kw">c</span>(<span class="st">&quot;male&quot;</span>,<span class="st">&quot;female&quot;</span>),</span>
+<span id="cb139-10"><a href="tidy-data.html#cb139-10"></a>               <span class="dt">names_to =</span> <span class="st">&quot;sex&quot;</span>,</span>
+<span id="cb139-11"><a href="tidy-data.html#cb139-11"></a>               <span class="dt">values_drop_na=</span>T) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># 去缺失值（怀孕，男）</span></span>
+<span id="cb139-12"><a href="tidy-data.html#cb139-12"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb139-13"><a href="tidy-data.html#cb139-13"></a>    <span class="dt">female =</span> (sex<span class="op">==</span><span class="st">&quot;female&quot;</span>),</span>
+<span id="cb139-14"><a href="tidy-data.html#cb139-14"></a>    <span class="dt">pregnant =</span> (pregnant<span class="op">==</span><span class="st">&quot;yes&quot;</span>)  <span class="co"># 受启发，改为逻辑变量</span></span>
+<span id="cb139-15"><a href="tidy-data.html#cb139-15"></a>  ) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb139-16"><a href="tidy-data.html#cb139-16"></a><span class="st">  </span><span class="kw">select</span>(female,pregnant,value)</span>
+<span id="cb139-17"><a href="tidy-data.html#cb139-17"></a><span class="co">#&gt; # A tibble: 3 x 3</span></span>
+<span id="cb139-18"><a href="tidy-data.html#cb139-18"></a><span class="co">#&gt;   female pregnant value</span></span>
+<span id="cb139-19"><a href="tidy-data.html#cb139-19"></a><span class="co">#&gt;   &lt;lgl&gt;  &lt;lgl&gt;    &lt;dbl&gt;</span></span>
+<span id="cb139-20"><a href="tidy-data.html#cb139-20"></a><span class="co">#&gt; 1 TRUE   TRUE        10</span></span>
+<span id="cb139-21"><a href="tidy-data.html#cb139-21"></a><span class="co">#&gt; 2 FALSE  FALSE       20</span></span>
+<span id="cb139-22"><a href="tidy-data.html#cb139-22"></a><span class="co">#&gt; 3 TRUE   FALSE       12</span></span></code></pre></div>
 
 </div>
 </div>
