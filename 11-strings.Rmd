@@ -1,0 +1,180 @@
+# Strings
+
+学习`stringr`包去处理字符串，主要内容是正则表达式。
+```{r}
+library(tidyverse)
+```
+
+## 字符串基础
+
+```{r echo=FALSE}
+knitr::include_graphics("images/strings-字符串基础.png")
+```
+
+关于丢弃长度为0的对象，稍微修改了一下原书的例子：
+```{r}
+name <- "Hadley" 
+time_of_day <- "morning" 
+birthday <- FALSE 
+ 
+str_c( 
+  "Good ", time_of_day, " ", name, 
+  if (birthday) " and HAPPY BIRTHDAY" else "..",  # 注意这里
+  "." 
+) 
+```
+
+结合`if`语句使用非常好用。
+
+## 使用正则表达式进行模式匹配
+
+可以通过`str_view()`和`str_view_all()`函数来学习正则表达式
+
+正则表达式的内容很多，下面只是简单把书上提高的内容列举一下：
+```{r echo=FALSE}
+knitr::include_graphics("images/模式匹配.png")
+```
+
+### 练习
+
+#### 基础匹配
+
+（1）解释一下为什么这些字符串不能匹配一个反斜杠`\`：`"\"`、`"\\"`、`"\\\"`。
+
+匹配一个反斜杠 `\` 的正则表达式为 `\\` ，再转为字符串自然是`"\\\\"`。
+
+而
+```{r eval=FALSE, error=TRUE}
+# 这不是一个合法字符串，末尾缺一个"
+writeLines("\")
+```
+```{r error=TRUE}
+# 这个字符串实际上是\，不能匹配\
+writeLines("\\")
+```
+```{r error=TRUE,eval=FALSE}
+# 非法字符串
+writeLines("\\\")
+```
+
+（2）如何匹配字符序列 `"'\` ？
+```{r}
+# 先确定正则表达式为 "'\\
+# 再确定字符串为 \"\'\\\\
+writeLines("\"\'\\\\")
+# 最后验证一下
+x <- "abc\"\'\\de"
+writeLines(x)
+str_view(x, "\"\'\\\\")
+```
+
+（3）正则表达式`\..\..\..`会匹配哪种模式？如何用字符串来表示这个正则表达式？
+
+会匹配“.+任意字符+.+任意字符+.+任意字符”。
+```{r}
+# 字符串表达
+x <- "\\..\\..\\.."
+writeLines(x)
+```
+
+#### 锚点
+
+（1）如何匹配字符串`"$^$"`？
+```{r}
+# 先确定正则表达式为 \$\^\$
+
+# 再确定字符串
+x <- "\\$\\^\\$"
+writeLines(x)
+# 尝试匹配
+s <- "ab$^$cd"
+writeLines(s)
+str_view(s,x)
+```
+
+**更正：**没有考虑到全字匹配。
+```{r}
+# 先确定正则表达式为 ^\$\^\$$
+
+# 再确定字符串
+x <- "^\\$\\^\\$$"
+writeLines(x)
+# 尝试匹配
+str_view(c("$^$", "ab$^$sfas"), "^\\$\\^\\$$", match = TRUE)
+```
+
+
+
+
+（2）给定`stringr::words`中的常用单词语料库，创建正则表达式以找出满足下列条件的所有单词。
+
+```{r}
+# 以 y 开头的单词
+x <- "^y"
+str_view(stringr::words,x,match = T)
+```
+
+```{r}
+# 以 x 结尾的单词
+x <- "x$"
+str_view(stringr::words,x,match = T)
+```
+
+```{r}
+#  长度正好为 3 个字符的单词。
+x <- "^...$"
+str_view(stringr::words,x,match = T)
+```
+
+```{r}
+# 具有 7 个或更多字符的单词
+x <- "^......."
+str_view(stringr::words,x,match = T)
+```
+
+
+#### 字符类与字符选项
+
+（1）创建正则表达式来找出符合以下条件的所有单词。
+
+```{r}
+# 以元音字母开头的单词
+x <- "^[aeiou]"
+str_view(stringr::words,x,match = T)
+```
+
+```{r}
+# 只包含辅音字母的单词
+x <- "[aeiou]"
+str_view(stringr::words,x,match = F) # match=F，只显示匹配不成功的单词
+```
+
+```{r}
+# 以 ed 结尾，但不以 eed 结尾的单词
+x <- "[^e]ed$"
+str_view(stringr::words,x,match = T)
+```
+
+```{r}
+#  以 ing 或 ize 结尾的单词
+x <- "ing|ize"
+str_view(stringr::words,x,match = T)
+```
+
+
+（2）实际验证一下规则：i 总是在 e 前面，除非 i 前面有 c。
+
+这个有点难耶...
+
+（3）q 后面总是跟着一个 u 吗？
+
+```{r}
+x <- "q[^qe]e"
+str_view(stringr::words,x,match = )
+```
+
+
+
+
+
+
