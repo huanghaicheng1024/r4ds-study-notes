@@ -92,7 +92,7 @@ writeLines(s)
 str_view(s,x)
 ```
 
-**更正：**没有考虑到全字匹配。
+**更正：**之前没有考虑到全字匹配。
 ```{r}
 # 先确定正则表达式为 ^\$\^\$$
 
@@ -102,7 +102,6 @@ writeLines(x)
 # 尝试匹配
 str_view(c("$^$", "ab$^$sfas"), "^\\$\\^\\$$", match = TRUE)
 ```
-
 
 
 
@@ -123,13 +122,13 @@ str_view(stringr::words,x,match = T)
 ```{r}
 #  长度正好为 3 个字符的单词。
 x <- "^...$"
-str_view(stringr::words,x,match = T)
+str_subset(stringr::words,x) 
 ```
 
 ```{r}
 # 具有 7 个或更多字符的单词
 x <- "^......."
-str_view(stringr::words,x,match = T)
+str_subset(stringr::words,x)
 ```
 
 
@@ -140,37 +139,102 @@ str_view(stringr::words,x,match = T)
 ```{r}
 # 以元音字母开头的单词
 x <- "^[aeiou]"
-str_view(stringr::words,x,match = T)
+# str_view(stringr::words,x,match = T)
+# 参考答案，结果太多，使用str_subset
+str_subset(stringr::words,x)
 ```
 
 ```{r}
 # 只包含辅音字母的单词
 x <- "[aeiou]"
 str_view(stringr::words,x,match = F) # match=F，只显示匹配不成功的单词
+# 若使用str_subset，设置negate=TRUE
 ```
 
 ```{r}
 # 以 ed 结尾，但不以 eed 结尾的单词
 x <- "[^e]ed$"
 str_view(stringr::words,x,match = T)
+
+# ADD:上面不会匹配到字符串"ed"，需要手动加入
+# x <- "(^|[^e])ed$"
 ```
 
 ```{r}
-#  以 ing 或 ize 结尾的单词
-x <- "ing|ize"
+#  以 ing 或 ise 结尾的单词
+x <- "ing|ise"  # 或者i(ng|se)
 str_view(stringr::words,x,match = T)
 ```
 
 
 （2）实际验证一下规则：i 总是在 e 前面，除非 i 前面有 c。
 
-这个有点难耶...
+那就假设它们是挨在一起的了。
+```{r}
+# 要匹配不符合规则的字符串，比如
+# [^c]ei,^ei
+x <- "[^c]ei|^ei"
+str_view(stringr::words,x,match = T)
+```
+
 
 （3）q 后面总是跟着一个 u 吗？
 
 ```{r}
-x <- "q[^qe]e"
-str_view(stringr::words,x,match = )
+x <- "q[^u]"
+str_view(stringr::words,x,match = T)
+```
+
+在这个数据集中的确是这样子的。
+
+#### 重复
+
+（3）创建正则表达式来找出满足以下条件的所有单词。
+
+```{r}
+# 以 3 个辅音字母开头的单词
+x <- "^[^aeiou]{3}"
+str_subset(stringr::words,x)
+```
+
+```{r}
+# 有连续 3 个或更多元音字母的单词
+x <- "[aeiou]{3,}"
+str_subset(stringr::words,x)
+```
+
+```{r}
+#  有连续 2 个或更多元音—辅音配对的单词
+x <- "([aeiou][^aeiou]){2,}"
+str_subset(stringr::words,x)
+```
+
+#### 分组与回溯引用
+
+（2）创建正则表达式来匹配出以下单词。
+
+```{r}
+# 开头字母和结尾字母相同的单词
+x <- "^(.).*\\1$"
+str_subset(stringr::words,x)
+
+# 更正：忽略只有一个字母的字符串
+x <- "^(.)((.*\\1$)|$)"
+str_subset(stringr::words,x)
+```
+
+```{r}
+# 包含一对重复字母的单词（例如，church 中包含了重复的 ch）。
+# 严谨一点，用[A-Za-z]代替.
+x <- "(..).*\\1"
+str_subset(stringr::words,x)
+```
+
+```{r}
+# 包含一个至少重复 3 次的字母的单词（例如，eleven 中的 e 重复了 3 次）
+# 严谨一点，用[A-Za-z]代替.
+x <- "(.).*\\1.*\\1"
+str_subset(stringr::words,x)
 ```
 
 
@@ -178,3 +242,6 @@ str_view(stringr::words,x,match = )
 
 
 
+
+ 
+ 
