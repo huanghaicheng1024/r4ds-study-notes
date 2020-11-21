@@ -53,7 +53,7 @@ str(mpg)
 利用`str `函数，可以得到数据集`mpg`中有234行11列。
 
 (3) 变量`drv`的意义是什么？使用`?mpg`命令阅读帮助文件以找出答案。
-```{r echo=FALSE}
+```{r eval=FALSE}
 ?mpg
 ```
 
