@@ -237,11 +237,50 @@ x <- "(.).*\\1.*\\1"
 str_subset(stringr::words,x)
 ```
 
+## 工具
 
+利用正则匹配来解决实际问题
 
+### 导图
 
+```{r}
+knitr::include_graphics("images/工具.png")
+```
 
+### 关于匹配的一些注意
 
+> 如果正则表达式过于复杂，则应该将其分解为几个更小的子表达式，将每个子表达式的匹配结果赋给一个变量，并使用逻辑运算组合起来。
 
+> 匹配从来不会重叠。
+
+> 很多`stringr`函数都是成对出现的：一个函数用于单个匹配，另一个函数用于全部匹配，后者会有后缀 `_all`。
+
+### boundary()
+
+`boundary()`可以通过字母(character)、行(line_break)、句子(sentence)和单词(word)边界来拆分字符串。
+
+比如
+```{r}
+x <- "This is a sentence. This is another sentence." 
+str_view_all(x, boundary("word"))
+```
+
+```{r}
+str_split(x,boundary("word"))
+```
+
+#### 疑问
  
+有一点不太明白，`boundary("word)`如果是用于匹配词，那么再使用`str_split`拆分，剩下的不应该是“非词”部分吗？比如是用空格拆分，返回非空格部分：
+```{r}
+str_split(x," ")
+```
+
+但你要说它不是匹配词，用`str_extract_all()`函数却可以得到拆分结果：
+```{r}
+str_extract_all(x,boundary("word"))
+```
+
+可能这个函数重载了？挖个坑...
+
  
