@@ -24,7 +24,7 @@
 <meta name="author" content="Huang" />
 
 
-<meta name="date" content="2020-11-19" />
+<meta name="date" content="2020-11-21" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -286,6 +286,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="11.2.1" data-path="strings.html"><a href="strings.html#练习-16"><i class="fa fa-check"></i><b>11.2.1</b> 练习</a></li>
 </ul></li>
+<li class="chapter" data-level="11.3" data-path="strings.html"><a href="strings.html#工具"><i class="fa fa-check"></i><b>11.3</b> 工具</a>
+<ul>
+<li class="chapter" data-level="11.3.1" data-path="strings.html"><a href="strings.html#导图-1"><i class="fa fa-check"></i><b>11.3.1</b> 导图</a></li>
+<li class="chapter" data-level="11.3.2" data-path="strings.html"><a href="strings.html#关于匹配的一些注意"><i class="fa fa-check"></i><b>11.3.2</b> 关于匹配的一些注意</a></li>
+<li class="chapter" data-level="11.3.3" data-path="strings.html"><a href="strings.html#boundary"><i class="fa fa-check"></i><b>11.3.3</b> boundary()</a></li>
+</ul></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://bookdown.org" target="blank">本书由 bookdown 强力驱动</a></li>
@@ -482,8 +488,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-24-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>咦，会叠加的耶。</p>
 <p>(5)<code>stroke</code>这个图形属性的作用是什么？它适用于哪些形状？（提示：使用<code>?geom_point</code>命令。）</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="data-visualisation.html#cb20-1"></a>?geom_point</span>
-<span id="cb20-2"><a href="data-visualisation.html#cb20-2"></a><span class="co">#&gt; starting httpd help server ... done</span></span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="data-visualisation.html#cb20-1"></a>?geom_point</span></code></pre></div>
 <p>但是里面没有具体涉及。实践一下</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="data-visualisation.html#cb21-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> mpg) <span class="op">+</span><span class="st"> </span></span>
 <span id="cb21-2"><a href="data-visualisation.html#cb21-2"></a><span class="st">  </span><span class="kw">geom_point</span>( </span>
