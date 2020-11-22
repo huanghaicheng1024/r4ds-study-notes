@@ -24,7 +24,7 @@
 <meta name="author" content="Huang" />
 
 
-<meta name="date" content="2020-11-21" />
+<meta name="date" content="2020-11-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -292,6 +292,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="11.3.2" data-path="strings.html"><a href="strings.html#关于匹配的一些注意"><i class="fa fa-check"></i><b>11.3.2</b> 关于匹配的一些注意</a></li>
 <li class="chapter" data-level="11.3.3" data-path="strings.html"><a href="strings.html#boundary"><i class="fa fa-check"></i><b>11.3.3</b> boundary()</a></li>
 </ul></li>
+<li class="chapter" data-level="11.4" data-path="strings.html"><a href="strings.html#其他"><i class="fa fa-check"></i><b>11.4</b> 其他</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://bookdown.org" target="blank">本书由 bookdown 强力驱动</a></li>
@@ -650,7 +651,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>利用正则匹配来解决实际问题</p>
 <div id="导图-1" class="section level3" number="11.3.1">
 <h3><span class="header-section-number">11.3.1</span> 导图</h3>
-<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="strings.html#cb173-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;images/工具.png&quot;</span>)</span></code></pre></div>
 <p><img src="images/工具.png" width="70%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="关于匹配的一些注意" class="section level3" number="11.3.2">
@@ -669,30 +669,34 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3><span class="header-section-number">11.3.3</span> boundary()</h3>
 <p><code>boundary()</code>可以通过字母(character)、行(line_break)、句子(sentence)和单词(word)边界来拆分字符串。</p>
 <p>比如</p>
-<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="strings.html#cb174-1"></a>x &lt;-<span class="st"> &quot;This is a sentence. This is another sentence.&quot;</span> </span>
-<span id="cb174-2"><a href="strings.html#cb174-2"></a><span class="kw">str_view_all</span>(x, <span class="kw">boundary</span>(<span class="st">&quot;word&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="strings.html#cb173-1"></a>x &lt;-<span class="st"> &quot;This is a sentence. This is another sentence.&quot;</span> </span>
+<span id="cb173-2"><a href="strings.html#cb173-2"></a><span class="kw">str_view_all</span>(x, <span class="kw">boundary</span>(<span class="st">&quot;word&quot;</span>))</span></code></pre></div>
 <div id="htmlwidget-416566eb193bf50d04e6" style="width:960px;height:100%;" class="str_view html-widget"></div>
 <script type="application/json" data-for="htmlwidget-416566eb193bf50d04e6">{"x":{"html":"<ul>\n  <li><span class='match'>This<\/span> <span class='match'>is<\/span> <span class='match'>a<\/span> <span class='match'>sentence<\/span>. <span class='match'>This<\/span> <span class='match'>is<\/span> <span class='match'>another<\/span> <span class='match'>sentence<\/span>.<\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
-<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="strings.html#cb175-1"></a><span class="kw">str_split</span>(x,<span class="kw">boundary</span>(<span class="st">&quot;word&quot;</span>))</span>
-<span id="cb175-2"><a href="strings.html#cb175-2"></a><span class="co">#&gt; [[1]]</span></span>
-<span id="cb175-3"><a href="strings.html#cb175-3"></a><span class="co">#&gt; [1] &quot;This&quot;     &quot;is&quot;       &quot;a&quot;        &quot;sentence&quot; &quot;This&quot;     &quot;is&quot;       &quot;another&quot; </span></span>
-<span id="cb175-4"><a href="strings.html#cb175-4"></a><span class="co">#&gt; [8] &quot;sentence&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="strings.html#cb174-1"></a><span class="kw">str_split</span>(x,<span class="kw">boundary</span>(<span class="st">&quot;word&quot;</span>))</span>
+<span id="cb174-2"><a href="strings.html#cb174-2"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb174-3"><a href="strings.html#cb174-3"></a><span class="co">#&gt; [1] &quot;This&quot;     &quot;is&quot;       &quot;a&quot;        &quot;sentence&quot; &quot;This&quot;     &quot;is&quot;       &quot;another&quot; </span></span>
+<span id="cb174-4"><a href="strings.html#cb174-4"></a><span class="co">#&gt; [8] &quot;sentence&quot;</span></span></code></pre></div>
 <div id="疑问" class="section level4" number="11.3.3.1">
 <h4><span class="header-section-number">11.3.3.1</span> 疑问</h4>
 <p>有一点不太明白，<code>boundary("word)</code>如果是用于匹配词，那么再使用<code>str_split</code>拆分，剩下的不应该是“非词”部分吗？比如是用空格拆分，返回非空格部分：</p>
-<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="strings.html#cb176-1"></a><span class="kw">str_split</span>(x,<span class="st">&quot; &quot;</span>)</span>
-<span id="cb176-2"><a href="strings.html#cb176-2"></a><span class="co">#&gt; [[1]]</span></span>
-<span id="cb176-3"><a href="strings.html#cb176-3"></a><span class="co">#&gt; [1] &quot;This&quot;      &quot;is&quot;        &quot;a&quot;         &quot;sentence.&quot; &quot;This&quot;      &quot;is&quot;       </span></span>
-<span id="cb176-4"><a href="strings.html#cb176-4"></a><span class="co">#&gt; [7] &quot;another&quot;   &quot;sentence.&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="strings.html#cb175-1"></a><span class="kw">str_split</span>(x,<span class="st">&quot; &quot;</span>)</span>
+<span id="cb175-2"><a href="strings.html#cb175-2"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb175-3"><a href="strings.html#cb175-3"></a><span class="co">#&gt; [1] &quot;This&quot;      &quot;is&quot;        &quot;a&quot;         &quot;sentence.&quot; &quot;This&quot;      &quot;is&quot;       </span></span>
+<span id="cb175-4"><a href="strings.html#cb175-4"></a><span class="co">#&gt; [7] &quot;another&quot;   &quot;sentence.&quot;</span></span></code></pre></div>
 <p>但你要说它不是匹配词，用<code>str_extract_all()</code>函数却可以得到拆分结果：</p>
-<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="strings.html#cb177-1"></a><span class="kw">str_extract_all</span>(x,<span class="kw">boundary</span>(<span class="st">&quot;word&quot;</span>))</span>
-<span id="cb177-2"><a href="strings.html#cb177-2"></a><span class="co">#&gt; [[1]]</span></span>
-<span id="cb177-3"><a href="strings.html#cb177-3"></a><span class="co">#&gt; [1] &quot;This&quot;     &quot;is&quot;       &quot;a&quot;        &quot;sentence&quot; &quot;This&quot;     &quot;is&quot;       &quot;another&quot; </span></span>
-<span id="cb177-4"><a href="strings.html#cb177-4"></a><span class="co">#&gt; [8] &quot;sentence&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="strings.html#cb176-1"></a><span class="kw">str_extract_all</span>(x,<span class="kw">boundary</span>(<span class="st">&quot;word&quot;</span>))</span>
+<span id="cb176-2"><a href="strings.html#cb176-2"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb176-3"><a href="strings.html#cb176-3"></a><span class="co">#&gt; [1] &quot;This&quot;     &quot;is&quot;       &quot;a&quot;        &quot;sentence&quot; &quot;This&quot;     &quot;is&quot;       &quot;another&quot; </span></span>
+<span id="cb176-4"><a href="strings.html#cb176-4"></a><span class="co">#&gt; [8] &quot;sentence&quot;</span></span></code></pre></div>
 <p>可能这个函数重载了？挖个坑…</p>
+</div>
+</div>
+</div>
+<div id="其他" class="section level2" number="11.4">
+<h2><span class="header-section-number">11.4</span> 其他</h2>
+<p><img src="images/strings-其他.png" width="80%" style="display: block; margin: auto;" /></p>
 
-</div>
-</div>
 </div>
 </div>
 <section style="
