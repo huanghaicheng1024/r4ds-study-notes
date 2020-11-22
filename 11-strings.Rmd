@@ -243,7 +243,7 @@ str_subset(stringr::words,x)
 
 ### 导图
 
-```{r}
+```{r echo=FALSE}
 knitr::include_graphics("images/工具.png")
 ```
 
@@ -282,5 +282,31 @@ str_extract_all(x,boundary("word"))
 ```
 
 可能这个函数重载了？挖个坑...
+
+
+## 其他
+
+```{r echo=FALSE,out.width="80%"}
+knitr::include_graphics("images/strings-其他.png")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
  
