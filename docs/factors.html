@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>8 Data import | r4ds学习笔记</title>
+  <title>12 Factors | r4ds学习笔记</title>
   <meta name="description" content="这是使用bookdwon编写的书籍。" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="8 Data import | r4ds学习笔记" />
+  <meta property="og:title" content="12 Factors | r4ds学习笔记" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="8 Data import | r4ds学习笔记" />
+  <meta name="twitter:title" content="12 Factors | r4ds学习笔记" />
   
   <meta name="twitter:description" content="这是使用bookdwon编写的书籍。" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="tibbles.html"/>
-<link rel="next" href="tidy-data.html"/>
+<link rel="prev" href="strings.html"/>
+
 <script src="libs/header-attrs-2.5/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -318,124 +318,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="data-import" class="section level1" number="8">
-<h1><span class="header-section-number">8</span> Data import</h1>
-<div id="简介-1" class="section level2" number="8.1">
-<h2><span class="header-section-number">8.1</span> 简介</h2>
-<p>学习利用<code>readr</code>包将纯文本格式的矩形文件读入 R。</p>
-<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb131-1"><a href="data-import.html#cb131-1"></a><span class="kw">library</span>(tidyverse)</span></code></pre></div>
-</div>
-<div id="入门" class="section level2" number="8.2">
-<h2><span class="header-section-number">8.2</span> 入门</h2>
-<p><code>readr</code>有很多函数提供类似的使用方法实现对不同格式平面文件的读入，下面以<code>read_csv</code>函数为例学习这些函数一般的用法。</p>
-<code>read_csv</code>常用参数：
-<div align="center">
-<img src="08-data-import_files/readcsv.png" style="width:70.0%" />
-</div>
-</div>
-<div id="解析向量" class="section level2" number="8.3">
-<h2><span class="header-section-number">8.3</span> 解析向量</h2>
-<p>我们先学习<code>parse_*()</code>函数族，它们接收一个字符串，然后返回一个特定数据类型的向量。</p>
-<p>各函数的用法大致一样，第一个参数是需要解析的字符向量，<code>na</code>参数设定了哪些字符串应该当作缺失值来处理。解析失败的值在输出中是以<strong>缺失值</strong>的形式存在的。</p>
-<p>各函数的作用大致如下：</p>
-<div align="center">
-<img src="08-data-import_files/parse.png" style="width:80.0%" />
-</div>
-</div>
-<div id="解析文件" class="section level2" number="8.4">
-<h2><span class="header-section-number">8.4</span> 解析文件</h2>
-<div id="策略" class="section level3" number="8.4.1">
-<h3><span class="header-section-number">8.4.1</span> 策略</h3>
-<p><code>readr</code>使用一种启发式过程来确定每列的类型：先读取文件的前1000行，使用<code>guess_parser()</code>函数返回<code>readr</code>最可信的猜测，接着<code>parse_guess()</code>函数使用这个猜测来解析列。</p>
-</div>
-<div id="问题" class="section level3" number="8.4.2">
-<h3><span class="header-section-number">8.4.2</span> 问题</h3>
-<p>按照上面的策略来进行当然不可能万无一失。可能遇到的问题：</p>
-<ul>
-<li><p>前 1000 行可能是一种特殊情况，<code>readr</code>猜测出的类型不足以代表整个文件。</p></li>
-<li><p>列中可能含有大量缺失值。</p></li>
-</ul>
-<blockquote>
-<p>每个<code>parse_xyz()</code>函数都有一个对应的<code>col_xyz()</code>函数。如果数据已经保存在R的字符向量中那么你可以使用<code>parse_xyz()</code>；如果想要告诉<code>readr</code>如何加载数据，则应该使用<code>col_xyz()</code>。
-我们强烈建议你总是提供<code>col_types</code>参数，从<code>readr</code>打印出的输出中可以知道它的值。这可以确保数据导入脚本的一致性，并可以重复使用。如果不提供这个参数，而是依赖猜测的类型，那么当数据发生变化时，<code>readr</code>会继续读入数据。如果想要严格解析，可以使用<code>stop_for_problems()</code>函数：当出现任何解析问题时，它会抛出一个错误，并终止脚本。</p>
-</blockquote>
-</div>
-<div id="其他策略" class="section level3" number="8.4.3">
-<h3><span class="header-section-number">8.4.3</span> 其他策略</h3>
-<p>对于上面的问题，我们需要其他的策略：</p>
-<ul>
-<li><p>设置<code>guess_max</code>读多几行数据</p></li>
-<li><p>将所有列都作为字符向量读入，再结合<code>type_convert()</code>函数</p></li>
-<li><p>如果正在读取一个非常大的文件，那么你应该将<code>n_max</code>设置为一个较小的数，比如10 000或者100 000。这可以让你在解决常见问题时加快重复试验的过程。</p></li>
-<li><p>如果遇到严重的解析问题，有时使用<code>read_lines()</code>函数按行读入字符向量会更容易，甚至可以使用<code>read_file()</code>函数读入一个长度为1的字符向量。接着你可以使用后面将学到的字符串解析技能来解析各种各样的数据形式。</p></li>
-</ul>
-<p>后两个策略暂时不太明白…</p>
-</div>
-</div>
-<div id="写入文件" class="section level2" number="8.5">
-<h2><span class="header-section-number">8.5</span> 写入文件</h2>
-<div align="center">
-<img src="08-data-import_files/写入文件.png" style="width:70.0%" />
-</div>
-</div>
-<div id="练习-13" class="section level2" number="8.6">
-<h2><span class="header-section-number">8.6</span> 练习</h2>
-<p>（1）有时CSV文件中的字符串会包含逗号。为了防止引发问题，需要用引号（如 " 或 ’）将逗号围起来。按照惯例，<code>read_csv()</code>默认引号为"，如果想要改变默认值，就要转而使用<code>read_delim()</code>函数。要想将以下文本读入一个数据框，需要设定哪些参数？</p>
-<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="data-import.html#cb132-1"></a>x &lt;-<span class="st"> &quot;x,y</span><span class="ch">\n</span><span class="st">1,&#39;a,b&#39;&quot;</span></span>
-<span id="cb132-2"><a href="data-import.html#cb132-2"></a><span class="kw">read_csv</span>(x,<span class="dt">quote =</span> <span class="st">&quot;&#39;&quot;</span>)</span>
-<span id="cb132-3"><a href="data-import.html#cb132-3"></a><span class="co">#&gt; # A tibble: 1 x 2</span></span>
-<span id="cb132-4"><a href="data-import.html#cb132-4"></a><span class="co">#&gt;       x y    </span></span>
-<span id="cb132-5"><a href="data-import.html#cb132-5"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;chr&gt;</span></span>
-<span id="cb132-6"><a href="data-import.html#cb132-6"></a><span class="co">#&gt; 1     1 a,b</span></span></code></pre></div>
-<p>通过设置<code>quote</code>参数指定引号。</p>
-<p>（2）找出以下每个行内 CSV 文件中的错误。如果运行代码，会发生什么情况？</p>
-<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb133-1"><a href="data-import.html#cb133-1"></a><span class="kw">read_csv</span>(<span class="st">&quot;a,b</span><span class="ch">\n</span><span class="st">1,2,3</span><span class="ch">\n</span><span class="st">4,5,6&quot;</span>) </span>
-<span id="cb133-2"><a href="data-import.html#cb133-2"></a><span class="co">#&gt; Warning: 2 parsing failures.</span></span>
-<span id="cb133-3"><a href="data-import.html#cb133-3"></a><span class="co">#&gt; row col  expected    actual         file</span></span>
-<span id="cb133-4"><a href="data-import.html#cb133-4"></a><span class="co">#&gt;   1  -- 2 columns 3 columns literal data</span></span>
-<span id="cb133-5"><a href="data-import.html#cb133-5"></a><span class="co">#&gt;   2  -- 2 columns 3 columns literal data</span></span>
-<span id="cb133-6"><a href="data-import.html#cb133-6"></a><span class="co">#&gt; # A tibble: 2 x 2</span></span>
-<span id="cb133-7"><a href="data-import.html#cb133-7"></a><span class="co">#&gt;       a     b</span></span>
-<span id="cb133-8"><a href="data-import.html#cb133-8"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt;</span></span>
-<span id="cb133-9"><a href="data-import.html#cb133-9"></a><span class="co">#&gt; 1     1     2</span></span>
-<span id="cb133-10"><a href="data-import.html#cb133-10"></a><span class="co">#&gt; 2     4     5</span></span>
-<span id="cb133-11"><a href="data-import.html#cb133-11"></a><span class="kw">read_csv</span>(<span class="st">&quot;a,b,c</span><span class="ch">\n</span><span class="st">1,2</span><span class="ch">\n</span><span class="st">1,2,3,4&quot;</span>) </span>
-<span id="cb133-12"><a href="data-import.html#cb133-12"></a><span class="co">#&gt; Warning: 2 parsing failures.</span></span>
-<span id="cb133-13"><a href="data-import.html#cb133-13"></a><span class="co">#&gt; row col  expected    actual         file</span></span>
-<span id="cb133-14"><a href="data-import.html#cb133-14"></a><span class="co">#&gt;   1  -- 3 columns 2 columns literal data</span></span>
-<span id="cb133-15"><a href="data-import.html#cb133-15"></a><span class="co">#&gt;   2  -- 3 columns 4 columns literal data</span></span>
-<span id="cb133-16"><a href="data-import.html#cb133-16"></a><span class="co">#&gt; # A tibble: 2 x 3</span></span>
-<span id="cb133-17"><a href="data-import.html#cb133-17"></a><span class="co">#&gt;       a     b     c</span></span>
-<span id="cb133-18"><a href="data-import.html#cb133-18"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
-<span id="cb133-19"><a href="data-import.html#cb133-19"></a><span class="co">#&gt; 1     1     2    NA</span></span>
-<span id="cb133-20"><a href="data-import.html#cb133-20"></a><span class="co">#&gt; 2     1     2     3</span></span></code></pre></div>
-<p>列数不匹配，不是矩形数据。<code>read_csv</code>以第一列列数识别为文件列数，后面的数据列数不够部为NA，超过的截断。</p>
-<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="data-import.html#cb134-1"></a>x &lt;-<span class="st"> &quot;a,b</span><span class="ch">\n\&quot;</span><span class="st">1&quot;</span></span>
-<span id="cb134-2"><a href="data-import.html#cb134-2"></a><span class="kw">cat</span>(x)</span>
-<span id="cb134-3"><a href="data-import.html#cb134-3"></a><span class="co">#&gt; a,b</span></span>
-<span id="cb134-4"><a href="data-import.html#cb134-4"></a><span class="co">#&gt; &quot;1</span></span>
-<span id="cb134-5"><a href="data-import.html#cb134-5"></a><span class="kw">read_csv</span>(x) </span>
-<span id="cb134-6"><a href="data-import.html#cb134-6"></a><span class="co">#&gt; Warning: 2 parsing failures.</span></span>
-<span id="cb134-7"><a href="data-import.html#cb134-7"></a><span class="co">#&gt; row col                     expected    actual         file</span></span>
-<span id="cb134-8"><a href="data-import.html#cb134-8"></a><span class="co">#&gt;   1  a  closing quote at end of file           literal data</span></span>
-<span id="cb134-9"><a href="data-import.html#cb134-9"></a><span class="co">#&gt;   1  -- 2 columns                    1 columns literal data</span></span>
-<span id="cb134-10"><a href="data-import.html#cb134-10"></a><span class="co">#&gt; # A tibble: 1 x 2</span></span>
-<span id="cb134-11"><a href="data-import.html#cb134-11"></a><span class="co">#&gt;       a b    </span></span>
-<span id="cb134-12"><a href="data-import.html#cb134-12"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;chr&gt;</span></span>
-<span id="cb134-13"><a href="data-import.html#cb134-13"></a><span class="co">#&gt; 1     1 &lt;NA&gt;</span></span></code></pre></div>
-<p>估计是把<code>"1</code>识别为整数<code>1</code>。</p>
-<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb135-1"><a href="data-import.html#cb135-1"></a><span class="kw">read_csv</span>(<span class="st">&quot;a,b</span><span class="ch">\n</span><span class="st">1,2</span><span class="ch">\n</span><span class="st">a,b&quot;</span>) </span>
-<span id="cb135-2"><a href="data-import.html#cb135-2"></a><span class="co">#&gt; # A tibble: 2 x 2</span></span>
-<span id="cb135-3"><a href="data-import.html#cb135-3"></a><span class="co">#&gt;   a     b    </span></span>
-<span id="cb135-4"><a href="data-import.html#cb135-4"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;</span></span>
-<span id="cb135-5"><a href="data-import.html#cb135-5"></a><span class="co">#&gt; 1 1     2    </span></span>
-<span id="cb135-6"><a href="data-import.html#cb135-6"></a><span class="co">#&gt; 2 a     b</span></span></code></pre></div>
-<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="data-import.html#cb136-1"></a><span class="kw">read_csv</span>(<span class="st">&quot;a;b</span><span class="ch">\n</span><span class="st">1;3&quot;</span>)</span>
-<span id="cb136-2"><a href="data-import.html#cb136-2"></a><span class="co">#&gt; # A tibble: 1 x 1</span></span>
-<span id="cb136-3"><a href="data-import.html#cb136-3"></a><span class="co">#&gt;   `a;b`</span></span>
-<span id="cb136-4"><a href="data-import.html#cb136-4"></a><span class="co">#&gt;   &lt;chr&gt;</span></span>
-<span id="cb136-5"><a href="data-import.html#cb136-5"></a><span class="co">#&gt; 1 1;3</span></span></code></pre></div>
-<p>将<code>a;b</code>与<code>1;3</code>识别为字符串了。</p>
+<div id="factors" class="section level1" number="12">
+<h1><span class="header-section-number">12</span> Factors</h1>
+<p>学习<code>forcats</code>包去处理分类变量（因子）。</p>
+<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="factors.html#cb177-1"></a><span class="kw">library</span>(tidyverse)</span></code></pre></div>
+<div id="导图-2" class="section level2" number="12.1">
+<h2><span class="header-section-number">12.1</span> 导图</h2>
+<p><img src="images/因子.png" width="80%" style="display: block; margin: auto;" /></p>
 
 </div>
 </div>
@@ -455,8 +344,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="tibbles.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="tidy-data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="strings.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -478,7 +367,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/huanghaicheng1024/r4ds-study-notes/edit/master/08-data-import.Rmd",
+"link": "https://github.com/huanghaicheng1024/r4ds-study-notes/edit/master/12-factors.Rmd",
 "text": "Edit"
 },
 "history": {
