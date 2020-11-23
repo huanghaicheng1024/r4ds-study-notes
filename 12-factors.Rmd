@@ -1,0 +1,23 @@
+# Factors
+
+学习`forcats`包去处理分类变量（因子）。
+```{r}
+library(tidyverse)
+```
+
+## 导图
+
+```{r echo=FALSE,out.width="80%"}
+knitr::include_graphics("images/因子.png")
+```
+
+
+
+
+
+
+
+
+
+
+
