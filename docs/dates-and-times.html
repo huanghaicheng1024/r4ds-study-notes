@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>10 Relational data | r4ds学习笔记</title>
+  <title>13 Dates and times | r4ds学习笔记</title>
   <meta name="description" content="这是使用bookdwon编写的书籍。" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="10 Relational data | r4ds学习笔记" />
+  <meta property="og:title" content="13 Dates and times | r4ds学习笔记" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="10 Relational data | r4ds学习笔记" />
+  <meta name="twitter:title" content="13 Dates and times | r4ds学习笔记" />
   
   <meta name="twitter:description" content="这是使用bookdwon编写的书籍。" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="tidy-data.html"/>
-<link rel="next" href="strings.html"/>
+<link rel="prev" href="factors.html"/>
+
 <script src="libs/header-attrs-2.5/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -335,129 +335,89 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="relational-data" class="section level1" number="10">
-<h1><span class="header-section-number">10</span> Relational data</h1>
-<p>学习利用<code>dplyr</code>中的函数处理关系数据，其实也就是实现SQL里边的一些内容。</p>
-<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="relational-data.html#cb140-1"></a><span class="kw">library</span>(tidyverse) </span>
-<span id="cb140-2"><a href="relational-data.html#cb140-2"></a><span class="kw">library</span>(nycflights13)</span></code></pre></div>
-<div id="键" class="section level2" number="10.1">
-<h2><span class="header-section-number">10.1</span> 键</h2>
-<p>类似于数据库的定义，不再赘述。</p>
-<p>关于如何验证表的主键，一种验证方法是对主键进行<code>count()</code>操作，然后查看是否有n大于1的记录，即看看是否违背唯一确定的性质：</p>
-<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="relational-data.html#cb141-1"></a>planes <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb141-2"><a href="relational-data.html#cb141-2"></a><span class="st">  </span><span class="kw">count</span>(tailnum) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb141-3"><a href="relational-data.html#cb141-3"></a><span class="st">  </span><span class="kw">filter</span>(n<span class="op">&gt;</span><span class="dv">1</span>)</span>
-<span id="cb141-4"><a href="relational-data.html#cb141-4"></a><span class="co">#&gt; # A tibble: 0 x 2</span></span>
-<span id="cb141-5"><a href="relational-data.html#cb141-5"></a><span class="co">#&gt; # ... with 2 variables: tailnum &lt;chr&gt;, n &lt;int&gt;</span></span></code></pre></div>
-<p>关于如何建立代理键，可以利用<code>mutate</code>与<code>row_number()</code>:</p>
-<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="relational-data.html#cb142-1"></a>x &lt;-<span class="st"> </span><span class="kw">tribble</span>(</span>
-<span id="cb142-2"><a href="relational-data.html#cb142-2"></a>  <span class="op">~</span>a,<span class="op">~</span>b,</span>
-<span id="cb142-3"><a href="relational-data.html#cb142-3"></a>  <span class="dv">1</span>,<span class="dv">2</span>,</span>
-<span id="cb142-4"><a href="relational-data.html#cb142-4"></a>  <span class="dv">1</span>,<span class="dv">3</span>,</span>
-<span id="cb142-5"><a href="relational-data.html#cb142-5"></a>  <span class="dv">2</span>,<span class="dv">3</span></span>
-<span id="cb142-6"><a href="relational-data.html#cb142-6"></a>)</span>
-<span id="cb142-7"><a href="relational-data.html#cb142-7"></a>(x <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb142-8"><a href="relational-data.html#cb142-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">key=</span><span class="kw">row_number</span>()) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb142-9"><a href="relational-data.html#cb142-9"></a><span class="st">  </span><span class="kw">select</span>(key,<span class="kw">everything</span>()))</span>
-<span id="cb142-10"><a href="relational-data.html#cb142-10"></a><span class="co">#&gt; # A tibble: 3 x 3</span></span>
-<span id="cb142-11"><a href="relational-data.html#cb142-11"></a><span class="co">#&gt;     key     a     b</span></span>
-<span id="cb142-12"><a href="relational-data.html#cb142-12"></a><span class="co">#&gt;   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
-<span id="cb142-13"><a href="relational-data.html#cb142-13"></a><span class="co">#&gt; 1     1     1     2</span></span>
-<span id="cb142-14"><a href="relational-data.html#cb142-14"></a><span class="co">#&gt; 2     2     1     3</span></span>
-<span id="cb142-15"><a href="relational-data.html#cb142-15"></a><span class="co">#&gt; 3     3     2     3</span></span></code></pre></div>
+<div id="dates-and-times" class="section level1" number="13">
+<h1><span class="header-section-number">13</span> Dates and times</h1>
+<p>本章主要学习使用<code>lubridate</code>处理日期时间类型的数据。</p>
+<div id="创建日期或时间" class="section level2" number="13.1">
+<h2><span class="header-section-number">13.1</span> 创建日期或时间</h2>
+<div id="导图-3" class="section level3" number="13.1.1">
+<h3><span class="header-section-number">13.1.1</span> 导图</h3>
+<p><img src="images/创建dttm.png" width="80%" style="display: block; margin: auto;" /></p>
 </div>
-<div id="处理关系数据的三种操作" class="section level2" number="10.2">
-<h2><span class="header-section-number">10.2</span> 处理关系数据的三种操作</h2>
-<p><img src="images/relational-data-处理关系数据.png" width="70%" style="display: block; margin: auto;" /></p>
-<div id="定义键列" class="section level3" number="10.2.1">
-<h3><span class="header-section-number">10.2.1</span> 定义键列</h3>
-<p>通过上述函数的参数<code>by</code>来设置。</p>
+<div id="处理flights日期时间数据" class="section level3" number="13.1.2">
+<h3><span class="header-section-number">13.1.2</span> 处理<code>flights</code>日期时间数据</h3>
+<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="dates-and-times.html#cb178-1"></a>make_datetime_<span class="dv">100</span> &lt;-<span class="st"> </span><span class="cf">function</span>(year, month, day, time) { </span>
+<span id="cb178-2"><a href="dates-and-times.html#cb178-2"></a>  <span class="kw">make_datetime</span>(year, month, day, time <span class="op">%/%</span><span class="st"> </span><span class="dv">100</span>, time <span class="op">%%</span><span class="st"> </span><span class="dv">100</span>) </span>
+<span id="cb178-3"><a href="dates-and-times.html#cb178-3"></a>} </span>
+<span id="cb178-4"><a href="dates-and-times.html#cb178-4"></a> </span>
+<span id="cb178-5"><a href="dates-and-times.html#cb178-5"></a>flights_dt &lt;-<span class="st"> </span>flights <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb178-6"><a href="dates-and-times.html#cb178-6"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(dep_time), <span class="op">!</span><span class="kw">is.na</span>(arr_time)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb178-7"><a href="dates-and-times.html#cb178-7"></a><span class="st">  </span><span class="kw">mutate</span>( </span>
+<span id="cb178-8"><a href="dates-and-times.html#cb178-8"></a>    <span class="dt">dep_time =</span> <span class="kw">make_datetime_100</span>(year, month, day, dep_time), </span>
+<span id="cb178-9"><a href="dates-and-times.html#cb178-9"></a>    <span class="dt">arr_time =</span> <span class="kw">make_datetime_100</span>(year, month, day, arr_time), </span>
+<span id="cb178-10"><a href="dates-and-times.html#cb178-10"></a>    <span class="dt">sched_dep_time =</span> <span class="kw">make_datetime_100</span>( </span>
+<span id="cb178-11"><a href="dates-and-times.html#cb178-11"></a>      year, month, day, sched_dep_time </span>
+<span id="cb178-12"><a href="dates-and-times.html#cb178-12"></a>    ), </span>
+<span id="cb178-13"><a href="dates-and-times.html#cb178-13"></a>    <span class="dt">sched_arr_time =</span> <span class="kw">make_datetime_100</span>( </span>
+<span id="cb178-14"><a href="dates-and-times.html#cb178-14"></a>      year, month, day, sched_arr_time </span>
+<span id="cb178-15"><a href="dates-and-times.html#cb178-15"></a>    ) </span>
+<span id="cb178-16"><a href="dates-and-times.html#cb178-16"></a>  ) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb178-17"><a href="dates-and-times.html#cb178-17"></a><span class="st">  </span><span class="kw">select</span>(origin, dest, <span class="kw">ends_with</span>(<span class="st">&quot;delay&quot;</span>), <span class="kw">ends_with</span>(<span class="st">&quot;time&quot;</span>)) </span>
+<span id="cb178-18"><a href="dates-and-times.html#cb178-18"></a> </span>
+<span id="cb178-19"><a href="dates-and-times.html#cb178-19"></a>flights_dt </span>
+<span id="cb178-20"><a href="dates-and-times.html#cb178-20"></a><span class="co">#&gt; # A tibble: 328,063 x 9</span></span>
+<span id="cb178-21"><a href="dates-and-times.html#cb178-21"></a><span class="co">#&gt;   origin dest  dep_delay arr_delay dep_time            sched_dep_time     </span></span>
+<span id="cb178-22"><a href="dates-and-times.html#cb178-22"></a><span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;dttm&gt;              &lt;dttm&gt;             </span></span>
+<span id="cb178-23"><a href="dates-and-times.html#cb178-23"></a><span class="co">#&gt; 1 EWR    IAH           2        11 2013-01-01 05:17:00 2013-01-01 05:15:00</span></span>
+<span id="cb178-24"><a href="dates-and-times.html#cb178-24"></a><span class="co">#&gt; 2 LGA    IAH           4        20 2013-01-01 05:33:00 2013-01-01 05:29:00</span></span>
+<span id="cb178-25"><a href="dates-and-times.html#cb178-25"></a><span class="co">#&gt; 3 JFK    MIA           2        33 2013-01-01 05:42:00 2013-01-01 05:40:00</span></span>
+<span id="cb178-26"><a href="dates-and-times.html#cb178-26"></a><span class="co">#&gt; 4 JFK    BQN          -1       -18 2013-01-01 05:44:00 2013-01-01 05:45:00</span></span>
+<span id="cb178-27"><a href="dates-and-times.html#cb178-27"></a><span class="co">#&gt; 5 LGA    ATL          -6       -25 2013-01-01 05:54:00 2013-01-01 06:00:00</span></span>
+<span id="cb178-28"><a href="dates-and-times.html#cb178-28"></a><span class="co">#&gt; 6 EWR    ORD          -4        12 2013-01-01 05:54:00 2013-01-01 05:58:00</span></span>
+<span id="cb178-29"><a href="dates-and-times.html#cb178-29"></a><span class="co">#&gt; # ... with 328,057 more rows, and 3 more variables: arr_time &lt;dttm&gt;,</span></span>
+<span id="cb178-30"><a href="dates-and-times.html#cb178-30"></a><span class="co">#&gt; #   sched_arr_time &lt;dttm&gt;, air_time &lt;dbl&gt;</span></span></code></pre></div>
+</div>
+<div id="绘图" class="section level3" number="13.1.3">
+<h3><span class="header-section-number">13.1.3</span> 绘图</h3>
+<blockquote>
+<p>注意，当将日期时间型数据作为数值使用时（比如在直方图中），1 表示 1 秒，因此分箱宽
+度 86 400 才能够表示 1 天。对于日期型数据，1 则表示 1 天。</p>
+</blockquote>
+<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb179-1"><a href="dates-and-times.html#cb179-1"></a>flights_dt <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb179-2"><a href="dates-and-times.html#cb179-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(dep_time)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb179-3"><a href="dates-and-times.html#cb179-3"></a><span class="st">  </span><span class="kw">geom_freqpoly</span>(<span class="dt">binwidth =</span> <span class="dv">86400</span>) <span class="co"># 86400秒 = 1天</span></span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-205-1.png" width="70%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="日期时间成分" class="section level2" number="13.2">
+<h2><span class="header-section-number">13.2</span> 日期时间成分</h2>
+<div id="导图-4" class="section level3" number="13.2.1">
+<h3><span class="header-section-number">13.2.1</span> 导图</h3>
+<p><img src="images/日期时间成分.png" width="80%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="获取day成分" class="section level3" number="13.2.2">
+<h3><span class="header-section-number">13.2.2</span> 获取day成分</h3>
+<p>提供了三个访问器函数，<code>mday()</code>（一个月中的第几天）、<code>yday()</code>（一年中的第几天）、<code>wday()</code>（一周中的第几天）。</p>
+</div>
+</div>
+<div id="时间间隔" class="section level2" number="13.3">
+<h2><span class="header-section-number">13.3</span> 时间间隔</h2>
+<p><img src="images/时间间隔.png" width="80%" style="display: block; margin: auto;" /></p>
+<blockquote>
+<p>如果只关心物理时间，那么就使用时期；如果还需要考虑人工时间，那么就使用阶段；如果需要找出人工时间范围内有多长的时间间隔，那么就使用区间。</p>
+</blockquote>
+</div>
+<div id="时区" class="section level2" number="13.4">
+<h2><span class="header-section-number">13.4</span> 时区</h2>
+<p>在R中，时区是日期时间型数据的一个属性，仅用于控制输出，不会影响具体的时刻。</p>
+<p>改变时区的两种方法：</p>
 <ul>
-<li><p>默认值<code>by = NULL</code>，自然连接。</p></li>
-<li><p>字符向量<code>by = "x"</code>。这种方式与自然连接很相似，但只使用指定的公共变量。</p></li>
-<li><p>命名字符向量<code>by = c("a" = "b")</code>。这种方式会匹配<code>x</code>表中的<code>a</code>变量和<code>y</code>表中的<code>b</code>变量。输出结果中使用的是<code>x</code>表中的变量。适用于含义一样但名字不同的变量之间连接。</p></li>
+<li><p>保持时间不变，修改其显示方式：<code>with_tz</code></p></li>
+<li><p>修改内部时间：<code>force_tz</code></p></li>
 </ul>
 </div>
-<div id="连接中的问题" class="section level3" number="10.2.2">
-<h3><span class="header-section-number">10.2.2</span> 连接中的问题</h3>
-<ul>
-<li><p>首先，需要找出每个表中可以作为主键的变量。一般应该基于对数据的理解来确定主键，而不是凭经验寻找能作为唯一标识符的变量组合。从含义出发！</p></li>
-<li><p>确保主键中的每个变量都没有缺失值。（实体完整性…）</p></li>
-<li><p>检查外键是否与另一张表的主键相匹配。最好的方法是使用<code>anti_join()</code>，由于数据录入错误，外键和主键不匹配的情况很常见。解决这种问题通常需要大量工作。</p></li>
-</ul>
-</div>
-</div>
-<div id="练习-15" class="section level2" number="10.3">
-<h2><span class="header-section-number">10.3</span> 练习</h2>
-<p>（1）将起点机场和终点机场的位置信息（即<code>lat</code>和<code>lon</code>）添加到<code>flights</code>中。</p>
-<p>先去掉<code>airports</code>中多余的变量，再两次左外连接：</p>
-<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb143-1"><a href="relational-data.html#cb143-1"></a>airport_locations &lt;-<span class="st"> </span>airports <span class="op">%&gt;%</span></span>
-<span id="cb143-2"><a href="relational-data.html#cb143-2"></a><span class="st">  </span><span class="kw">select</span>(faa, lat, lon)</span>
-<span id="cb143-3"><a href="relational-data.html#cb143-3"></a></span>
-<span id="cb143-4"><a href="relational-data.html#cb143-4"></a>flights <span class="op">%&gt;%</span></span>
-<span id="cb143-5"><a href="relational-data.html#cb143-5"></a><span class="st">  </span><span class="kw">select</span>(year<span class="op">:</span>day, hour, origin, dest) <span class="op">%&gt;%</span></span>
-<span id="cb143-6"><a href="relational-data.html#cb143-6"></a><span class="st">  </span><span class="kw">left_join</span>(</span>
-<span id="cb143-7"><a href="relational-data.html#cb143-7"></a>    airport_locations,</span>
-<span id="cb143-8"><a href="relational-data.html#cb143-8"></a>    <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;origin&quot;</span> =<span class="st"> &quot;faa&quot;</span>)</span>
-<span id="cb143-9"><a href="relational-data.html#cb143-9"></a>  ) <span class="op">%&gt;%</span></span>
-<span id="cb143-10"><a href="relational-data.html#cb143-10"></a><span class="st">  </span><span class="kw">left_join</span>(</span>
-<span id="cb143-11"><a href="relational-data.html#cb143-11"></a>    airport_locations,</span>
-<span id="cb143-12"><a href="relational-data.html#cb143-12"></a>    <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;dest&quot;</span> =<span class="st"> &quot;faa&quot;</span>)</span>
-<span id="cb143-13"><a href="relational-data.html#cb143-13"></a>  )</span>
-<span id="cb143-14"><a href="relational-data.html#cb143-14"></a><span class="co">#&gt; # A tibble: 336,776 x 10</span></span>
-<span id="cb143-15"><a href="relational-data.html#cb143-15"></a><span class="co">#&gt;    year month   day  hour origin dest  lat.x lon.x lat.y lon.y</span></span>
-<span id="cb143-16"><a href="relational-data.html#cb143-16"></a><span class="co">#&gt;   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
-<span id="cb143-17"><a href="relational-data.html#cb143-17"></a><span class="co">#&gt; 1  2013     1     1     5 EWR    IAH    40.7 -74.2  30.0 -95.3</span></span>
-<span id="cb143-18"><a href="relational-data.html#cb143-18"></a><span class="co">#&gt; 2  2013     1     1     5 LGA    IAH    40.8 -73.9  30.0 -95.3</span></span>
-<span id="cb143-19"><a href="relational-data.html#cb143-19"></a><span class="co">#&gt; 3  2013     1     1     5 JFK    MIA    40.6 -73.8  25.8 -80.3</span></span>
-<span id="cb143-20"><a href="relational-data.html#cb143-20"></a><span class="co">#&gt; 4  2013     1     1     5 JFK    BQN    40.6 -73.8  NA    NA  </span></span>
-<span id="cb143-21"><a href="relational-data.html#cb143-21"></a><span class="co">#&gt; 5  2013     1     1     6 LGA    ATL    40.8 -73.9  33.6 -84.4</span></span>
-<span id="cb143-22"><a href="relational-data.html#cb143-22"></a><span class="co">#&gt; 6  2013     1     1     5 EWR    ORD    40.7 -74.2  42.0 -87.9</span></span>
-<span id="cb143-23"><a href="relational-data.html#cb143-23"></a><span class="co">#&gt; # ... with 336,770 more rows</span></span></code></pre></div>
-<p>为什么是左外连接而不是内连接？先看看内连接：</p>
-<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="relational-data.html#cb144-1"></a>flights <span class="op">%&gt;%</span></span>
-<span id="cb144-2"><a href="relational-data.html#cb144-2"></a><span class="st">  </span><span class="kw">select</span>(year<span class="op">:</span>day, hour, origin, dest) <span class="op">%&gt;%</span></span>
-<span id="cb144-3"><a href="relational-data.html#cb144-3"></a><span class="st">  </span><span class="kw">inner_join</span>(</span>
-<span id="cb144-4"><a href="relational-data.html#cb144-4"></a>    airport_locations,</span>
-<span id="cb144-5"><a href="relational-data.html#cb144-5"></a>    <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;origin&quot;</span> =<span class="st"> &quot;faa&quot;</span>)</span>
-<span id="cb144-6"><a href="relational-data.html#cb144-6"></a>  ) <span class="op">%&gt;%</span></span>
-<span id="cb144-7"><a href="relational-data.html#cb144-7"></a><span class="st">  </span><span class="kw">inner_join</span>(</span>
-<span id="cb144-8"><a href="relational-data.html#cb144-8"></a>    airport_locations,</span>
-<span id="cb144-9"><a href="relational-data.html#cb144-9"></a>    <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;dest&quot;</span> =<span class="st"> &quot;faa&quot;</span>)</span>
-<span id="cb144-10"><a href="relational-data.html#cb144-10"></a>  )</span>
-<span id="cb144-11"><a href="relational-data.html#cb144-11"></a><span class="co">#&gt; # A tibble: 329,174 x 10</span></span>
-<span id="cb144-12"><a href="relational-data.html#cb144-12"></a><span class="co">#&gt;    year month   day  hour origin dest  lat.x lon.x lat.y lon.y</span></span>
-<span id="cb144-13"><a href="relational-data.html#cb144-13"></a><span class="co">#&gt;   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
-<span id="cb144-14"><a href="relational-data.html#cb144-14"></a><span class="co">#&gt; 1  2013     1     1     5 EWR    IAH    40.7 -74.2  30.0 -95.3</span></span>
-<span id="cb144-15"><a href="relational-data.html#cb144-15"></a><span class="co">#&gt; 2  2013     1     1     5 LGA    IAH    40.8 -73.9  30.0 -95.3</span></span>
-<span id="cb144-16"><a href="relational-data.html#cb144-16"></a><span class="co">#&gt; 3  2013     1     1     5 JFK    MIA    40.6 -73.8  25.8 -80.3</span></span>
-<span id="cb144-17"><a href="relational-data.html#cb144-17"></a><span class="co">#&gt; 4  2013     1     1     6 LGA    ATL    40.8 -73.9  33.6 -84.4</span></span>
-<span id="cb144-18"><a href="relational-data.html#cb144-18"></a><span class="co">#&gt; 5  2013     1     1     5 EWR    ORD    40.7 -74.2  42.0 -87.9</span></span>
-<span id="cb144-19"><a href="relational-data.html#cb144-19"></a><span class="co">#&gt; 6  2013     1     1     6 EWR    FLL    40.7 -74.2  26.1 -80.2</span></span>
-<span id="cb144-20"><a href="relational-data.html#cb144-20"></a><span class="co">#&gt; # ... with 329,168 more rows</span></span></code></pre></div>
-<p>行数要少很多，说明有很多是没有匹配到的。</p>
-<p>另一个问题，对于重复的变量<code>lat,lot</code>，连接时会默认添加<code>.x,.y</code>用于区分，可以使用参数<code>suffix</code>来修改。如：</p>
-<div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb145-1"><a href="relational-data.html#cb145-1"></a>flights <span class="op">%&gt;%</span></span>
-<span id="cb145-2"><a href="relational-data.html#cb145-2"></a><span class="st">  </span><span class="kw">select</span>(year<span class="op">:</span>day, hour, origin, dest) <span class="op">%&gt;%</span></span>
-<span id="cb145-3"><a href="relational-data.html#cb145-3"></a><span class="st">  </span><span class="kw">left_join</span>(</span>
-<span id="cb145-4"><a href="relational-data.html#cb145-4"></a>    airport_locations,</span>
-<span id="cb145-5"><a href="relational-data.html#cb145-5"></a>    <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;origin&quot;</span> =<span class="st"> &quot;faa&quot;</span>)</span>
-<span id="cb145-6"><a href="relational-data.html#cb145-6"></a>  ) <span class="op">%&gt;%</span></span>
-<span id="cb145-7"><a href="relational-data.html#cb145-7"></a><span class="st">  </span><span class="kw">left_join</span>(</span>
-<span id="cb145-8"><a href="relational-data.html#cb145-8"></a>    airport_locations,</span>
-<span id="cb145-9"><a href="relational-data.html#cb145-9"></a>    <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;dest&quot;</span> =<span class="st"> &quot;faa&quot;</span>),</span>
-<span id="cb145-10"><a href="relational-data.html#cb145-10"></a>    <span class="dt">suffix =</span> <span class="kw">c</span>(<span class="st">&quot;_origin&quot;</span>, <span class="st">&quot;_dest&quot;</span>)</span>
-<span id="cb145-11"><a href="relational-data.html#cb145-11"></a>  )</span>
-<span id="cb145-12"><a href="relational-data.html#cb145-12"></a><span class="co">#&gt; # A tibble: 336,776 x 10</span></span>
-<span id="cb145-13"><a href="relational-data.html#cb145-13"></a><span class="co">#&gt;    year month   day  hour origin dest  lat_origin lon_origin lat_dest lon_dest</span></span>
-<span id="cb145-14"><a href="relational-data.html#cb145-14"></a><span class="co">#&gt;   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;      &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;</span></span>
-<span id="cb145-15"><a href="relational-data.html#cb145-15"></a><span class="co">#&gt; 1  2013     1     1     5 EWR    IAH         40.7      -74.2     30.0    -95.3</span></span>
-<span id="cb145-16"><a href="relational-data.html#cb145-16"></a><span class="co">#&gt; 2  2013     1     1     5 LGA    IAH         40.8      -73.9     30.0    -95.3</span></span>
-<span id="cb145-17"><a href="relational-data.html#cb145-17"></a><span class="co">#&gt; 3  2013     1     1     5 JFK    MIA         40.6      -73.8     25.8    -80.3</span></span>
-<span id="cb145-18"><a href="relational-data.html#cb145-18"></a><span class="co">#&gt; 4  2013     1     1     5 JFK    BQN         40.6      -73.8     NA       NA  </span></span>
-<span id="cb145-19"><a href="relational-data.html#cb145-19"></a><span class="co">#&gt; 5  2013     1     1     6 LGA    ATL         40.8      -73.9     33.6    -84.4</span></span>
-<span id="cb145-20"><a href="relational-data.html#cb145-20"></a><span class="co">#&gt; 6  2013     1     1     5 EWR    ORD         40.7      -74.2     42.0    -87.9</span></span>
-<span id="cb145-21"><a href="relational-data.html#cb145-21"></a><span class="co">#&gt; # ... with 336,770 more rows</span></span></code></pre></div>
+<div id="练习-17" class="section level2" number="13.5">
+<h2><span class="header-section-number">13.5</span> 练习</h2>
 
 </div>
 </div>
@@ -477,8 +437,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="tidy-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="strings.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="factors.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -500,7 +460,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/huanghaicheng1024/r4ds-study-notes/edit/master/10-relational-data.Rmd",
+"link": "https://github.com/huanghaicheng1024/r4ds-study-notes/edit/master/13-dates-and-times.Rmd",
 "text": "Edit"
 },
 "history": {
