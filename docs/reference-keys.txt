@@ -110,3 +110,4 @@ dates-and-times
 获取day成分
 时间间隔
 时区
+pipes
