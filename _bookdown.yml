@@ -13,4 +13,25 @@ language:
   ui:
     chapter_name: ""
 
+rmd_files: [
+  "index.rmd",
+  "01-intro.Rmd",
+
+  "02-explore-intro.Rmd",
+  "03-visualize.Rmd",
+  "04-workflow-basics.Rmd",
+  "05-transform.Rmd",
+  "06-EDA.Rmd",
+
+  "07-tibbles.Rmd",
+  "08-data-import.Rmd",
+  "09-tidy-data.Rmd",
+  "10-relational-data.Rmd",
+  "11-strings.Rmd",
+  "12-factors.Rmd",
+  "13-dates-and-times.Rmd",
+
+  "pipes.Rmd",
+]
+
 before_chapter_script: "_common.R"
