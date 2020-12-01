@@ -1,0 +1,48 @@
+# Vectors
+
+```{r message=FALSE,cache=FALSE}
+library(tidyverse) 
+```
+
+## 一个很长的导图
+
+```{r echo=FALSE,out.width="85%"}
+knitr::include_graphics("images/向量.png")
+```
+
+
+## 导图补充
+
+### 全局字符串池
+
+> R使用的是全局字符串池。这意味着每个唯一的字符串在内存中只保存一次，每次对这个字符串的使用都指向这段内存，这样可以减少复制字符串所需的内存空间。
+
+### 一些数值型特殊值的检查
+
+```{r}
+x <- c(1,NA,NaN,Inf,-Inf)
+is.finite(x)
+is.infinite(x)
+is.na(x)  # 这个NA NaN都会返回True
+is.nan(x)
+```
+
+## 练习
+
+（1）对比`setNames()`与`purrr::set_names()`
+
+用法上的略有不同暂不说，`purrr::set_names()`的主要特色在于
+
+- 允许使用函数或者公式来转换现有名称：
+```{r}
+purrr::set_names(c(a = 1, b = 2, c = 3), toupper)
+purrr::set_names(c(a = 1, b = 2, c = 3), ~toupper(.))
+```
+
+- `purrr::set_names()`要求命名向量与原向量长度相同，`setNames()`则不然：
+```{r error=TRUE}
+purrr::set_names(1:4, c("a", "b"))
+setNames(1:4, c("a", "b"))
+```
+
+
