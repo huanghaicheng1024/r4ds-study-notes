@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>2 Introduction | r4ds学习笔记</title>
+  <title>15 Vectors | r4ds学习笔记</title>
   <meta name="description" content="这是使用bookdwon编写的书籍。" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="2 Introduction | r4ds学习笔记" />
+  <meta property="og:title" content="15 Vectors | r4ds学习笔记" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="2 Introduction | r4ds学习笔记" />
+  <meta name="twitter:title" content="15 Vectors | r4ds学习笔记" />
   
   <meta name="twitter:description" content="这是使用bookdwon编写的书籍。" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="intro.html"/>
-<link rel="next" href="data-visualisation.html"/>
+<link rel="prev" href="pipes.html"/>
+
 <script src="libs/header-attrs-2.5/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -346,11 +346,77 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="explore-intro" class="section level1" number="2">
-<h1><span class="header-section-number">2</span> Introduction</h1>
-<p>首先开始讲解的是数据探索这部分内容。</p>
-<p>数据探索是一门艺术，它是审视数据、生成假设、假设检验的不断反复的过程。</p>
+<div id="vectors" class="section level1" number="15">
+<h1><span class="header-section-number">15</span> Vectors</h1>
+<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="vectors.html#cb180-1"></a><span class="kw">library</span>(tidyverse) </span></code></pre></div>
+<div id="一个很长的导图" class="section level2" number="15.1">
+<h2><span class="header-section-number">15.1</span> 一个很长的导图</h2>
+<p><img src="images/向量.png" width="85%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="导图补充" class="section level2" number="15.2">
+<h2><span class="header-section-number">15.2</span> 导图补充</h2>
+<div id="全局字符串池" class="section level3" number="15.2.1">
+<h3><span class="header-section-number">15.2.1</span> 全局字符串池</h3>
+<blockquote>
+<p>R使用的是全局字符串池。这意味着每个唯一的字符串在内存中只保存一次，每次对这个字符串的使用都指向这段内存，这样可以减少复制字符串所需的内存空间。</p>
+</blockquote>
+</div>
+<div id="一些数值型特殊值的检查" class="section level3" number="15.2.2">
+<h3><span class="header-section-number">15.2.2</span> 一些数值型特殊值的检查</h3>
+<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="vectors.html#cb181-1"></a>x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>,<span class="ot">NA</span>,<span class="ot">NaN</span>,<span class="ot">Inf</span>,<span class="op">-</span><span class="ot">Inf</span>)</span>
+<span id="cb181-2"><a href="vectors.html#cb181-2"></a><span class="kw">is.finite</span>(x)</span>
+<span id="cb181-3"><a href="vectors.html#cb181-3"></a><span class="co">#&gt; [1]  TRUE FALSE FALSE FALSE FALSE</span></span>
+<span id="cb181-4"><a href="vectors.html#cb181-4"></a><span class="kw">is.infinite</span>(x)</span>
+<span id="cb181-5"><a href="vectors.html#cb181-5"></a><span class="co">#&gt; [1] FALSE FALSE FALSE  TRUE  TRUE</span></span>
+<span id="cb181-6"><a href="vectors.html#cb181-6"></a><span class="kw">is.na</span>(x)  <span class="co"># 这个NA NaN都会返回True</span></span>
+<span id="cb181-7"><a href="vectors.html#cb181-7"></a><span class="co">#&gt; [1] FALSE  TRUE  TRUE FALSE FALSE</span></span>
+<span id="cb181-8"><a href="vectors.html#cb181-8"></a><span class="kw">is.nan</span>(x)</span>
+<span id="cb181-9"><a href="vectors.html#cb181-9"></a><span class="co">#&gt; [1] FALSE FALSE  TRUE FALSE FALSE</span></span></code></pre></div>
+</div>
+</div>
+<div id="练习-17" class="section level2" number="15.3">
+<h2><span class="header-section-number">15.3</span> 练习</h2>
+<p>（1）对比<code>setNames()</code>与<code>purrr::set_names()</code></p>
+<p>用法上的略有不同暂不说，<code>purrr::set_names()</code>的主要特色在于</p>
+<ul>
+<li>允许使用函数或者公式来转换现有名称：</li>
+</ul>
+<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="vectors.html#cb182-1"></a>purrr<span class="op">::</span><span class="kw">set_names</span>(<span class="kw">c</span>(<span class="dt">a =</span> <span class="dv">1</span>, <span class="dt">b =</span> <span class="dv">2</span>, <span class="dt">c =</span> <span class="dv">3</span>), toupper)</span>
+<span id="cb182-2"><a href="vectors.html#cb182-2"></a><span class="co">#&gt; A B C </span></span>
+<span id="cb182-3"><a href="vectors.html#cb182-3"></a><span class="co">#&gt; 1 2 3</span></span>
+<span id="cb182-4"><a href="vectors.html#cb182-4"></a>purrr<span class="op">::</span><span class="kw">set_names</span>(<span class="kw">c</span>(<span class="dt">a =</span> <span class="dv">1</span>, <span class="dt">b =</span> <span class="dv">2</span>, <span class="dt">c =</span> <span class="dv">3</span>), <span class="op">~</span><span class="kw">toupper</span>(.))</span>
+<span id="cb182-5"><a href="vectors.html#cb182-5"></a><span class="co">#&gt; A B C </span></span>
+<span id="cb182-6"><a href="vectors.html#cb182-6"></a><span class="co">#&gt; 1 2 3</span></span></code></pre></div>
+<ul>
+<li><code>purrr::set_names()</code>要求命名向量与原向量长度相同，<code>setNames()</code>则不然：</li>
+</ul>
+<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="vectors.html#cb183-1"></a>purrr<span class="op">::</span><span class="kw">set_names</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>))</span>
+<span id="cb183-2"><a href="vectors.html#cb183-2"></a><span class="co">#&gt; Error: `nm` must be `NULL` or a character vector the same length as `x`</span></span>
+<span id="cb183-3"><a href="vectors.html#cb183-3"></a><span class="kw">setNames</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>))</span>
+<span id="cb183-4"><a href="vectors.html#cb183-4"></a><span class="co">#&gt;    a    b &lt;NA&gt; &lt;NA&gt; </span></span>
+<span id="cb183-5"><a href="vectors.html#cb183-5"></a><span class="co">#&gt;    1    2    3    4</span></span></code></pre></div>
+<p>（2）在编写程序/函数时，需要考虑一些特殊值或者特殊情况，比如空向量、<code>Inf</code>、<code>-Inf</code>、<code>NA</code>、<code>NaN</code>等的处理。</p>
+<p>（3）What happens if you subset a <code>tibble</code> as if you’re subsetting a list? What are the key differences between a list and a <code>tibble</code>?</p>
+<p><code>tibble</code>可以看作是列的列表，只不过每列的长度必须相同，这是与列表最大的不同。在取子集上两者也很类似：</p>
+<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb184-1"><a href="vectors.html#cb184-1"></a>x &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">a=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>),<span class="dt">b=</span><span class="kw">c</span>(<span class="st">&quot;a&quot;</span>,<span class="st">&quot;c&quot;</span>))</span>
+<span id="cb184-2"><a href="vectors.html#cb184-2"></a>x[<span class="st">&quot;a&quot;</span>]</span>
+<span id="cb184-3"><a href="vectors.html#cb184-3"></a><span class="co">#&gt; # A tibble: 2 x 1</span></span>
+<span id="cb184-4"><a href="vectors.html#cb184-4"></a><span class="co">#&gt;       a</span></span>
+<span id="cb184-5"><a href="vectors.html#cb184-5"></a><span class="co">#&gt;   &lt;dbl&gt;</span></span>
+<span id="cb184-6"><a href="vectors.html#cb184-6"></a><span class="co">#&gt; 1     1</span></span>
+<span id="cb184-7"><a href="vectors.html#cb184-7"></a><span class="co">#&gt; 2     2</span></span>
+<span id="cb184-8"><a href="vectors.html#cb184-8"></a>x[[<span class="st">&quot;a&quot;</span>]]</span>
+<span id="cb184-9"><a href="vectors.html#cb184-9"></a><span class="co">#&gt; [1] 1 2</span></span></code></pre></div>
+<p>（4）使用list作为<code>tibble</code>的列也是可行的（如果它们的长度相同）！</p>
+<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="vectors.html#cb185-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">y =</span> <span class="kw">list</span>(<span class="st">&quot;a&quot;</span>, <span class="dv">1</span>, <span class="kw">list</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>)))</span>
+<span id="cb185-2"><a href="vectors.html#cb185-2"></a><span class="co">#&gt; # A tibble: 3 x 2</span></span>
+<span id="cb185-3"><a href="vectors.html#cb185-3"></a><span class="co">#&gt;       x y         </span></span>
+<span id="cb185-4"><a href="vectors.html#cb185-4"></a><span class="co">#&gt;   &lt;int&gt; &lt;list&gt;    </span></span>
+<span id="cb185-5"><a href="vectors.html#cb185-5"></a><span class="co">#&gt; 1     1 &lt;chr [1]&gt; </span></span>
+<span id="cb185-6"><a href="vectors.html#cb185-6"></a><span class="co">#&gt; 2     2 &lt;dbl [1]&gt; </span></span>
+<span id="cb185-7"><a href="vectors.html#cb185-7"></a><span class="co">#&gt; 3     3 &lt;list [1]&gt;</span></span></code></pre></div>
 
+</div>
 </div>
 <section style="
     display: block;
@@ -368,8 +434,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="data-visualisation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="pipes.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -391,7 +457,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/huanghaicheng1024/r4ds-study-notes/edit/master/02-explore-intro.Rmd",
+"link": "https://github.com/huanghaicheng1024/r4ds-study-notes/edit/master/vectors.Rmd",
 "text": "Edit"
 },
 "history": {
