@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>6 Exploratory Data Analysis | r4ds学习笔记</title>
+  <title>16 Iteration | r4ds学习笔记</title>
   <meta name="description" content="这是使用bookdwon编写的书籍。" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="6 Exploratory Data Analysis | r4ds学习笔记" />
+  <meta property="og:title" content="16 Iteration | r4ds学习笔记" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="6 Exploratory Data Analysis | r4ds学习笔记" />
+  <meta name="twitter:title" content="16 Iteration | r4ds学习笔记" />
   
   <meta name="twitter:description" content="这是使用bookdwon编写的书籍。" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="data-transformation.html"/>
-<link rel="next" href="tibbles.html"/>
+<link rel="prev" href="vectors.html"/>
+
 <script src="libs/header-attrs-2.5/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -355,106 +355,61 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="exploratory-data-analysis" class="section level1" number="6">
-<h1><span class="header-section-number">6</span> Exploratory Data Analysis</h1>
-<p>探索性数据分析（EDA）是一个天马行空的不断迭代循环的思考过程，主要作用：</p>
-<ol style="list-style-type: decimal">
-<li><p>对数据提出问题
-。</p></li>
-<li><p>对数据进行可视化、转换和建模，进而找出问题的答案。</p></li>
-<li><p>使用上一个步骤的结果来精炼问题，并提出新问题。</p></li>
-</ol>
-<div id="两类问题" class="section level2" number="6.1">
-<h2><span class="header-section-number">6.1</span> 两类问题</h2>
-<p>对于数据，我们可以粗略地提出两大类问题：</p>
-<ol style="list-style-type: decimal">
-<li><p>变量本身会发生何种变动？</p></li>
-<li><p>不同变量之间会发生何种相关变动？</p></li>
-</ol>
-<div align="center">
-<img src="06-EDA_files/EDA两类问题.png" style="width:80.0%" />
+<div id="iteration" class="section level1" number="16">
+<h1><span class="header-section-number">16</span> Iteration</h1>
+<p>学习使用<code>purrr</code>实现迭代。</p>
+<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="iteration.html#cb186-1"></a><span class="kw">library</span>(tidyverse) </span>
+<span id="cb186-2"><a href="iteration.html#cb186-2"></a><span class="kw">library</span>(microbenchmark)</span></code></pre></div>
+<div id="一个很长的导图-1" class="section level2" number="16.1">
+<h2><span class="header-section-number">16.1</span> 一个很长的导图</h2>
+<p><img src="images/使用purrr 实现迭代.png" width="85%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="导图补充-1" class="section level2" number="16.2">
+<h2><span class="header-section-number">16.2</span> 导图补充</h2>
+<div id="循环模式名称" class="section level3" number="16.2.1">
+<h3><span class="header-section-number">16.2.1</span> 循环模式：名称</h3>
+<p>如果想要创建命名的输出向量，请一定按照如下方式进行命名：</p>
+<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="iteration.html#cb187-1"></a>results &lt;-<span class="st"> </span><span class="kw">vector</span>(<span class="st">&quot;list&quot;</span>, <span class="kw">length</span>(x)) </span>
+<span id="cb187-2"><a href="iteration.html#cb187-2"></a><span class="kw">names</span>(results) &lt;-<span class="st"> </span><span class="kw">names</span>(x)</span></code></pre></div>
 </div>
 </div>
-<div id="一些tips" class="section level2" number="6.2">
-<h2><span class="header-section-number">6.2</span> 一些tips</h2>
-<blockquote>
-<p>使用带有异常值和不带异常值的数据分别进行分析，是一种良好的做法。如果两次分析的
-结果差别不大，而你又无法说明为什么会有异常值，那么完全可以用缺失值替代异常值，
-然后继续进行分析。但如果两次分析的结果有显著差别，那么你就不能在没有正当理由的
-情况下丢弃它们。你需要弄清出现异常值的原因（如数据输入错误），并在文章中说明丢弃它们的理由。</p>
-</blockquote>
-</div>
-<div id="练习-11" class="section level2" number="6.3">
-<h2><span class="header-section-number">6.3</span> 练习</h2>
-<div id="变动" class="section level3" number="6.3.1">
-<h3><span class="header-section-number">6.3.1</span> 3-变动</h3>
-<p>(1)研究 x、y 和 z 变量在diamonds数据集中的分布。你能发现什么？思考一下，对于一条钻石数据，如何确定表示长、宽和高的变量？</p>
-<p>利用直方图探究连续变量的变动：</p>
-<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="exploratory-data-analysis.html#cb117-1"></a>diamonds <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb117-2"><a href="exploratory-data-analysis.html#cb117-2"></a><span class="st">  </span><span class="kw">ggplot</span>()<span class="op">+</span></span>
-<span id="cb117-3"><a href="exploratory-data-analysis.html#cb117-3"></a><span class="st">    </span><span class="kw">geom_freqpoly</span>(<span class="kw">aes</span>(x), <span class="dt">binwidth =</span> <span class="fl">0.5</span>,<span class="dt">color=</span><span class="st">&quot;black&quot;</span>)<span class="op">+</span></span>
-<span id="cb117-4"><a href="exploratory-data-analysis.html#cb117-4"></a><span class="st">    </span><span class="kw">geom_freqpoly</span>(<span class="kw">aes</span>(y), <span class="dt">binwidth =</span> <span class="fl">0.5</span>,<span class="dt">color=</span><span class="st">&quot;red&quot;</span>)<span class="op">+</span></span>
-<span id="cb117-5"><a href="exploratory-data-analysis.html#cb117-5"></a><span class="st">    </span><span class="kw">geom_freqpoly</span>(<span class="kw">aes</span>(z), <span class="dt">binwidth =</span> <span class="fl">0.5</span>,<span class="dt">color=</span><span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
-<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-129-1.png" width="70%" style="display: block; margin: auto;" /></p>
-<p>可以看到，x（长）和y（宽）变量在数据集中的分布高度一致，它们与z（高）变量的分布形状类似。</p>
-<p>(2)研究price的分布，你能发现不寻常或令人惊奇的事情吗？（提示：仔细考虑一下binwidth参数，并确定试验了足够多的取值。）</p>
-<p>利用直方图探究连续变量的变动，多次调整值发现：</p>
-<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="exploratory-data-analysis.html#cb118-1"></a>diamonds <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb118-2"><a href="exploratory-data-analysis.html#cb118-2"></a><span class="st">  </span><span class="kw">ggplot</span>()<span class="op">+</span></span>
-<span id="cb118-3"><a href="exploratory-data-analysis.html#cb118-3"></a><span class="st">    </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(price),<span class="dt">binwidth =</span> <span class="dv">50</span>)<span class="op">+</span></span>
-<span id="cb118-4"><a href="exploratory-data-analysis.html#cb118-4"></a><span class="st">    </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="dv">1450</span>,<span class="dv">1600</span>))</span></code></pre></div>
-<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-130-1.png" width="70%" style="display: block; margin: auto;" /></p>
-<p>在1475-1525区间中是没有数据的，好像是有点奇怪…</p>
-<p>(3)0.99克拉的钻石有多少？1克拉的钻石有多少？造成这种区别的原因是什么？</p>
-<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="exploratory-data-analysis.html#cb119-1"></a>diamonds <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb119-2"><a href="exploratory-data-analysis.html#cb119-2"></a><span class="st">  </span><span class="kw">filter</span>(<span class="kw">between</span>(carat,<span class="fl">0.99</span>,<span class="fl">1.01</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb119-3"><a href="exploratory-data-analysis.html#cb119-3"></a><span class="st">  </span><span class="kw">count</span>(carat)</span>
-<span id="cb119-4"><a href="exploratory-data-analysis.html#cb119-4"></a><span class="co">#&gt; # A tibble: 3 x 2</span></span>
-<span id="cb119-5"><a href="exploratory-data-analysis.html#cb119-5"></a><span class="co">#&gt;   carat     n</span></span>
-<span id="cb119-6"><a href="exploratory-data-analysis.html#cb119-6"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;int&gt;</span></span>
-<span id="cb119-7"><a href="exploratory-data-analysis.html#cb119-7"></a><span class="co">#&gt; 1  0.99    23</span></span>
-<span id="cb119-8"><a href="exploratory-data-analysis.html#cb119-8"></a><span class="co">#&gt; 2  1     1558</span></span>
-<span id="cb119-9"><a href="exploratory-data-analysis.html#cb119-9"></a><span class="co">#&gt; 3  1.01  2242</span></span></code></pre></div>
-<p>估计大多数0.99克拉的钻石都会被当作1克拉对外宣称…就像一些人身高168的说自己170一样…</p>
-</div>
-<div id="缺失值" class="section level3" number="6.3.2">
-<h3><span class="header-section-number">6.3.2</span> 4-缺失值</h3>
-<p>(1)直方图如何处理缺失值？条形图如何处理缺失值？为什么会有这种区别？</p>
-<blockquote>
-<p>参考https://jrnold.github.io/r4ds-exercise-solutions/exploratory-data-analysis.html#exercise-7.4.1</p>
-</blockquote>
-<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="exploratory-data-analysis.html#cb120-1"></a>diamonds2 &lt;-<span class="st"> </span>diamonds <span class="op">%&gt;%</span></span>
-<span id="cb120-2"><a href="exploratory-data-analysis.html#cb120-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">y =</span> <span class="kw">ifelse</span>(y <span class="op">&lt;</span><span class="st"> </span><span class="dv">3</span> <span class="op">|</span><span class="st"> </span>y <span class="op">&gt;</span><span class="st"> </span><span class="dv">20</span>, <span class="ot">NA</span>, y))</span>
-<span id="cb120-3"><a href="exploratory-data-analysis.html#cb120-3"></a></span>
-<span id="cb120-4"><a href="exploratory-data-analysis.html#cb120-4"></a><span class="kw">ggplot</span>(diamonds2, <span class="kw">aes</span>(<span class="dt">x =</span> y)) <span class="op">+</span></span>
-<span id="cb120-5"><a href="exploratory-data-analysis.html#cb120-5"></a><span class="st">  </span><span class="kw">geom_histogram</span>()</span>
-<span id="cb120-6"><a href="exploratory-data-analysis.html#cb120-6"></a><span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></span>
-<span id="cb120-7"><a href="exploratory-data-analysis.html#cb120-7"></a><span class="co">#&gt; Warning: Removed 9 rows containing non-finite values (stat_bin).</span></span></code></pre></div>
-<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-132-1.png" width="70%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="exploratory-data-analysis.html#cb121-1"></a>diamonds <span class="op">%&gt;%</span></span>
-<span id="cb121-2"><a href="exploratory-data-analysis.html#cb121-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">cut =</span> <span class="kw">if_else</span>(<span class="kw">runif</span>(<span class="kw">n</span>()) <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.1</span>, <span class="ot">NA_character_</span>, <span class="kw">as.character</span>(cut))) <span class="op">%&gt;%</span></span>
-<span id="cb121-3"><a href="exploratory-data-analysis.html#cb121-3"></a><span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span></span>
-<span id="cb121-4"><a href="exploratory-data-analysis.html#cb121-4"></a><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> cut))</span></code></pre></div>
-<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-133-1.png" width="70%" style="display: block; margin: auto;" /></p>
-<p>直方图会丢弃NA值，条形图会把NA值作为一个取值。</p>
-<p>(2)<code>na.rm = TRUE</code>在<code>mean()</code>和<code>sum()</code>函数中的作用是什么？</p>
-<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="exploratory-data-analysis.html#cb122-1"></a>a &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>,<span class="ot">NA</span>,<span class="ot">NA</span>)</span>
-<span id="cb122-2"><a href="exploratory-data-analysis.html#cb122-2"></a><span class="kw">sum</span>(a)</span>
-<span id="cb122-3"><a href="exploratory-data-analysis.html#cb122-3"></a><span class="co">#&gt; [1] NA</span></span>
-<span id="cb122-4"><a href="exploratory-data-analysis.html#cb122-4"></a><span class="kw">sum</span>(a,<span class="dt">na.rm =</span> T)</span>
-<span id="cb122-5"><a href="exploratory-data-analysis.html#cb122-5"></a><span class="co">#&gt; [1] 15</span></span>
-<span id="cb122-6"><a href="exploratory-data-analysis.html#cb122-6"></a><span class="kw">mean</span>(a)</span>
-<span id="cb122-7"><a href="exploratory-data-analysis.html#cb122-7"></a><span class="co">#&gt; [1] NA</span></span>
-<span id="cb122-8"><a href="exploratory-data-analysis.html#cb122-8"></a><span class="kw">mean</span>(a,<span class="dt">na.rm =</span> T)</span>
-<span id="cb122-9"><a href="exploratory-data-analysis.html#cb122-9"></a><span class="co">#&gt; [1] 3</span></span></code></pre></div>
-<p>求非NA值的和以及求非NA值的均值（分母为非NA值的个数）。</p>
+<div id="练习-18" class="section level2" number="16.3">
+<h2><span class="header-section-number">16.3</span> 练习</h2>
+<p>（1）It’s common to see for loops that don’t preallocate the output and instead increase the length of a vector at each step:</p>
+<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="iteration.html#cb188-1"></a>output &lt;-<span class="st"> </span><span class="kw">vector</span>(<span class="st">&quot;integer&quot;</span>, <span class="dv">0</span>)</span>
+<span id="cb188-2"><a href="iteration.html#cb188-2"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_along</span>(x)) {</span>
+<span id="cb188-3"><a href="iteration.html#cb188-3"></a>  output &lt;-<span class="st"> </span><span class="kw">c</span>(output, <span class="kw">lengths</span>(x[[i]]))</span>
+<span id="cb188-4"><a href="iteration.html#cb188-4"></a>}</span>
+<span id="cb188-5"><a href="iteration.html#cb188-5"></a>output</span></code></pre></div>
+<p>How does this affect performance? Design and execute an experiment.</p>
+<p>安装<code>microbenchmark</code>包，<code>microbenchmark</code>函数可以比较多个函数多次运行时间。</p>
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="iteration.html#cb189-1"></a><span class="co"># 未预先分配输出空间</span></span>
+<span id="cb189-2"><a href="iteration.html#cb189-2"></a>add_vector_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="cf">function</span>(n){</span>
+<span id="cb189-3"><a href="iteration.html#cb189-3"></a>  output &lt;-<span class="st"> </span><span class="kw">vector</span>(<span class="st">&quot;integer&quot;</span>, <span class="dv">0</span>) </span>
+<span id="cb189-4"><a href="iteration.html#cb189-4"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(n)) { </span>
+<span id="cb189-5"><a href="iteration.html#cb189-5"></a>    output &lt;-<span class="st"> </span><span class="kw">c</span>(output, i) </span>
+<span id="cb189-6"><a href="iteration.html#cb189-6"></a>  output</span>
+<span id="cb189-7"><a href="iteration.html#cb189-7"></a>  } </span>
+<span id="cb189-8"><a href="iteration.html#cb189-8"></a>}</span>
+<span id="cb189-9"><a href="iteration.html#cb189-9"></a><span class="co"># 预先分配输出空间</span></span>
+<span id="cb189-10"><a href="iteration.html#cb189-10"></a>add_vector_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="cf">function</span>(n){</span>
+<span id="cb189-11"><a href="iteration.html#cb189-11"></a>  output &lt;-<span class="st"> </span><span class="kw">vector</span>(<span class="st">&quot;integer&quot;</span>, n) </span>
+<span id="cb189-12"><a href="iteration.html#cb189-12"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(n)) { </span>
+<span id="cb189-13"><a href="iteration.html#cb189-13"></a>    output[[i]] &lt;-<span class="st"> </span>i</span>
+<span id="cb189-14"><a href="iteration.html#cb189-14"></a>  output</span>
+<span id="cb189-15"><a href="iteration.html#cb189-15"></a>  } </span>
+<span id="cb189-16"><a href="iteration.html#cb189-16"></a>}</span>
+<span id="cb189-17"><a href="iteration.html#cb189-17"></a></span>
+<span id="cb189-18"><a href="iteration.html#cb189-18"></a><span class="co"># 比较运行时间</span></span>
+<span id="cb189-19"><a href="iteration.html#cb189-19"></a> <span class="kw">microbenchmark</span>(<span class="kw">add_vector_1</span>(<span class="dv">10000</span>), <span class="kw">add_vector_2</span>(<span class="dv">10000</span>), <span class="dt">times =</span> <span class="dv">10</span>)</span>
+<span id="cb189-20"><a href="iteration.html#cb189-20"></a><span class="co">#&gt; Unit: microseconds</span></span>
+<span id="cb189-21"><a href="iteration.html#cb189-21"></a><span class="co">#&gt;                 expr   min     lq   mean median     uq    max neval</span></span>
+<span id="cb189-22"><a href="iteration.html#cb189-22"></a><span class="co">#&gt;  add_vector_1(10000) 99278 104586 115419 107580 125863 150725    10</span></span>
+<span id="cb189-23"><a href="iteration.html#cb189-23"></a><span class="co">#&gt;  add_vector_2(10000)   566    648   1206    890   1398   3475    10</span></span></code></pre></div>
+<p>差了两个数量级。</p>
 
 </div>
 </div>
-</div>
-
-
-
 <section style="
     display: block;
 ">
@@ -471,8 +426,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="data-transformation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="tibbles.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="vectors.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -494,7 +449,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/huanghaicheng1024/r4ds-study-notes/edit/master/06-EDA.Rmd",
+"link": "https://github.com/huanghaicheng1024/r4ds-study-notes/edit/master/iteration.Rmd",
 "text": "Edit"
 },
 "history": {
