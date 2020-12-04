@@ -33,6 +33,7 @@ rmd_files: [
 
   "pipes.Rmd",
   "vectors.Rmd",
+  "iteration.Rmd",
 ]
 
 before_chapter_script: "_common.R"
