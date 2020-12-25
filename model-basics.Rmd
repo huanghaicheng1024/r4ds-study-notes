@@ -1,0 +1,14 @@
+# model-basics
+
+学习建模的基础，主要是如何对一般性的模型进行可视化。
+```{r message=FALSE,cache=FALSE}
+library(tidyverse)
+
+library(modelr)
+options(na.action = na.warn)
+```
+
+## 思维导图
+```{r echo=FALSE,out.width="85%"}
+knitr::include_graphics("images/模型基础.png")
+```
