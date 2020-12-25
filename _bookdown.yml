@@ -34,6 +34,9 @@ rmd_files: [
   "pipes.Rmd",
   "vectors.Rmd",
   "iteration.Rmd",
+  
+  "model-intro.Rmd",
+#  "model-basics.Rmd",
 ]
 
 before_chapter_script: "_common.R"
