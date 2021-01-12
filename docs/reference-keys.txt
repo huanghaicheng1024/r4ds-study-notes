@@ -126,3 +126,10 @@ model-intro
 model-basics
 思维导图
 导图补充-2
+model-building
+第二个模型的部分代码
+many-models
+gapminder
+初识数据
+案例研究
+思维导图-1

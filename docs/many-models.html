@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>8 Data import | r4ds学习笔记</title>
+  <title>20 Many models | r4ds学习笔记</title>
   <meta name="description" content="这是使用bookdwon编写的书籍。" />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="8 Data import | r4ds学习笔记" />
+  <meta property="og:title" content="20 Many models | r4ds学习笔记" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="8 Data import | r4ds学习笔记" />
+  <meta name="twitter:title" content="20 Many models | r4ds学习笔记" />
   
   <meta name="twitter:description" content="这是使用bookdwon编写的书籍。" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="tibbles.html"/>
-<link rel="next" href="tidy-data.html"/>
+<link rel="prev" href="model-building.html"/>
+
 <script src="libs/header-attrs-2.5/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -375,124 +375,181 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="data-import" class="section level1" number="8">
-<h1><span class="header-section-number">8</span> Data import</h1>
-<div id="简介-1" class="section level2" number="8.1">
-<h2><span class="header-section-number">8.1</span> 简介</h2>
-<p>学习利用<code>readr</code>包将纯文本格式的矩形文件读入 R。</p>
-<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb131-1"><a href="data-import.html#cb131-1"></a><span class="kw">library</span>(tidyverse)</span></code></pre></div>
-</div>
-<div id="入门" class="section level2" number="8.2">
-<h2><span class="header-section-number">8.2</span> 入门</h2>
-<p><code>readr</code>有很多函数提供类似的使用方法实现对不同格式平面文件的读入，下面以<code>read_csv</code>函数为例学习这些函数一般的用法。</p>
-<code>read_csv</code>常用参数：
-<div align="center">
-<img src="08-data-import_files/readcsv.png" style="width:70.0%" />
-</div>
-</div>
-<div id="解析向量" class="section level2" number="8.3">
-<h2><span class="header-section-number">8.3</span> 解析向量</h2>
-<p>我们先学习<code>parse_*()</code>函数族，它们接收一个字符串，然后返回一个特定数据类型的向量。</p>
-<p>各函数的用法大致一样，第一个参数是需要解析的字符向量，<code>na</code>参数设定了哪些字符串应该当作缺失值来处理。解析失败的值在输出中是以<strong>缺失值</strong>的形式存在的。</p>
-<p>各函数的作用大致如下：</p>
-<div align="center">
-<img src="08-data-import_files/parse.png" style="width:80.0%" />
-</div>
-</div>
-<div id="解析文件" class="section level2" number="8.4">
-<h2><span class="header-section-number">8.4</span> 解析文件</h2>
-<div id="策略" class="section level3" number="8.4.1">
-<h3><span class="header-section-number">8.4.1</span> 策略</h3>
-<p><code>readr</code>使用一种启发式过程来确定每列的类型：先读取文件的前1000行，使用<code>guess_parser()</code>函数返回<code>readr</code>最可信的猜测，接着<code>parse_guess()</code>函数使用这个猜测来解析列。</p>
-</div>
-<div id="问题" class="section level3" number="8.4.2">
-<h3><span class="header-section-number">8.4.2</span> 问题</h3>
-<p>按照上面的策略来进行当然不可能万无一失。可能遇到的问题：</p>
+<div id="many-models" class="section level1" number="20">
+<h1><span class="header-section-number">20</span> Many models</h1>
+<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb209-1"><a href="many-models.html#cb209-1"></a><span class="kw">library</span>(modelr)</span>
+<span id="cb209-2"><a href="many-models.html#cb209-2"></a><span class="kw">library</span>(tidyverse)</span></code></pre></div>
+<div id="gapminder" class="section level2" number="20.1">
+<h2><span class="header-section-number">20.1</span> gapminder</h2>
+<p>对gapminder这个数据表进行分析一下。</p>
+<div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb210-1"><a href="many-models.html#cb210-1"></a><span class="co"># 载入数据包</span></span>
+<span id="cb210-2"><a href="many-models.html#cb210-2"></a><span class="kw">library</span>(gapminder)</span>
+<span id="cb210-3"><a href="many-models.html#cb210-3"></a>gapminder</span>
+<span id="cb210-4"><a href="many-models.html#cb210-4"></a><span class="co">#&gt; # A tibble: 1,704 x 6</span></span>
+<span id="cb210-5"><a href="many-models.html#cb210-5"></a><span class="co">#&gt;   country     continent  year lifeExp      pop gdpPercap</span></span>
+<span id="cb210-6"><a href="many-models.html#cb210-6"></a><span class="co">#&gt;   &lt;fct&gt;       &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;</span></span>
+<span id="cb210-7"><a href="many-models.html#cb210-7"></a><span class="co">#&gt; 1 Afghanistan Asia       1952    28.8  8425333      779.</span></span>
+<span id="cb210-8"><a href="many-models.html#cb210-8"></a><span class="co">#&gt; 2 Afghanistan Asia       1957    30.3  9240934      821.</span></span>
+<span id="cb210-9"><a href="many-models.html#cb210-9"></a><span class="co">#&gt; 3 Afghanistan Asia       1962    32.0 10267083      853.</span></span>
+<span id="cb210-10"><a href="many-models.html#cb210-10"></a><span class="co">#&gt; 4 Afghanistan Asia       1967    34.0 11537966      836.</span></span>
+<span id="cb210-11"><a href="many-models.html#cb210-11"></a><span class="co">#&gt; 5 Afghanistan Asia       1972    36.1 13079460      740.</span></span>
+<span id="cb210-12"><a href="many-models.html#cb210-12"></a><span class="co">#&gt; 6 Afghanistan Asia       1977    38.4 14880372      786.</span></span>
+<span id="cb210-13"><a href="many-models.html#cb210-13"></a><span class="co">#&gt; # ... with 1,698 more rows</span></span></code></pre></div>
+<div id="初识数据" class="section level3" number="20.1.1">
+<h3><span class="header-section-number">20.1.1</span> 初识数据</h3>
+<div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb211-1"><a href="many-models.html#cb211-1"></a><span class="kw">str</span>(gapminder)</span>
+<span id="cb211-2"><a href="many-models.html#cb211-2"></a><span class="co">#&gt; tibble [1,704 x 6] (S3: tbl_df/tbl/data.frame)</span></span>
+<span id="cb211-3"><a href="many-models.html#cb211-3"></a><span class="co">#&gt;  $ country  : Factor w/ 142 levels &quot;Afghanistan&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb211-4"><a href="many-models.html#cb211-4"></a><span class="co">#&gt;  $ continent: Factor w/ 5 levels &quot;Africa&quot;,&quot;Americas&quot;,..: 3 3 3 3 3 3 3 3 3 3 ...</span></span>
+<span id="cb211-5"><a href="many-models.html#cb211-5"></a><span class="co">#&gt;  $ year     : int [1:1704] 1952 1957 1962 1967 1972 1977 1982 1987 1992 1997 ...</span></span>
+<span id="cb211-6"><a href="many-models.html#cb211-6"></a><span class="co">#&gt;  $ lifeExp  : num [1:1704] 28.8 30.3 32 34 36.1 ...</span></span>
+<span id="cb211-7"><a href="many-models.html#cb211-7"></a><span class="co">#&gt;  $ pop      : int [1:1704] 8425333 9240934 10267083 11537966 13079460 14880372 12881816 13867957 16317921 22227415 ...</span></span>
+<span id="cb211-8"><a href="many-models.html#cb211-8"></a><span class="co">#&gt;  $ gdpPercap: num [1:1704] 779 821 853 836 740 ...</span></span></code></pre></div>
+<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb212-1"><a href="many-models.html#cb212-1"></a>?gapminder</span></code></pre></div>
+<p>数据包括各国预期寿命，人均GDP和人口数据的摘录。各个字段含义如下：</p>
 <ul>
-<li><p>前 1000 行可能是一种特殊情况，<code>readr</code>猜测出的类型不足以代表整个文件。</p></li>
-<li><p>列中可能含有大量缺失值。</p></li>
+<li><p>country：国家。因子变量，142个水平。</p></li>
+<li><p>continent：国家所属大洲。因子变量，5个水平。</p></li>
+<li><p>year：年份。1952-2007，每5年一个记录。</p></li>
+<li><p>lifeExp：预期寿命。</p></li>
+<li><p>pop：人口数。</p></li>
+<li><p>gdpPercap：人均国内生产总值。</p></li>
 </ul>
-<blockquote>
-<p>每个<code>parse_xyz()</code>函数都有一个对应的<code>col_xyz()</code>函数。如果数据已经保存在R的字符向量中那么你可以使用<code>parse_xyz()</code>；如果想要告诉<code>readr</code>如何加载数据，则应该使用<code>col_xyz()</code>。
-我们强烈建议你总是提供<code>col_types</code>参数，从<code>readr</code>打印出的输出中可以知道它的值。这可以确保数据导入脚本的一致性，并可以重复使用。如果不提供这个参数，而是依赖猜测的类型，那么当数据发生变化时，<code>readr</code>会继续读入数据。如果想要严格解析，可以使用<code>stop_for_problems()</code>函数：当出现任何解析问题时，它会抛出一个错误，并终止脚本。</p>
-</blockquote>
 </div>
-<div id="其他策略" class="section level3" number="8.4.3">
-<h3><span class="header-section-number">8.4.3</span> 其他策略</h3>
-<p>对于上面的问题，我们需要其他的策略：</p>
-<ul>
-<li><p>设置<code>guess_max</code>读多几行数据</p></li>
-<li><p>将所有列都作为字符向量读入，再结合<code>type_convert()</code>函数</p></li>
-<li><p>如果正在读取一个非常大的文件，那么你应该将<code>n_max</code>设置为一个较小的数，比如10 000或者100 000。这可以让你在解决常见问题时加快重复试验的过程。</p></li>
-<li><p>如果遇到严重的解析问题，有时使用<code>read_lines()</code>函数按行读入字符向量会更容易，甚至可以使用<code>read_file()</code>函数读入一个长度为1的字符向量。接着你可以使用后面将学到的字符串解析技能来解析各种各样的数据形式。</p></li>
-</ul>
-<p>后两个策略暂时不太明白…</p>
+<div id="案例研究" class="section level3" number="20.1.2">
+<h3><span class="header-section-number">20.1.2</span> 案例研究</h3>
+<p>问题：每个国家(country)的预期寿命(lifeExp)是如何随时间(year)变化的?</p>
+<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb213-1"><a href="many-models.html#cb213-1"></a>gapminder <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb213-2"><a href="many-models.html#cb213-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(year, lifeExp, <span class="dt">group =</span> country)) <span class="op">+</span></span>
+<span id="cb213-3"><a href="many-models.html#cb213-3"></a><span class="st">    </span><span class="kw">geom_line</span>(<span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>)</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-252-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>可以看到，总的来说，预期寿命似乎一直在稳步提高。然而，如果仔细观察，我们可能会注意到一些国家没有遵循这种模式。为了使这些国家更容易被看到，我们可以使用线性趋势拟合模型，解释模型随时间稳定的部分，再从残差中研究剩余的部分。</p>
+<p>对于某一个国家，这样的工作并不困难。</p>
+<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb214-1"><a href="many-models.html#cb214-1"></a>nz &lt;-<span class="st"> </span><span class="kw">filter</span>(gapminder, country <span class="op">==</span><span class="st"> &quot;China&quot;</span>)</span>
+<span id="cb214-2"><a href="many-models.html#cb214-2"></a>nz <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb214-3"><a href="many-models.html#cb214-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(year, lifeExp)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb214-4"><a href="many-models.html#cb214-4"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb214-5"><a href="many-models.html#cb214-5"></a><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Full data = &quot;</span>)</span>
+<span id="cb214-6"><a href="many-models.html#cb214-6"></a></span>
+<span id="cb214-7"><a href="many-models.html#cb214-7"></a>nz_mod &lt;-<span class="st"> </span><span class="kw">lm</span>(lifeExp <span class="op">~</span><span class="st"> </span>year, <span class="dt">data =</span> nz)</span>
+<span id="cb214-8"><a href="many-models.html#cb214-8"></a>nz <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb214-9"><a href="many-models.html#cb214-9"></a><span class="st">  </span><span class="kw">add_predictions</span>(nz_mod) <span class="op">%&gt;%</span></span>
+<span id="cb214-10"><a href="many-models.html#cb214-10"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(year, pred)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb214-11"><a href="many-models.html#cb214-11"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb214-12"><a href="many-models.html#cb214-12"></a><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Linear trend + &quot;</span>)</span>
+<span id="cb214-13"><a href="many-models.html#cb214-13"></a></span>
+<span id="cb214-14"><a href="many-models.html#cb214-14"></a>nz <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb214-15"><a href="many-models.html#cb214-15"></a><span class="st">  </span><span class="kw">add_residuals</span>(nz_mod) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb214-16"><a href="many-models.html#cb214-16"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(year, resid)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb214-17"><a href="many-models.html#cb214-17"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">colour =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">size =</span> <span class="dv">3</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb214-18"><a href="many-models.html#cb214-18"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb214-19"><a href="many-models.html#cb214-19"></a><span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;Remaining pattern&quot;</span>)</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-253-1.png" width="70%" style="display: block; margin: auto;" /><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-253-2.png" width="70%" style="display: block; margin: auto;" /><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-253-3.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>对于多个国家，我们可以使用<code>purrr</code>的<code>map</code>函数，但我们需要先构建每个国家的嵌套数据框。</p>
+<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb215-1"><a href="many-models.html#cb215-1"></a>by_country &lt;-<span class="st"> </span>gapminder <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb215-2"><a href="many-models.html#cb215-2"></a><span class="st">  </span><span class="kw">group_by</span>(country, continent) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb215-3"><a href="many-models.html#cb215-3"></a><span class="st">  </span><span class="kw">nest</span>()</span>
+<span id="cb215-4"><a href="many-models.html#cb215-4"></a><span class="kw">head</span>(by_country)</span>
+<span id="cb215-5"><a href="many-models.html#cb215-5"></a><span class="co">#&gt; # A tibble: 6 x 3</span></span>
+<span id="cb215-6"><a href="many-models.html#cb215-6"></a><span class="co">#&gt; # Groups:   country, continent [6]</span></span>
+<span id="cb215-7"><a href="many-models.html#cb215-7"></a><span class="co">#&gt;   country     continent data             </span></span>
+<span id="cb215-8"><a href="many-models.html#cb215-8"></a><span class="co">#&gt;   &lt;fct&gt;       &lt;fct&gt;     &lt;list&gt;           </span></span>
+<span id="cb215-9"><a href="many-models.html#cb215-9"></a><span class="co">#&gt; 1 Afghanistan Asia      &lt;tibble [12 x 4]&gt;</span></span>
+<span id="cb215-10"><a href="many-models.html#cb215-10"></a><span class="co">#&gt; 2 Albania     Europe    &lt;tibble [12 x 4]&gt;</span></span>
+<span id="cb215-11"><a href="many-models.html#cb215-11"></a><span class="co">#&gt; 3 Algeria     Africa    &lt;tibble [12 x 4]&gt;</span></span>
+<span id="cb215-12"><a href="many-models.html#cb215-12"></a><span class="co">#&gt; 4 Angola      Africa    &lt;tibble [12 x 4]&gt;</span></span>
+<span id="cb215-13"><a href="many-models.html#cb215-13"></a><span class="co">#&gt; 5 Argentina   Americas  &lt;tibble [12 x 4]&gt;</span></span>
+<span id="cb215-14"><a href="many-models.html#cb215-14"></a><span class="co">#&gt; 6 Australia   Oceania   &lt;tibble [12 x 4]&gt;</span></span></code></pre></div>
+<p>这是一个嵌套数据框，它的<code>data</code>列是一列数据框。</p>
+<p>这时可以对每个国家拟合模型了：</p>
+<div class="sourceCode" id="cb216"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb216-1"><a href="many-models.html#cb216-1"></a>country_model &lt;-<span class="st"> </span><span class="cf">function</span>(df) {</span>
+<span id="cb216-2"><a href="many-models.html#cb216-2"></a>  <span class="kw">lm</span>(lifeExp <span class="op">~</span><span class="st"> </span>year, <span class="dt">data =</span> df)</span>
+<span id="cb216-3"><a href="many-models.html#cb216-3"></a>}</span>
+<span id="cb216-4"><a href="many-models.html#cb216-4"></a>by_country &lt;-<span class="st"> </span>by_country <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb216-5"><a href="many-models.html#cb216-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">model =</span> <span class="kw">map</span>(data, country_model))</span></code></pre></div>
+<p>再对于每个模型添加残差：</p>
+<div class="sourceCode" id="cb217"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb217-1"><a href="many-models.html#cb217-1"></a>by_country &lt;-<span class="st"> </span>by_country <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb217-2"><a href="many-models.html#cb217-2"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb217-3"><a href="many-models.html#cb217-3"></a>    <span class="dt">resids =</span> <span class="kw">map2</span>(data, model, add_residuals)</span>
+<span id="cb217-4"><a href="many-models.html#cb217-4"></a>  )</span>
+<span id="cb217-5"><a href="many-models.html#cb217-5"></a>by_country</span>
+<span id="cb217-6"><a href="many-models.html#cb217-6"></a><span class="co">#&gt; # A tibble: 142 x 5</span></span>
+<span id="cb217-7"><a href="many-models.html#cb217-7"></a><span class="co">#&gt; # Groups:   country, continent [142]</span></span>
+<span id="cb217-8"><a href="many-models.html#cb217-8"></a><span class="co">#&gt;   country     continent data              model  resids           </span></span>
+<span id="cb217-9"><a href="many-models.html#cb217-9"></a><span class="co">#&gt;   &lt;fct&gt;       &lt;fct&gt;     &lt;list&gt;            &lt;list&gt; &lt;list&gt;           </span></span>
+<span id="cb217-10"><a href="many-models.html#cb217-10"></a><span class="co">#&gt; 1 Afghanistan Asia      &lt;tibble [12 x 4]&gt; &lt;lm&gt;   &lt;tibble [12 x 5]&gt;</span></span>
+<span id="cb217-11"><a href="many-models.html#cb217-11"></a><span class="co">#&gt; 2 Albania     Europe    &lt;tibble [12 x 4]&gt; &lt;lm&gt;   &lt;tibble [12 x 5]&gt;</span></span>
+<span id="cb217-12"><a href="many-models.html#cb217-12"></a><span class="co">#&gt; 3 Algeria     Africa    &lt;tibble [12 x 4]&gt; &lt;lm&gt;   &lt;tibble [12 x 5]&gt;</span></span>
+<span id="cb217-13"><a href="many-models.html#cb217-13"></a><span class="co">#&gt; 4 Angola      Africa    &lt;tibble [12 x 4]&gt; &lt;lm&gt;   &lt;tibble [12 x 5]&gt;</span></span>
+<span id="cb217-14"><a href="many-models.html#cb217-14"></a><span class="co">#&gt; 5 Argentina   Americas  &lt;tibble [12 x 4]&gt; &lt;lm&gt;   &lt;tibble [12 x 5]&gt;</span></span>
+<span id="cb217-15"><a href="many-models.html#cb217-15"></a><span class="co">#&gt; 6 Australia   Oceania   &lt;tibble [12 x 4]&gt; &lt;lm&gt;   &lt;tibble [12 x 5]&gt;</span></span>
+<span id="cb217-16"><a href="many-models.html#cb217-16"></a><span class="co">#&gt; # ... with 136 more rows</span></span></code></pre></div>
+<p>嵌套数据框好处理，但要展示出来还得解除嵌套(unnest)：</p>
+<div class="sourceCode" id="cb218"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb218-1"><a href="many-models.html#cb218-1"></a>resids &lt;-<span class="st"> </span><span class="kw">unnest</span>(by_country, resids)</span>
+<span id="cb218-2"><a href="many-models.html#cb218-2"></a>resids</span>
+<span id="cb218-3"><a href="many-models.html#cb218-3"></a><span class="co">#&gt; # A tibble: 1,704 x 9</span></span>
+<span id="cb218-4"><a href="many-models.html#cb218-4"></a><span class="co">#&gt; # Groups:   country, continent [142]</span></span>
+<span id="cb218-5"><a href="many-models.html#cb218-5"></a><span class="co">#&gt;   country    continent data        model  year lifeExp     pop gdpPercap   resid</span></span>
+<span id="cb218-6"><a href="many-models.html#cb218-6"></a><span class="co">#&gt;   &lt;fct&gt;      &lt;fct&gt;     &lt;list&gt;      &lt;lis&gt; &lt;int&gt;   &lt;dbl&gt;   &lt;int&gt;     &lt;dbl&gt;   &lt;dbl&gt;</span></span>
+<span id="cb218-7"><a href="many-models.html#cb218-7"></a><span class="co">#&gt; 1 Afghanist~ Asia      &lt;tibble [1~ &lt;lm&gt;   1952    28.8  8.43e6      779. -1.11  </span></span>
+<span id="cb218-8"><a href="many-models.html#cb218-8"></a><span class="co">#&gt; 2 Afghanist~ Asia      &lt;tibble [1~ &lt;lm&gt;   1957    30.3  9.24e6      821. -0.952 </span></span>
+<span id="cb218-9"><a href="many-models.html#cb218-9"></a><span class="co">#&gt; 3 Afghanist~ Asia      &lt;tibble [1~ &lt;lm&gt;   1962    32.0  1.03e7      853. -0.664 </span></span>
+<span id="cb218-10"><a href="many-models.html#cb218-10"></a><span class="co">#&gt; 4 Afghanist~ Asia      &lt;tibble [1~ &lt;lm&gt;   1967    34.0  1.15e7      836. -0.0172</span></span>
+<span id="cb218-11"><a href="many-models.html#cb218-11"></a><span class="co">#&gt; 5 Afghanist~ Asia      &lt;tibble [1~ &lt;lm&gt;   1972    36.1  1.31e7      740.  0.674 </span></span>
+<span id="cb218-12"><a href="many-models.html#cb218-12"></a><span class="co">#&gt; 6 Afghanist~ Asia      &lt;tibble [1~ &lt;lm&gt;   1977    38.4  1.49e7      786.  1.65  </span></span>
+<span id="cb218-13"><a href="many-models.html#cb218-13"></a><span class="co">#&gt; # ... with 1,698 more rows</span></span></code></pre></div>
+<p>绘制各个国家的年份-预期寿命残差图：</p>
+<div class="sourceCode" id="cb219"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb219-1"><a href="many-models.html#cb219-1"></a>resids <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb219-2"><a href="many-models.html#cb219-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(year, resid)) <span class="op">+</span></span>
+<span id="cb219-3"><a href="many-models.html#cb219-3"></a><span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> country), <span class="dt">alpha =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="dv">3</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb219-4"><a href="many-models.html#cb219-4"></a><span class="st">    </span><span class="kw">geom_smooth</span>(<span class="dt">se =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb219-5"><a href="many-models.html#cb219-5"></a><span class="co">#&gt; `geom_smooth()` using method = &#39;gam&#39; and formula &#39;y ~ s(x, bs = &quot;cs&quot;)&#39;</span></span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-258-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>或者对大洲进行分面绘制：</p>
+<div class="sourceCode" id="cb220"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb220-1"><a href="many-models.html#cb220-1"></a>resids <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb220-2"><a href="many-models.html#cb220-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(year, resid, <span class="dt">group =</span> country)) <span class="op">+</span></span>
+<span id="cb220-3"><a href="many-models.html#cb220-3"></a><span class="st">    </span><span class="kw">geom_line</span>(<span class="dt">alpha =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="dv">3</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb220-4"><a href="many-models.html#cb220-4"></a><span class="st">    </span><span class="kw">facet_wrap</span>(<span class="op">~</span>continent)</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-259-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>除了残差，还有很多指标可以衡量模型，可以使用<code>broom::glance()</code>去得到：</p>
+<div class="sourceCode" id="cb221"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb221-1"><a href="many-models.html#cb221-1"></a>glance &lt;-<span class="st"> </span>by_country <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb221-2"><a href="many-models.html#cb221-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">glance =</span> <span class="kw">map</span>(model, broom<span class="op">::</span>glance)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb221-3"><a href="many-models.html#cb221-3"></a><span class="st">  </span><span class="kw">unnest</span>(glance)</span></code></pre></div>
+<p>一般我们可以通过R平方去衡量模型解释的好坏，通过对R平方排序找出拟合不好的模型：</p>
+<div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb222-1"><a href="many-models.html#cb222-1"></a>glance <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb222-2"><a href="many-models.html#cb222-2"></a><span class="st">  </span><span class="kw">arrange</span>(r.squared)</span>
+<span id="cb222-3"><a href="many-models.html#cb222-3"></a><span class="co">#&gt; # A tibble: 142 x 17</span></span>
+<span id="cb222-4"><a href="many-models.html#cb222-4"></a><span class="co">#&gt; # Groups:   country, continent [142]</span></span>
+<span id="cb222-5"><a href="many-models.html#cb222-5"></a><span class="co">#&gt;   country continent data  model resids r.squared adj.r.squared sigma statistic</span></span>
+<span id="cb222-6"><a href="many-models.html#cb222-6"></a><span class="co">#&gt;   &lt;fct&gt;   &lt;fct&gt;     &lt;lis&gt; &lt;lis&gt; &lt;list&gt;     &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;</span></span>
+<span id="cb222-7"><a href="many-models.html#cb222-7"></a><span class="co">#&gt; 1 Rwanda  Africa    &lt;tib~ &lt;lm&gt;  &lt;tibb~    0.0172      -0.0811   6.56     0.175</span></span>
+<span id="cb222-8"><a href="many-models.html#cb222-8"></a><span class="co">#&gt; 2 Botswa~ Africa    &lt;tib~ &lt;lm&gt;  &lt;tibb~    0.0340      -0.0626   6.11     0.352</span></span>
+<span id="cb222-9"><a href="many-models.html#cb222-9"></a><span class="co">#&gt; 3 Zimbab~ Africa    &lt;tib~ &lt;lm&gt;  &lt;tibb~    0.0562      -0.0381   7.21     0.596</span></span>
+<span id="cb222-10"><a href="many-models.html#cb222-10"></a><span class="co">#&gt; 4 Zambia  Africa    &lt;tib~ &lt;lm&gt;  &lt;tibb~    0.0598      -0.0342   4.53     0.636</span></span>
+<span id="cb222-11"><a href="many-models.html#cb222-11"></a><span class="co">#&gt; 5 Swazil~ Africa    &lt;tib~ &lt;lm&gt;  &lt;tibb~    0.0682      -0.0250   6.64     0.732</span></span>
+<span id="cb222-12"><a href="many-models.html#cb222-12"></a><span class="co">#&gt; 6 Lesotho Africa    &lt;tib~ &lt;lm&gt;  &lt;tibb~    0.0849      -0.00666  5.93     0.927</span></span>
+<span id="cb222-13"><a href="many-models.html#cb222-13"></a><span class="co">#&gt; # ... with 136 more rows, and 8 more variables: p.value &lt;dbl&gt;, df &lt;dbl&gt;,</span></span>
+<span id="cb222-14"><a href="many-models.html#cb222-14"></a><span class="co">#&gt; #   logLik &lt;dbl&gt;, AIC &lt;dbl&gt;, BIC &lt;dbl&gt;, deviance &lt;dbl&gt;, df.residual &lt;int&gt;,</span></span>
+<span id="cb222-15"><a href="many-models.html#cb222-15"></a><span class="co">#&gt; #   nobs &lt;int&gt;</span></span></code></pre></div>
+<p>一些比较差的模型似乎都在非洲：</p>
+<div class="sourceCode" id="cb223"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb223-1"><a href="many-models.html#cb223-1"></a>glance <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb223-2"><a href="many-models.html#cb223-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(continent, r.squared)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb223-3"><a href="many-models.html#cb223-3"></a><span class="st">    </span><span class="kw">geom_jitter</span>(<span class="dt">width =</span> <span class="fl">0.5</span>)  <span class="co"># 横向抖动0.5</span></span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-262-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>或者我们可以把拟合效果最差的一些模型筛选出来，并绘制它们的年份-预期寿命图像：</p>
+<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb224-1"><a href="many-models.html#cb224-1"></a>bad_fit &lt;-<span class="st"> </span><span class="kw">filter</span>(glance, r.squared <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.25</span>)</span>
+<span id="cb224-2"><a href="many-models.html#cb224-2"></a></span>
+<span id="cb224-3"><a href="many-models.html#cb224-3"></a>gapminder <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb224-4"><a href="many-models.html#cb224-4"></a><span class="st">  </span><span class="kw">semi_join</span>(bad_fit, <span class="dt">by =</span> <span class="st">&quot;country&quot;</span>) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># 筛选连接，保留匹配</span></span>
+<span id="cb224-5"><a href="many-models.html#cb224-5"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(year, lifeExp, <span class="dt">colour =</span> country)) <span class="op">+</span></span>
+<span id="cb224-6"><a href="many-models.html#cb224-6"></a><span class="st">    </span><span class="kw">geom_line</span>()</span></code></pre></div>
+<p><img src="r4ds-study-notes_files/figure-html/unnamed-chunk-263-1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>影响因素主要是艾滋病与种族灭绝。</p>
 </div>
 </div>
-<div id="写入文件" class="section level2" number="8.5">
-<h2><span class="header-section-number">8.5</span> 写入文件</h2>
-<div align="center">
-<img src="08-data-import_files/写入文件.png" style="width:70.0%" />
-</div>
-</div>
-<div id="练习-13" class="section level2" number="8.6">
-<h2><span class="header-section-number">8.6</span> 练习</h2>
-<p>（1）有时CSV文件中的字符串会包含逗号。为了防止引发问题，需要用引号（如 " 或 ’）将逗号围起来。按照惯例，<code>read_csv()</code>默认引号为"，如果想要改变默认值，就要转而使用<code>read_delim()</code>函数。要想将以下文本读入一个数据框，需要设定哪些参数？</p>
-<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="data-import.html#cb132-1"></a>x &lt;-<span class="st"> &quot;x,y</span><span class="ch">\n</span><span class="st">1,&#39;a,b&#39;&quot;</span></span>
-<span id="cb132-2"><a href="data-import.html#cb132-2"></a><span class="kw">read_csv</span>(x,<span class="dt">quote =</span> <span class="st">&quot;&#39;&quot;</span>)</span>
-<span id="cb132-3"><a href="data-import.html#cb132-3"></a><span class="co">#&gt; # A tibble: 1 x 2</span></span>
-<span id="cb132-4"><a href="data-import.html#cb132-4"></a><span class="co">#&gt;       x y    </span></span>
-<span id="cb132-5"><a href="data-import.html#cb132-5"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;chr&gt;</span></span>
-<span id="cb132-6"><a href="data-import.html#cb132-6"></a><span class="co">#&gt; 1     1 a,b</span></span></code></pre></div>
-<p>通过设置<code>quote</code>参数指定引号。</p>
-<p>（2）找出以下每个行内 CSV 文件中的错误。如果运行代码，会发生什么情况？</p>
-<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb133-1"><a href="data-import.html#cb133-1"></a><span class="kw">read_csv</span>(<span class="st">&quot;a,b</span><span class="ch">\n</span><span class="st">1,2,3</span><span class="ch">\n</span><span class="st">4,5,6&quot;</span>) </span>
-<span id="cb133-2"><a href="data-import.html#cb133-2"></a><span class="co">#&gt; Warning: 2 parsing failures.</span></span>
-<span id="cb133-3"><a href="data-import.html#cb133-3"></a><span class="co">#&gt; row col  expected    actual         file</span></span>
-<span id="cb133-4"><a href="data-import.html#cb133-4"></a><span class="co">#&gt;   1  -- 2 columns 3 columns literal data</span></span>
-<span id="cb133-5"><a href="data-import.html#cb133-5"></a><span class="co">#&gt;   2  -- 2 columns 3 columns literal data</span></span>
-<span id="cb133-6"><a href="data-import.html#cb133-6"></a><span class="co">#&gt; # A tibble: 2 x 2</span></span>
-<span id="cb133-7"><a href="data-import.html#cb133-7"></a><span class="co">#&gt;       a     b</span></span>
-<span id="cb133-8"><a href="data-import.html#cb133-8"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt;</span></span>
-<span id="cb133-9"><a href="data-import.html#cb133-9"></a><span class="co">#&gt; 1     1     2</span></span>
-<span id="cb133-10"><a href="data-import.html#cb133-10"></a><span class="co">#&gt; 2     4     5</span></span>
-<span id="cb133-11"><a href="data-import.html#cb133-11"></a><span class="kw">read_csv</span>(<span class="st">&quot;a,b,c</span><span class="ch">\n</span><span class="st">1,2</span><span class="ch">\n</span><span class="st">1,2,3,4&quot;</span>) </span>
-<span id="cb133-12"><a href="data-import.html#cb133-12"></a><span class="co">#&gt; Warning: 2 parsing failures.</span></span>
-<span id="cb133-13"><a href="data-import.html#cb133-13"></a><span class="co">#&gt; row col  expected    actual         file</span></span>
-<span id="cb133-14"><a href="data-import.html#cb133-14"></a><span class="co">#&gt;   1  -- 3 columns 2 columns literal data</span></span>
-<span id="cb133-15"><a href="data-import.html#cb133-15"></a><span class="co">#&gt;   2  -- 3 columns 4 columns literal data</span></span>
-<span id="cb133-16"><a href="data-import.html#cb133-16"></a><span class="co">#&gt; # A tibble: 2 x 3</span></span>
-<span id="cb133-17"><a href="data-import.html#cb133-17"></a><span class="co">#&gt;       a     b     c</span></span>
-<span id="cb133-18"><a href="data-import.html#cb133-18"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
-<span id="cb133-19"><a href="data-import.html#cb133-19"></a><span class="co">#&gt; 1     1     2    NA</span></span>
-<span id="cb133-20"><a href="data-import.html#cb133-20"></a><span class="co">#&gt; 2     1     2     3</span></span></code></pre></div>
-<p>列数不匹配，不是矩形数据。<code>read_csv</code>以第一列列数识别为文件列数，后面的数据列数不够部为NA，超过的截断。</p>
-<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="data-import.html#cb134-1"></a>x &lt;-<span class="st"> &quot;a,b</span><span class="ch">\n\&quot;</span><span class="st">1&quot;</span></span>
-<span id="cb134-2"><a href="data-import.html#cb134-2"></a><span class="kw">cat</span>(x)</span>
-<span id="cb134-3"><a href="data-import.html#cb134-3"></a><span class="co">#&gt; a,b</span></span>
-<span id="cb134-4"><a href="data-import.html#cb134-4"></a><span class="co">#&gt; &quot;1</span></span>
-<span id="cb134-5"><a href="data-import.html#cb134-5"></a><span class="kw">read_csv</span>(x) </span>
-<span id="cb134-6"><a href="data-import.html#cb134-6"></a><span class="co">#&gt; Warning: 2 parsing failures.</span></span>
-<span id="cb134-7"><a href="data-import.html#cb134-7"></a><span class="co">#&gt; row col                     expected    actual         file</span></span>
-<span id="cb134-8"><a href="data-import.html#cb134-8"></a><span class="co">#&gt;   1  a  closing quote at end of file           literal data</span></span>
-<span id="cb134-9"><a href="data-import.html#cb134-9"></a><span class="co">#&gt;   1  -- 2 columns                    1 columns literal data</span></span>
-<span id="cb134-10"><a href="data-import.html#cb134-10"></a><span class="co">#&gt; # A tibble: 1 x 2</span></span>
-<span id="cb134-11"><a href="data-import.html#cb134-11"></a><span class="co">#&gt;       a b    </span></span>
-<span id="cb134-12"><a href="data-import.html#cb134-12"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;chr&gt;</span></span>
-<span id="cb134-13"><a href="data-import.html#cb134-13"></a><span class="co">#&gt; 1     1 &lt;NA&gt;</span></span></code></pre></div>
-<p>估计是把<code>"1</code>识别为整数<code>1</code>。</p>
-<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb135-1"><a href="data-import.html#cb135-1"></a><span class="kw">read_csv</span>(<span class="st">&quot;a,b</span><span class="ch">\n</span><span class="st">1,2</span><span class="ch">\n</span><span class="st">a,b&quot;</span>) </span>
-<span id="cb135-2"><a href="data-import.html#cb135-2"></a><span class="co">#&gt; # A tibble: 2 x 2</span></span>
-<span id="cb135-3"><a href="data-import.html#cb135-3"></a><span class="co">#&gt;   a     b    </span></span>
-<span id="cb135-4"><a href="data-import.html#cb135-4"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;</span></span>
-<span id="cb135-5"><a href="data-import.html#cb135-5"></a><span class="co">#&gt; 1 1     2    </span></span>
-<span id="cb135-6"><a href="data-import.html#cb135-6"></a><span class="co">#&gt; 2 a     b</span></span></code></pre></div>
-<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="data-import.html#cb136-1"></a><span class="kw">read_csv</span>(<span class="st">&quot;a;b</span><span class="ch">\n</span><span class="st">1;3&quot;</span>)</span>
-<span id="cb136-2"><a href="data-import.html#cb136-2"></a><span class="co">#&gt; # A tibble: 1 x 1</span></span>
-<span id="cb136-3"><a href="data-import.html#cb136-3"></a><span class="co">#&gt;   `a;b`</span></span>
-<span id="cb136-4"><a href="data-import.html#cb136-4"></a><span class="co">#&gt;   &lt;chr&gt;</span></span>
-<span id="cb136-5"><a href="data-import.html#cb136-5"></a><span class="co">#&gt; 1 1;3</span></span></code></pre></div>
-<p>将<code>a;b</code>与<code>1;3</code>识别为字符串了。</p>
+<div id="思维导图-1" class="section level2" number="20.2">
+<h2><span class="header-section-number">20.2</span> 思维导图</h2>
+<p><img src="images/many-models.png" width="85%" style="display: block; margin: auto;" /></p>
 
 </div>
 </div>
@@ -512,8 +569,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="tibbles.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="tidy-data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="model-building.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -535,7 +592,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/huanghaicheng1024/r4ds-study-notes/edit/master/08-data-import.Rmd",
+"link": "https://github.com/huanghaicheng1024/r4ds-study-notes/edit/master/many-models.Rmd",
 "text": "Edit"
 },
 "history": {
